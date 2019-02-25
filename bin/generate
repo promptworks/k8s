@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -e
+
+base_url="https://raw.githubusercontent.com/garethr/kubernetes-json-schema/master/v1.12.2"
+
+objects=(
+  pod
+  service
+  deployment
+  configmap
+  secret
+  ingress
+  namespace
+)
+
+generate() {
+  local object="$1"
+  local infile="tmp/$object.json"
+  local outfile="src/types/$object.ts"
+
+  echo "Generating $outfile..."
+  wget -q -N -O "$infile" "$base_url/$object.json"
+  node_modules/.bin/json2ts -i "$infile" -o "$outfile"
+}
+
+mkdir -p tmp/ src/types/
+for object in "${objects[@]}"; do
+  generate "$object"
+done
