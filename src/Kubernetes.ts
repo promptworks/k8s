@@ -2,6 +2,7 @@ import * as k8s from "kubernetes-client";
 import { Pod } from "./types/pod";
 import { Namespace } from "./types/namespace";
 import { getList, getBody } from "./helpers";
+import { Deployment } from "./types/deployment";
 
 interface Options {
   kubeconfig?: string;
@@ -11,18 +12,17 @@ interface Options {
 
 export class Kubernetes {
   private client: k8s.ApiRoot;
-  private namespace: k8s.ApiV1NamespacesName;
+  private namespace: string;
 
   public constructor({
     kubeconfig,
     context,
     namespace = "default"
   }: Options = {}) {
+    this.namespace = namespace;
     this.client = new k8s.Client1_10({
       config: k8s.config.fromKubeconfig(kubeconfig, context)
     });
-
-    this.namespace = this.client.api.v1.namespaces(namespace);
   }
 
   /**
@@ -42,10 +42,34 @@ export class Kubernetes {
    */
 
   public async listPods(): Promise<Pod[]> {
-    return getList(this.namespace.pods.get());
+    return getList(this.core.pods.get());
   }
 
   public async getPod(name: string): Promise<Pod> {
-    return getBody(this.namespace.pods(name).get());
+    return getBody(this.core.pods(name).get());
+  }
+
+  /**
+   * Deployments
+   */
+
+  public async listDeployments(): Promise<Deployment[]> {
+    return getList(this.apps.deployments.get());
+  }
+
+  public async getDeployment(name: string): Promise<Deployment> {
+    return getBody(this.apps.deployments(name).get());
+  }
+
+  /**
+   * Helpers
+   */
+
+  private get core() {
+    return this.client.api.v1.namespaces(this.namespace);
+  }
+
+  private get apps() {
+    return this.client.apis.apps.v1.namespaces(this.namespace);
   }
 }

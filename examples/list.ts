@@ -16,3 +16,8 @@ k8s.listPods().then(pods => {
   console.log("=== Pods");
   console.log(pods);
 });
+
+k8s.listDeployments().then(deployments => {
+  console.log("=== Deployments");
+  console.log(deployments);
+});
