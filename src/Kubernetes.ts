@@ -3,6 +3,10 @@ import { Pod } from "./types/pod";
 import { Namespace } from "./types/namespace";
 import { getList, getBody } from "./helpers";
 import { Deployment } from "./types/deployment";
+import { Secret } from "./types/secret";
+import { Configmap } from "./types/configmap";
+import { Ingress } from "./types/ingress";
+import { Service } from "./types/service";
 
 interface Options {
   kubeconfig?: string;
@@ -50,6 +54,42 @@ export class Kubernetes {
   }
 
   /**
+   * Services
+   */
+
+  public async listServices(): Promise<Service> {
+    return getList(this.core.services.get());
+  }
+
+  public async getService(name: string): Promise<Service> {
+    return getBody(this.core.services(name).get());
+  }
+
+  /**
+   * Secrets
+   */
+
+  public async listSecrets(): Promise<Secret[]> {
+    return getList(this.core.secrets.get());
+  }
+
+  public async getSecret(name: string): Promise<Secret> {
+    return getBody(this.core.secrets(name).get());
+  }
+
+  /**
+   * Configmaps
+   */
+
+  public async listConfigmaps(): Promise<Configmap[]> {
+    return getList(this.core.configmaps.get());
+  }
+
+  public async getConfigmap(name: string): Promise<Configmap> {
+    return getBody(this.core.configmaps(name).get());
+  }
+
+  /**
    * Deployments
    */
 
@@ -62,6 +102,18 @@ export class Kubernetes {
   }
 
   /**
+   * Ingress
+   */
+
+  public async listIngresses(): Promise<Ingress[]> {
+    return getList(this.extensions.ingresses.get());
+  }
+
+  public async getIngress(name: string): Promise<Ingress> {
+    return getBody(this.extensions.ingresses(name).get());
+  }
+
+  /**
    * Helpers
    */
 
@@ -71,5 +123,9 @@ export class Kubernetes {
 
   private get apps() {
     return this.client.apis.apps.v1.namespaces(this.namespace);
+  }
+
+  private get extensions() {
+    return this.client.apis.extensions.v1beta1.namespaces(this.namespace);
   }
 }

@@ -2,22 +2,17 @@ import { Kubernetes } from "../src";
 
 const k8s = new Kubernetes();
 
-k8s.getNamespace("default").then(namespace => {
-  console.log("=== Namespace");
-  console.log(namespace);
-});
+const print = async (name: string, promise: Promise<any>) => {
+  const items = await promise;
+  console.log(`\n=== ${name}`);
+  console.log(items);
+};
 
-k8s.listNamespaces().then(namespaces => {
-  console.log("=== Namespaces");
-  console.log(namespaces);
-});
-
-k8s.listPods().then(pods => {
-  console.log("=== Pods");
-  console.log(pods);
-});
-
-k8s.listDeployments().then(deployments => {
-  console.log("=== Deployments");
-  console.log(deployments);
-});
+print("Namespace", k8s.getNamespace("default"));
+print("Namespaces", k8s.listNamespaces());
+print("Pods", k8s.listPods());
+print("Services", k8s.listServices());
+print("Secrets", k8s.listSecrets());
+print("Configmaps", k8s.listConfigmaps());
+print("Deployments", k8s.listDeployments());
+print("Ingresses", k8s.listIngresses());
