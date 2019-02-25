@@ -14,6 +14,10 @@ interface Options {
   namespace?: string;
 }
 
+interface LogOptions {
+  container?: string;
+}
+
 export class Kubernetes {
   private client: k8s.ApiRoot;
   private namespace: string;
@@ -111,6 +115,23 @@ export class Kubernetes {
 
   public async getIngress(name: string): Promise<Ingress> {
     return getBody(this.extensions.ingresses(name).get());
+  }
+
+  /**
+   * Actions
+   */
+
+  public getLogs(name: string, opts: LogOptions = {}): Promise<string> {
+    return getBody(this.core.pods(name).log.get({ qs: opts }));
+  }
+
+  public streamLogs(
+    name: string,
+    opts: LogOptions = {}
+  ): NodeJS.ReadableStream {
+    return this.core.pods(name).log.getStream({
+      qs: { ...opts, follow: true }
+    });
   }
 
   /**
