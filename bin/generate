@@ -24,7 +24,11 @@ generate() {
   node_modules/.bin/json2ts -i "$infile" -o "$outfile"
 }
 
+rm -rf src/types/
 mkdir -p tmp/ src/types/
+
 for object in "${objects[@]}"; do
   generate "$object"
 done
+
+node_modules/.bin/barrelsby --delete --directory src/types
