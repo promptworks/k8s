@@ -41,7 +41,7 @@ export class Kubernetes {
     return getList(this.client.api.v1.namespaces.get());
   }
 
-  public async getNamespace(name: string): Promise<Namespace> {
+  public getNamespace(name: string): Promise<Namespace> {
     return getBody(this.client.api.v1.namespaces(name).get());
   }
 
@@ -49,23 +49,31 @@ export class Kubernetes {
    * Pods
    */
 
-  public async listPods(): Promise<Pod[]> {
+  public listPods(): Promise<Pod[]> {
     return getList(this.core.pods.get());
   }
 
-  public async getPod(name: string): Promise<Pod> {
+  public getPod(name: string): Promise<Pod> {
     return getBody(this.core.pods(name).get());
+  }
+
+  public createPod(pod: Pod): Promise<Pod> {
+    return getBody(this.core.pods.post({ body: pod }));
+  }
+
+  public deletePod(name: string): Promise<Pod> {
+    return getBody(this.core.pods(name).delete());
   }
 
   /**
    * Services
    */
 
-  public async listServices(): Promise<Service> {
+  public listServices(): Promise<Service> {
     return getList(this.core.services.get());
   }
 
-  public async getService(name: string): Promise<Service> {
+  public getService(name: string): Promise<Service> {
     return getBody(this.core.services(name).get());
   }
 
@@ -73,11 +81,11 @@ export class Kubernetes {
    * Secrets
    */
 
-  public async listSecrets(): Promise<Secret[]> {
+  public listSecrets(): Promise<Secret[]> {
     return getList(this.core.secrets.get());
   }
 
-  public async getSecret(name: string): Promise<Secret> {
+  public getSecret(name: string): Promise<Secret> {
     return getBody(this.core.secrets(name).get());
   }
 
@@ -85,11 +93,11 @@ export class Kubernetes {
    * Configmaps
    */
 
-  public async listConfigmaps(): Promise<Configmap[]> {
+  public listConfigmaps(): Promise<Configmap[]> {
     return getList(this.core.configmaps.get());
   }
 
-  public async getConfigmap(name: string): Promise<Configmap> {
+  public getConfigmap(name: string): Promise<Configmap> {
     return getBody(this.core.configmaps(name).get());
   }
 
@@ -97,11 +105,11 @@ export class Kubernetes {
    * Deployments
    */
 
-  public async listDeployments(): Promise<Deployment[]> {
+  public listDeployments(): Promise<Deployment[]> {
     return getList(this.apps.deployments.get());
   }
 
-  public async getDeployment(name: string): Promise<Deployment> {
+  public getDeployment(name: string): Promise<Deployment> {
     return getBody(this.apps.deployments(name).get());
   }
 
@@ -109,11 +117,11 @@ export class Kubernetes {
    * Ingress
    */
 
-  public async listIngresses(): Promise<Ingress[]> {
+  public listIngresses(): Promise<Ingress[]> {
     return getList(this.extensions.ingresses.get());
   }
 
-  public async getIngress(name: string): Promise<Ingress> {
+  public getIngress(name: string): Promise<Ingress> {
     return getBody(this.extensions.ingresses(name).get());
   }
 
