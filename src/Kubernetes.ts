@@ -7,6 +7,10 @@ import { Secret } from "./types/secret";
 import { Configmap } from "./types/configmap";
 import { Ingress } from "./types/ingress";
 import { Service } from "./types/service";
+import * as WebSocket from "ws";
+import { createStdio, StdioOptions } from "./stdio";
+import urljoin = require("url-join");
+import * as qs from "qs";
 
 interface Options {
   kubeconfig?: string;
@@ -21,16 +25,18 @@ interface LogOptions {
 export class Kubernetes {
   private client: k8s.ApiRoot;
   private namespace: string;
+  private config: k8s.ClientConfiguration;
 
   public constructor({
     kubeconfig,
     context,
     namespace = "default"
   }: Options = {}) {
+    const config = k8s.config.fromKubeconfig(kubeconfig, context);
+
     this.namespace = namespace;
-    this.client = new k8s.Client1_10({
-      config: k8s.config.fromKubeconfig(kubeconfig, context)
-    });
+    this.config = config;
+    this.client = new k8s.Client1_10({ config });
   }
 
   /**
@@ -126,7 +132,7 @@ export class Kubernetes {
   }
 
   /**
-   * Actions
+   * Logs
    */
 
   public getLogs(name: string, opts: LogOptions = {}): Promise<string> {
@@ -140,6 +146,29 @@ export class Kubernetes {
     return this.core.pods(name).log.getStream({
       qs: { ...opts, follow: true }
     });
+  }
+
+  /**
+   * Exec
+   */
+
+  public exec(name: string, command: string[], opts: StdioOptions = {}) {
+    const query = {
+      command,
+      stdout: Boolean(opts.stdout),
+      stderr: Boolean(opts.stderr),
+      stdin: Boolean(opts.stdin),
+      tty: Boolean(opts.stdin)
+    };
+
+    const url = urljoin(
+      this.config.url,
+      `/api/v1/namespaces/${this.namespace}/pods/${name}/exec`,
+      `?${qs.stringify(query, { indices: false })}`
+    );
+
+    const ws = new WebSocket(url, "channel.k8s.io", this.config);
+    return createStdio(ws, opts);
   }
 
   /**
