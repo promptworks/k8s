@@ -17,7 +17,7 @@ objects=(
 generate() {
   local object="$1"
   local infile="tmp/$object.json"
-  local outfile="src/types/$object.ts"
+  local outfile="src/types/gen/$object.ts"
 
   echo "Generating $outfile..."
   wget -q -N -O "$infile" "$base_url/$object.json"
@@ -31,4 +31,4 @@ for object in "${objects[@]}"; do
   generate "$object"
 done
 
-node_modules/.bin/barrelsby --delete --directory src/types
+node_modules/.bin/barrelsby --delete --directory src/types/gen
