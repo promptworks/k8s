@@ -1,12 +1,14 @@
 import * as k8s from "kubernetes-client";
-import { Pod } from "./types/pod";
-import { Namespace } from "./types/namespace";
+import {
+  Pod,
+  Namespace,
+  Deployment,
+  Secret,
+  Configmap,
+  Ingress,
+  Service
+} from "./types";
 import { getList, getBody } from "./helpers";
-import { Deployment } from "./types/deployment";
-import { Secret } from "./types/secret";
-import { Configmap } from "./types/configmap";
-import { Ingress } from "./types/ingress";
-import { Service } from "./types/service";
 import * as execa from "execa";
 import { Stream } from "stream";
 
@@ -59,121 +61,145 @@ export class Kubernetes {
   }
 
   /**
-   * Namespaces
+   * List all namespaces
    */
-
   public listNamespaces(): Promise<Namespace[]> {
     return getList(this.client.api.v1.namespaces.get());
   }
 
+  /**
+   * Get a specific namespace.
+   */
   public getNamespace(name: string): Promise<Namespace> {
     return getBody(this.client.api.v1.namespaces(name).get());
   }
 
   /**
-   * Pods
+   * List all pods.
    */
-
   public listPods(): Promise<Pod[]> {
     return getList(this.core.pods.get());
   }
 
+  /**
+   * Get a specific pod.
+   */
   public getPod(name: string): Promise<Pod> {
     return getBody(this.core.pods(name).get());
   }
 
+  /**
+   * Create a pod.
+   */
   public createPod(pod: Pod): Promise<Pod> {
     return getBody(this.core.pods.post({ body: pod }));
   }
 
+  /**
+   * Delete a pod.
+   */
   public deletePod(name: string): Promise<Pod> {
     return getBody(this.core.pods(name).delete());
   }
 
   /**
-   * Services
+   * List all services.
    */
-
   public listServices(): Promise<Service> {
     return getList(this.core.services.get());
   }
 
+  /**
+   * Get a specific service
+   */
   public getService(name: string): Promise<Service> {
     return getBody(this.core.services(name).get());
   }
 
   /**
-   * Secrets
+   * List all secrets.
    */
-
   public listSecrets(): Promise<Secret[]> {
     return getList(this.core.secrets.get());
   }
 
+  /**
+   * Get a specific secret.
+   */
   public getSecret(name: string): Promise<Secret> {
     return getBody(this.core.secrets(name).get());
   }
 
   /**
-   * Configmaps
+   * List all configmaps.
    */
-
   public listConfigmaps(): Promise<Configmap[]> {
     return getList(this.core.configmaps.get());
   }
 
+  /**
+   * Get a specific configmap.
+   */
   public getConfigmap(name: string): Promise<Configmap> {
     return getBody(this.core.configmaps(name).get());
   }
 
   /**
-   * Deployments
+   * List all deploymentst.
    */
-
   public listDeployments(): Promise<Deployment[]> {
     return getList(this.apps.deployments.get());
   }
 
+  /**
+   * Get a specific deployment.
+   */
   public getDeployment(name: string): Promise<Deployment> {
     return getBody(this.apps.deployments(name).get());
   }
 
   /**
-   * Ingress
+   * List all ingresses.
    */
-
   public listIngresses(): Promise<Ingress[]> {
     return getList(this.extensions.ingresses.get());
   }
 
+  /**
+   * Get a specific ingress.
+   */
   public getIngress(name: string): Promise<Ingress> {
     return getBody(this.extensions.ingresses(name).get());
   }
 
   /**
-   * Logs
+   * Get the logs from a container, and return them as a string.
    */
-
-  public getLogs(name: string, opts: LogOptions = {}): Promise<string> {
-    return getBody(this.core.pods(name).log.get({ qs: opts }));
+  public getLogs(pod: string, opts: LogOptions = {}): Promise<string> {
+    return getBody(this.core.pods(pod).log.get({ qs: opts }));
   }
 
-  public followLogs(name: string, opts: LogOptions = {}): Stream {
-    return this.core.pods(name).log.getStream({
+  /**
+   * Get a log stream from a running container.
+   */
+  public followLogs(pod: string, opts: LogOptions = {}): Stream {
+    return this.core.pods(pod).log.getStream({
       qs: { ...opts, follow: true }
     });
   }
 
   /**
-   * Exec
+   * Run a single command and return the output as a string.
    */
-
-  public async exec(name: string, opts: ExecOptions): Promise<string> {
-    return getBody(this.core.pods(name).exec.post({ qs: opts }));
+  public async exec(pod: string, opts: ExecOptions): Promise<string> {
+    return getBody(this.core.pods(pod).exec.post({ qs: opts }));
   }
 
-  public async attach(name: string, opts: AttachOptions): Promise<void> {
-    const flags: string[] = ["attach", name, ...this.configFlags];
+  /**
+   * Attach to a running container.
+   */
+  public async attach(pod: string, opts: AttachOptions): Promise<void> {
+    const flags: string[] = ["attach", pod, ...this.configFlags];
 
     if (opts.stdin) flags.push("--stdin");
     if (opts.tty) flags.push("--tty");
@@ -186,8 +212,11 @@ export class Kubernetes {
     });
   }
 
-  public async connect(name: string, opts: ConnectOptions): Promise<void> {
-    const flags: string[] = ["exec", name, ...this.configFlags];
+  /**
+   * Establish an interactive `exec` session with a running container.
+   */
+  public async connect(pod: string, opts: ConnectOptions): Promise<void> {
+    const flags: string[] = ["exec", pod, ...this.configFlags];
 
     if (opts.stdin) flags.push("--stdin");
     if (opts.tty) flags.push("--tty");
@@ -200,10 +229,6 @@ export class Kubernetes {
       stderr: opts.stderr
     });
   }
-
-  /**
-   * Helpers
-   */
 
   private get core() {
     return this.client.api.v1.namespaces(this.namespace);
