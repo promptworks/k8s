@@ -1,9 +1,8 @@
 import { Kubernetes } from "../src";
 
-const exec = async (k8s: Kubernetes) => {
-  /**
-   * Simple
-   */
+export default async () => {
+  const k8s = new Kubernetes();
+
   const out = await k8s.exec("looper", {
     stdout: true,
     command: ["uname", "-a"]
@@ -11,9 +10,6 @@ const exec = async (k8s: Kubernetes) => {
 
   process.stdout.write(out);
 
-  /**
-   * Interactive
-   */
   await k8s.connect("looper", {
     tty: true,
     stdin: process.stdin,
@@ -21,9 +17,4 @@ const exec = async (k8s: Kubernetes) => {
     stderr: process.stderr,
     command: ["sh"]
   });
-};
-
-export default async () => {
-  const k8s = new Kubernetes();
-  await exec(k8s);
 };

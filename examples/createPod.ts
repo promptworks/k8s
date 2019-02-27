@@ -20,18 +20,14 @@ const pod: Pod = {
   }
 };
 
-export const createPod = async (k8s: Kubernetes) => {
+export default async () => {
+  const k8s = new Kubernetes();
+
   try {
     await k8s.deletePod(name);
   } catch (err) {
     // Ignored
   }
 
-  return k8s.createPod(pod);
-};
-
-export default async () => {
-  const k8s = new Kubernetes();
-  const pod = await createPod(k8s);
-  console.log(pod);
+  console.log(await k8s.createPod(pod));
 };
