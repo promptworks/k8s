@@ -20,20 +20,23 @@ interface LogOptions {
   container?: string;
 }
 
-interface ExecOptions {
+export interface ExecOptions {
   command?: string[];
   container?: string;
-  stdout?: boolean;
   stderr?: boolean;
+  stdout?: boolean;
 }
 
-interface ConnectOptions {
-  tty?: boolean;
+export interface AttachOptions {
+  container?: string;
+  stderr?: Stream;
   stdin?: Stream;
   stdout?: Stream;
-  stderr?: Stream;
+  tty?: boolean;
+}
+
+export interface ConnectOptions extends AttachOptions {
   command?: string[];
-  container?: string;
 }
 
 export class Kubernetes {
@@ -172,12 +175,22 @@ export class Kubernetes {
     return getBody(this.core.pods(name).exec.post({ qs: opts }));
   }
 
-  public async connect(name: string, opts: ConnectOptions): Promise<void> {
-    const flags: string[] = ["exec", name];
+  public async attach(name: string, opts: AttachOptions): Promise<void> {
+    const flags: string[] = ["attach", name, ...this.configFlags];
 
-    if (this.context) flags.push("--context", this.context);
-    if (this.kubeconfig) flags.push("--kubeconfig", this.kubeconfig);
-    if (this.namespace) flags.push("--namespace", this.namespace);
+    if (opts.stdin) flags.push("--stdin");
+    if (opts.tty) flags.push("--tty");
+    if (opts.container) flags.push("--container", opts.container);
+
+    await execa("kubectl", flags, {
+      stdin: opts.stdin,
+      stdout: opts.stdout,
+      stderr: opts.stderr
+    });
+  }
+
+  public async connect(name: string, opts: ConnectOptions): Promise<void> {
+    const flags: string[] = ["exec", name, ...this.configFlags];
 
     if (opts.stdin) flags.push("--stdin");
     if (opts.tty) flags.push("--tty");
@@ -205,5 +218,15 @@ export class Kubernetes {
 
   private get extensions() {
     return this.client.apis.extensions.v1beta1.namespaces(this.namespace);
+  }
+
+  private get configFlags() {
+    const flags: string[] = [];
+
+    if (this.context) flags.push("--context", this.context);
+    if (this.kubeconfig) flags.push("--kubeconfig", this.kubeconfig);
+    if (this.namespace) flags.push("--namespace", this.namespace);
+
+    return flags;
   }
 }

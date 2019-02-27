@@ -4,7 +4,6 @@ const exec = async (k8s: Kubernetes) => {
   /**
    * Simple
    */
-
   const out = await k8s.exec("looper", {
     stdout: true,
     command: ["uname", "-a"]
