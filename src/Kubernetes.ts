@@ -158,10 +158,7 @@ export class Kubernetes {
     return getBody(this.core.pods(name).log.get({ qs: opts }));
   }
 
-  public followLogs(
-    name: string,
-    opts: LogOptions = {}
-  ): NodeJS.ReadableStream {
+  public followLogs(name: string, opts: LogOptions = {}): Stream {
     return this.core.pods(name).log.getStream({
       qs: { ...opts, follow: true }
     });
