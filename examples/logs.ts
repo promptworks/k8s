@@ -15,7 +15,7 @@ const logs = async (k8s: Kubernetes) => {
 
   await delay(5000);
 
-  return k8s.streamLogs(name);
+  return k8s.followLogs(name);
 };
 
 export default async () => {
