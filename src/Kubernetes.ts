@@ -6,7 +6,8 @@ import {
   Secret,
   ConfigMap,
   Ingress,
-  Service
+  Service,
+  AnyObject
 } from "./types";
 import { getList, getBody } from "./helpers";
 import * as execa from "execa";
@@ -40,6 +41,10 @@ export interface AttachOptions {
 export interface ConnectOptions extends AttachOptions {
   command?: string[];
 }
+
+const toJSON = (input: any) => {
+  return JSON.stringify(input);
+};
 
 export class Kubernetes {
   private client: k8s.ApiRoot;
@@ -228,6 +233,15 @@ export class Kubernetes {
       stdout: opts.stdout,
       stderr: opts.stderr
     });
+  }
+
+  /**
+   * Apply an array of objects.
+   */
+  public async apply(objects: AnyObject[]): Promise<void> {
+    const flags = ["apply", "-f", "-", ...this.configFlags];
+    const input = objects.map(toJSON).join("\n");
+    await execa("kubectl", flags, { input });
   }
 
   private get core() {
