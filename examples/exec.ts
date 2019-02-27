@@ -1,20 +1,22 @@
 import { Kubernetes } from "../src";
 
 const exec = async (k8s: Kubernetes) => {
-  // (process.stdin as any).setRawMode(true);
+  const stdin: any = process.stdin;
 
-  await k8s.exec("looper", ["sh"], {
-    stdin: process.stdin,
+  stdin.setRawMode(true);
+  stdin.resume();
+
+  await k8s.exec("looper", {
+    tty: true,
+    stdin,
     stdout: process.stdout,
-    stderr: process.stderr
+    stderr: process.stderr,
+    command: ["sh"]
   });
-
-  console.log("resolved");
-  console.log("HANDLES");
-  console.log((process as any)._getActiveHandles());
 };
 
 export default async () => {
   const k8s = new Kubernetes();
   await exec(k8s);
+  process.exit(0);
 };

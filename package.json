@@ -9,14 +9,11 @@
   },
   "dependencies": {
     "@types/node": "^11.9.5",
-    "@types/qs": "^6.5.1",
-    "@types/url-join": "^4.0.0",
     "@types/ws": "^6.0.1",
     "kubernetes-client": "../kubernetes-client",
-    "qs": "^6.6.0",
     "tslib": "^1.9.3",
-    "url-join": "^4.0.0",
-    "ws": "^6.1.4"
+    "why-is-node-running": "^2.0.3",
+    "ws": "6.1.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.6",
