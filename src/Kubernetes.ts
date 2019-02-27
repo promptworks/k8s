@@ -7,7 +7,8 @@ import { Secret } from "./types/secret";
 import { Configmap } from "./types/configmap";
 import { Ingress } from "./types/ingress";
 import { Service } from "./types/service";
-import { ExecOptions, exec } from "./exec";
+import * as execa from "execa";
+import { Stream } from "stream";
 
 interface Options {
   kubeconfig?: string;
@@ -19,10 +20,27 @@ interface LogOptions {
   container?: string;
 }
 
+interface ExecOptions {
+  command?: string[];
+  container?: string;
+  stdout?: boolean;
+  stderr?: boolean;
+}
+
+interface ConnectOptions {
+  tty?: boolean;
+  stdin?: Stream;
+  stdout?: Stream;
+  stderr?: Stream;
+  command?: string[];
+  container?: string;
+}
+
 export class Kubernetes {
   private client: k8s.ApiRoot;
   private namespace: string;
-  private config: k8s.ClientConfiguration;
+  private context?: string;
+  private kubeconfig?: string;
 
   public constructor({
     kubeconfig,
@@ -32,7 +50,8 @@ export class Kubernetes {
     const config = k8s.config.fromKubeconfig(kubeconfig, context);
 
     this.namespace = namespace;
-    this.config = config;
+    this.context = context;
+    this.kubeconfig = kubeconfig;
     this.client = new k8s.Client1_10({ config });
   }
 
@@ -149,12 +168,26 @@ export class Kubernetes {
    * Exec
    */
 
-  public exec(name: string, opts: ExecOptions) {
-    return exec({
-      pod: name,
-      config: this.config,
-      namespace: this.namespace,
-      ...opts
+  public async exec(name: string, opts: ExecOptions): Promise<string> {
+    return getBody(this.core.pods(name).exec.post({ qs: opts }));
+  }
+
+  public async connect(name: string, opts: ConnectOptions): Promise<void> {
+    const flags: string[] = ["exec", name];
+
+    if (this.context) flags.push("--context", this.context);
+    if (this.kubeconfig) flags.push("--kubeconfig", this.kubeconfig);
+    if (this.namespace) flags.push("--namespace", this.namespace);
+
+    if (opts.stdin) flags.push("--stdin");
+    if (opts.tty) flags.push("--tty");
+    if (opts.container) flags.push("--container", opts.container);
+    if (opts.command) flags.push("--", ...opts.command);
+
+    await execa("kubectl", flags, {
+      stdin: opts.stdin,
+      stdout: opts.stdout,
+      stderr: opts.stderr
     });
   }
 

@@ -1,14 +1,23 @@
 import { Kubernetes } from "../src";
 
 const exec = async (k8s: Kubernetes) => {
-  const stdin: any = process.stdin;
+  /**
+   * Simple
+   */
 
-  stdin.setRawMode(true);
-  stdin.resume();
+  const out = await k8s.exec("looper", {
+    stdout: true,
+    command: ["uname", "-a"]
+  });
 
-  await k8s.exec("looper", {
+  process.stdout.write(out);
+
+  /**
+   * Interactive
+   */
+  await k8s.connect("looper", {
     tty: true,
-    stdin,
+    stdin: process.stdin,
     stdout: process.stdout,
     stderr: process.stderr,
     command: ["sh"]
@@ -18,5 +27,4 @@ const exec = async (k8s: Kubernetes) => {
 export default async () => {
   const k8s = new Kubernetes();
   await exec(k8s);
-  process.exit(0);
 };
