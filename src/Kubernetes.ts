@@ -4,7 +4,7 @@ import {
   Namespace,
   Deployment,
   Secret,
-  Configmap,
+  ConfigMap,
   Ingress,
   Service
 } from "./types";
@@ -105,7 +105,7 @@ export class Kubernetes {
   /**
    * List all services.
    */
-  public listServices(): Promise<Service> {
+  public listServices(): Promise<Service[]> {
     return getList(this.core.services.get());
   }
 
@@ -133,14 +133,14 @@ export class Kubernetes {
   /**
    * List all configmaps.
    */
-  public listConfigmaps(): Promise<Configmap[]> {
+  public listConfigMaps(): Promise<ConfigMap[]> {
     return getList(this.core.configmaps.get());
   }
 
   /**
    * Get a specific configmap.
    */
-  public getConfigmap(name: string): Promise<Configmap> {
+  public getConfigMap(name: string): Promise<ConfigMap> {
     return getBody(this.core.configmaps(name).get());
   }
 
