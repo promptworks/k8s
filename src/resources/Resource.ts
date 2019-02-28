@@ -1,4 +1,5 @@
-import { getList, getBody } from "./helpers";
+import { getList, getBody } from "../helpers";
+import { Config } from "../Config";
 
 export interface ResourceNameAPI {
   get(): Promise<any>;
@@ -12,9 +13,11 @@ export interface ResourceAPI {
 }
 
 export class Resource<T, A extends ResourceAPI = ResourceAPI> {
-  private api: A;
+  protected api: A;
+  protected config: Config;
 
-  public constructor(api: A) {
+  public constructor(config: Config, api: A) {
+    this.config = config;
     this.api = api;
   }
 
