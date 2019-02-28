@@ -3,9 +3,14 @@
  */
 
 export * from "./configmap";
+export * from "./daemonset";
 export * from "./deployment";
 export * from "./ingress";
+export * from "./job";
 export * from "./namespace";
+export * from "./persistentvolume";
 export * from "./pod";
+export * from "./replicaset";
 export * from "./secret";
 export * from "./service";
+export * from "./statefulset";

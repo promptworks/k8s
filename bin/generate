@@ -5,13 +5,18 @@ set -e
 base_url="https://raw.githubusercontent.com/garethr/kubernetes-json-schema/master/v1.12.2"
 
 objects=(
-  pod
-  service
-  deployment
   configmap
-  secret
+  daemonset
+  deployment
   ingress
+  job
   namespace
+  persistentvolume
+  pod
+  replicaset
+  secret
+  service
+  statefulset
 )
 
 generate() {
@@ -24,8 +29,8 @@ generate() {
   node_modules/.bin/json2ts -i "$infile" -o "$outfile"
 }
 
-rm -rf src/types/
-mkdir -p tmp/ src/types/
+rm -rf src/types/gen/
+mkdir -p tmp/ src/types/gen/
 
 for object in "${objects[@]}"; do
   generate "$object"

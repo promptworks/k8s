@@ -7,7 +7,11 @@ import {
   ConfigMap,
   Ingress,
   Service,
-  AnyObject
+  AnyObject,
+  DaemonSet,
+  ReplicaSet,
+  Job,
+  PersistentVolume
 } from "./types";
 import * as execa from "execa";
 import { Resource } from "./resources/Resource";
@@ -54,6 +58,22 @@ export class Kubernetes {
     return new Resource(this.config, this.core.services);
   }
 
+  public get daemonSets(): Resource<DaemonSet> {
+    return new Resource(this.config, this.apps.daemonsets);
+  }
+
+  public get replicaSets(): Resource<ReplicaSet> {
+    return new Resource(this.config, this.apps.replicasets);
+  }
+
+  public get jobs(): Resource<Job> {
+    return new Resource(this.config, this.batch.jobs);
+  }
+
+  public get persistentVolumes(): Resource<PersistentVolume> {
+    return new Resource(this.config, this.core.persistentvolumeclaim);
+  }
+
   public async apply(objects: AnyObject[]): Promise<void> {
     const flags = ["apply", "-f", "-", ...this.config.getFlags()];
     const input = objects.map(toJSON).join("\n");
@@ -66,6 +86,10 @@ export class Kubernetes {
 
   private get apps() {
     return this.client.apis.apps.v1.namespaces(this.config.namespace);
+  }
+
+  private get batch() {
+    return this.client.apis.batch.v1.namespaces(this.config.namespace);
   }
 
   private get extensions() {
