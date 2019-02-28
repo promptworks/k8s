@@ -2,7 +2,7 @@ import { Pod } from "../types";
 import { ApiV1NamespacesNamePods } from "kubernetes-client";
 import { Resource } from "./Resource";
 import { Stream } from "stream";
-import { getBody } from "../helpers";
+import { getBody } from "./helpers";
 import * as execa from "execa";
 
 export interface LogOptions {
