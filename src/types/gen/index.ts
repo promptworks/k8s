@@ -3,12 +3,14 @@
  */
 
 export * from "./configmap";
+export * from "./cronjob";
 export * from "./daemonset";
 export * from "./deployment";
+export * from "./horizontalpodautoscaler";
 export * from "./ingress";
 export * from "./job";
 export * from "./namespace";
-export * from "./persistentvolume";
+export * from "./persistentvolumeclaim";
 export * from "./pod";
 export * from "./replicaset";
 export * from "./secret";
