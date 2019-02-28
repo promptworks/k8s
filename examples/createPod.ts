@@ -24,10 +24,10 @@ export default async () => {
   const k8s = new Kubernetes();
 
   try {
-    await k8s.deletePod(name);
+    await k8s.pods.delete(name);
   } catch (err) {
     // Ignored
   }
 
-  console.log(await k8s.createPod(pod));
+  console.log(await k8s.pods.create(pod));
 };

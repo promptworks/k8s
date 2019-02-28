@@ -12,6 +12,7 @@ import {
 import { getList, getBody } from "./helpers";
 import * as execa from "execa";
 import { Stream } from "stream";
+import { Resource } from "./Resource";
 
 interface Options {
   kubeconfig?: string;
@@ -65,116 +66,32 @@ export class Kubernetes {
     this.client = new k8s.Client1_10({ config });
   }
 
-  /**
-   * List all namespaces
-   */
-  public listNamespaces(): Promise<Namespace[]> {
-    return getList(this.client.api.v1.namespaces.get());
+  public get configMaps(): Resource<ConfigMap> {
+    return new Resource(this.core.configmaps);
   }
 
-  /**
-   * Get a specific namespace.
-   */
-  public getNamespace(name: string): Promise<Namespace> {
-    return getBody(this.client.api.v1.namespaces(name).get());
+  public get deployments(): Resource<Deployment> {
+    return new Resource(this.apps.deployments);
   }
 
-  /**
-   * List all pods.
-   */
-  public listPods(): Promise<Pod[]> {
-    return getList(this.core.pods.get());
+  public get ingresses(): Resource<Ingress> {
+    return new Resource(this.extensions.ingresses);
   }
 
-  /**
-   * Get a specific pod.
-   */
-  public getPod(name: string): Promise<Pod> {
-    return getBody(this.core.pods(name).get());
+  public get namespaces(): Resource<Namespace> {
+    return new Resource(this.client.api.v1.namespaces);
   }
 
-  /**
-   * Create a pod.
-   */
-  public createPod(pod: Pod): Promise<Pod> {
-    return getBody(this.core.pods.post({ body: pod }));
+  public get pods(): Resource<Pod> {
+    return new Resource(this.core.pods);
   }
 
-  /**
-   * Delete a pod.
-   */
-  public deletePod(name: string): Promise<Pod> {
-    return getBody(this.core.pods(name).delete());
+  public get secrets(): Resource<Secret> {
+    return new Resource(this.core.secrets);
   }
 
-  /**
-   * List all services.
-   */
-  public listServices(): Promise<Service[]> {
-    return getList(this.core.services.get());
-  }
-
-  /**
-   * Get a specific service
-   */
-  public getService(name: string): Promise<Service> {
-    return getBody(this.core.services(name).get());
-  }
-
-  /**
-   * List all secrets.
-   */
-  public listSecrets(): Promise<Secret[]> {
-    return getList(this.core.secrets.get());
-  }
-
-  /**
-   * Get a specific secret.
-   */
-  public getSecret(name: string): Promise<Secret> {
-    return getBody(this.core.secrets(name).get());
-  }
-
-  /**
-   * List all configmaps.
-   */
-  public listConfigMaps(): Promise<ConfigMap[]> {
-    return getList(this.core.configmaps.get());
-  }
-
-  /**
-   * Get a specific configmap.
-   */
-  public getConfigMap(name: string): Promise<ConfigMap> {
-    return getBody(this.core.configmaps(name).get());
-  }
-
-  /**
-   * List all deploymentst.
-   */
-  public listDeployments(): Promise<Deployment[]> {
-    return getList(this.apps.deployments.get());
-  }
-
-  /**
-   * Get a specific deployment.
-   */
-  public getDeployment(name: string): Promise<Deployment> {
-    return getBody(this.apps.deployments(name).get());
-  }
-
-  /**
-   * List all ingresses.
-   */
-  public listIngresses(): Promise<Ingress[]> {
-    return getList(this.extensions.ingresses.get());
-  }
-
-  /**
-   * Get a specific ingress.
-   */
-  public getIngress(name: string): Promise<Ingress> {
-    return getBody(this.extensions.ingresses(name).get());
+  public get services(): Resource<Service> {
+    return new Resource(this.core.services);
   }
 
   /**
