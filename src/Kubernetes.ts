@@ -15,7 +15,8 @@ import {
   CronJob
 } from "./types";
 import * as execa from "execa";
-import { Resource, PodsResource } from "./resources";
+import { Resource } from "./resources/Resource";
+import { PodsResource } from "./resources/PodsResource";
 
 const toJSON = (input: any) => {
   return JSON.stringify(input);
