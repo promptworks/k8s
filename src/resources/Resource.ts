@@ -58,4 +58,17 @@ export class Resource<
   public delete(name: string): Promise<T> {
     return getBody(this.api(name).delete());
   }
+
+  public async exists(name: string): Promise<boolean> {
+    try {
+      await this.api(name).get();
+      return true;
+    } catch (err) {
+      if (err.code === 404) {
+        return false;
+      }
+
+      throw err;
+    }
+  }
 }
