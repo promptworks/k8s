@@ -29,6 +29,8 @@ export interface ConnectOptions extends AttachOptions {
 }
 
 export class PodsResource extends Resource<Pod, ApiV1NamespacesNamePods> {
+  private shell = execa;
+
   /**
    * Get the logs from a container, and return them as a string.
    */
@@ -56,13 +58,13 @@ export class PodsResource extends Resource<Pod, ApiV1NamespacesNamePods> {
    * Attach to a running container.
    */
   public async attach(name: string, opts: AttachOptions): Promise<void> {
-    const flags: string[] = ["attach", name, ...this.config.getFlags()];
+    const flags: string[] = ["attach", name, ...this.config.flags];
 
     if (opts.stdin) flags.push("--stdin");
     if (opts.tty) flags.push("--tty");
     if (opts.container) flags.push("--container", opts.container);
 
-    await execa("kubectl", flags, {
+    await this.shell("kubectl", flags, {
       stdin: opts.stdin,
       stdout: opts.stdout,
       stderr: opts.stderr
@@ -73,14 +75,14 @@ export class PodsResource extends Resource<Pod, ApiV1NamespacesNamePods> {
    * Establish an interactive `exec` session with a running container.
    */
   public async connect(pod: string, opts: ConnectOptions): Promise<void> {
-    const flags: string[] = ["exec", pod, ...this.config.getFlags()];
+    const flags: string[] = ["exec", pod, ...this.config.flags];
 
     if (opts.stdin) flags.push("--stdin");
     if (opts.tty) flags.push("--tty");
     if (opts.container) flags.push("--container", opts.container);
     if (opts.command) flags.push("--", ...opts.command);
 
-    await execa("kubectl", flags, {
+    await this.shell("kubectl", flags, {
       stdin: opts.stdin,
       stdout: opts.stdout,
       stderr: opts.stderr

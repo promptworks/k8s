@@ -1,5 +1,4 @@
-import * as k8s from "kubernetes-client";
-import { Config, Options } from "./Config";
+import { Config } from "./Config";
 import {
   Namespace,
   Deployment,
@@ -16,24 +15,22 @@ import {
   CronJob
 } from "./types";
 import * as execa from "execa";
-import { Resource } from "./resources/Resource";
-import { PodsResource } from "./resources/PodsResource";
+import { Resource, PodsResource } from "./resources";
 
 const toJSON = (input: any) => {
   return JSON.stringify(input);
 };
 
 export class Kubernetes {
-  private client: k8s.ApiRoot;
-  private config: Config;
+  private readonly config: Config;
+  private readonly shell = execa;
 
-  public constructor(options: Options = {}) {
-    this.config = new Config(options);
-    this.client = this.config.buildClient();
+  public constructor(config = new Config()) {
+    this.config = config;
   }
 
   public get namespaces(): Resource<Namespace> {
-    return new Resource(this.config, this.client.api.v1.namespaces);
+    return new Resource(this.config, this.config.client.api.v1.namespaces);
   }
 
   public get configMaps(): Resource<ConfigMap> {
@@ -88,32 +85,32 @@ export class Kubernetes {
   }
 
   public async apply(objects: AnyObject[]): Promise<void> {
-    const flags = ["apply", "-f", "-", ...this.config.getFlags()];
+    const flags = ["apply", "-f", "-", ...this.config.flags];
     const input = objects.map(toJSON).join("\n");
-    await execa("kubectl", flags, { input });
+    await this.shell("kubectl", flags, { input });
   }
 
   private get v1() {
-    return this.client.api.v1.ns(this.config.namespace);
+    return this.config.client.api.v1.ns(this.config.namespace);
   }
 
   private get v1apps() {
-    return this.client.apis.apps.v1.ns(this.config.namespace);
+    return this.config.client.apis.apps.v1.ns(this.config.namespace);
   }
 
   private get v1batch() {
-    return this.client.apis.batch.v1.ns(this.config.namespace);
+    return this.config.client.apis.batch.v1.ns(this.config.namespace);
   }
 
   private get v1beta1batch() {
-    return this.client.apis.batch.v1beta1.ns(this.config.namespace);
+    return this.config.client.apis.batch.v1beta1.ns(this.config.namespace);
   }
 
   private get v1autoscaling() {
-    return this.client.apis.autoscaling.v1.ns(this.config.namespace);
+    return this.config.client.apis.autoscaling.v1.ns(this.config.namespace);
   }
 
   private get v1beta1extensions() {
-    return this.client.apis.extensions.v1beta1.ns(this.config.namespace);
+    return this.config.client.apis.extensions.v1beta1.ns(this.config.namespace);
   }
 }

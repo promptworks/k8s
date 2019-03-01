@@ -6,32 +6,33 @@ export interface Options {
   context?: string;
 }
 
-export class Config {
-  public kubeconfig?: string;
-  public context?: string;
-  public namespace: string;
+const toFlags = (options: object) => {
+  return Object.entries(options).reduce(
+    (flags, [key, value]) => (value ? flags.concat(`--${key}`, value) : flags),
+    [] as string[]
+  );
+};
 
-  private _config: k8s.ClientConfiguration;
+export class Config {
+  public readonly namespace: string;
+  public readonly client: k8s.ApiRoot;
+  public readonly flags: string[];
 
   public constructor({
     kubeconfig,
     context,
     namespace = "default"
   }: Options = {}) {
-    this.kubeconfig = kubeconfig;
-    this.context = context;
     this.namespace = namespace;
-    this._config = k8s.config.fromKubeconfig(this.kubeconfig, this.context);
-  }
 
-  public getFlags() {
-    const flags: string[] = ["--namespace", this.namespace];
-    if (this.context) flags.push("--context", this.context);
-    if (this.kubeconfig) flags.push("--kubeconfig", this.kubeconfig);
-    return flags;
-  }
+    this.flags = toFlags({
+      namespace,
+      context,
+      kubeconfig
+    });
 
-  public buildClient() {
-    return new k8s.Client1_10({ config: this._config });
+    this.client = new k8s.Client1_10({
+      config: k8s.config.fromKubeconfig(kubeconfig, context)
+    });
   }
 }
