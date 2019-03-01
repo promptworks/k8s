@@ -11,6 +11,8 @@ export class Config {
   public context?: string;
   public namespace: string;
 
+  private _config: k8s.ClientConfiguration;
+
   public constructor({
     kubeconfig,
     context,
@@ -19,6 +21,7 @@ export class Config {
     this.kubeconfig = kubeconfig;
     this.context = context;
     this.namespace = namespace;
+    this._config = k8s.config.fromKubeconfig(this.kubeconfig, this.context);
   }
 
   public getFlags() {
@@ -29,8 +32,6 @@ export class Config {
   }
 
   public buildClient() {
-    return new k8s.Client1_10({
-      config: k8s.config.fromKubeconfig(this.kubeconfig, this.context)
-    });
+    return new k8s.Client1_10({ config: this._config });
   }
 }
