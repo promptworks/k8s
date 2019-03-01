@@ -1,4 +1,5 @@
 /node_modules
 /tmp
+/lib
 yarn-error.log
 .DS_Store
