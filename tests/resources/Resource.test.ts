@@ -7,9 +7,9 @@ import {
 } from "../factories";
 
 describe("Resource", () => {
-  let config!: Config;
-  let api!: MockResourceAPI;
-  let resource!: Resource<any>;
+  let config: Config;
+  let api: MockResourceAPI;
+  let resource: Resource<any>;
 
   beforeEach(() => {
     config = createMockConfig();

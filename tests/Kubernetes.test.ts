@@ -1,6 +1,21 @@
 import { Kubernetes, Config, PodsResource, Resource, Secret } from "../src";
 import { createMockConfig } from "./factories";
 
+const RESOURCES: Array<keyof Kubernetes> = [
+  "namespaces",
+  "configMaps",
+  "deployments",
+  "ingresses",
+  "secrets",
+  "services",
+  "daemonSets",
+  "replicaSets",
+  "jobs",
+  "cronJobs",
+  "horizontalPodAutoscalers",
+  "persistentVolumeClaims"
+];
+
 describe("Kubernetes", () => {
   let k8s: Kubernetes;
   let config: jest.Mocked<Config>;
@@ -10,56 +25,16 @@ describe("Kubernetes", () => {
     k8s = new Kubernetes(config);
   });
 
-  test("pods", () => {
-    expect(k8s.pods).toBeInstanceOf(PodsResource);
+  describe("pods", () => {
+    it("is a PodsResource", () => {
+      expect(k8s.pods).toBeInstanceOf(PodsResource);
+    });
   });
 
-  test("namespaces", () => {
-    expect(k8s.namespaces).toBeInstanceOf(Resource);
-  });
-
-  test("configMaps", () => {
-    expect(k8s.configMaps).toBeInstanceOf(Resource);
-  });
-
-  test("deployments", () => {
-    expect(k8s.deployments).toBeInstanceOf(Resource);
-  });
-
-  test("ingresses", () => {
-    expect(k8s.ingresses).toBeInstanceOf(Resource);
-  });
-
-  test("secrets", () => {
-    expect(k8s.secrets).toBeInstanceOf(Resource);
-  });
-
-  test("services", () => {
-    expect(k8s.services).toBeInstanceOf(Resource);
-  });
-
-  test("daemonSets", () => {
-    expect(k8s.daemonSets).toBeInstanceOf(Resource);
-  });
-
-  test("replicaSets", () => {
-    expect(k8s.replicaSets).toBeInstanceOf(Resource);
-  });
-
-  test("jobs", () => {
-    expect(k8s.jobs).toBeInstanceOf(Resource);
-  });
-
-  test("cronJobs", () => {
-    expect(k8s.cronJobs).toBeInstanceOf(Resource);
-  });
-
-  test("horizontalPodAutoscalers", () => {
-    expect(k8s.horizontalPodAutoscalers).toBeInstanceOf(Resource);
-  });
-
-  test("persistentVolumeClaims", () => {
-    expect(k8s.persistentVolumeClaims).toBeInstanceOf(Resource);
+  describe.each(RESOURCES)("%s", (name: keyof Kubernetes) => {
+    it("is a Resource", () => {
+      expect(k8s[name]).toBeInstanceOf(Resource);
+    });
   });
 
   test("apply", async () => {
