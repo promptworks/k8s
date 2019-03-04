@@ -1,16 +1,29 @@
 import { ResourceAPI, ResourceNameAPI, Config } from "../src";
 
+export const mockResponse = {
+  code: 200,
+  body: {
+    mock: "mock response",
+    items: [{ mock: "mock response items" }]
+  }
+};
+
+export const createMockRequest = () => {
+  return jest.fn().mockResolvedValue(mockResponse);
+};
+
 export const createMockResourceNameAPI = (): jest.Mocked<ResourceNameAPI> => ({
-  get: jest.fn(),
-  delete: jest.fn(),
-  patch: jest.fn(),
-  put: jest.fn()
+  get: createMockRequest(),
+  delete: createMockRequest(),
+  patch: createMockRequest(),
+  put: createMockRequest()
 });
 
 export const createMockResourceAPI = (): jest.Mocked<ResourceAPI> => {
-  const mock: any = jest.fn(createMockResourceNameAPI);
-  mock.get = jest.fn();
-  mock.post = jest.fn();
+  const nameAPI = createMockResourceNameAPI();
+  const mock: any = jest.fn(() => nameAPI);
+  mock.get = createMockRequest();
+  mock.post = createMockRequest();
   return mock;
 };
 
