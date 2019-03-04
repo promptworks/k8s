@@ -1,5 +1,5 @@
 {
-  "name": "kubernetes",
+  "name": "@promptly/k8s",
   "version": "1.0.0",
   "description": "A minimal Kubernetes client",
   "main": "lib/index.js",
