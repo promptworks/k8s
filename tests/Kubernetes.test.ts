@@ -1,4 +1,4 @@
-import { Kubernetes, Config, PodsResource, Resource } from "../src";
+import { Kubernetes, Config, PodsResource, Resource, Secret } from "../src";
 import { createMockConfig } from "./factories";
 
 describe("Kubernetes", () => {
@@ -60,5 +60,23 @@ describe("Kubernetes", () => {
 
   test("persistentVolumeClaims", () => {
     expect(k8s.persistentVolumeClaims).toBeInstanceOf(Resource);
+  });
+
+  test("apply", async () => {
+    const shell = jest.spyOn(k8s, "shell" as any);
+    const secret: Secret = {
+      apiVersion: "v1",
+      kind: "Secret",
+      metadata: { name: "example" }
+    };
+
+    shell.mockResolvedValue({});
+
+    await k8s.apply([secret]);
+    expect(shell).toHaveBeenCalledWith(
+      "kubectl",
+      ["apply", "--namespace", "default", "-f", "-"],
+      { input: JSON.stringify(secret) }
+    );
   });
 });

@@ -86,7 +86,7 @@ export class Kubernetes {
   }
 
   public async apply(objects: AnyObject[]): Promise<void> {
-    const flags = ["apply", "-f", "-", ...this.config.flags];
+    const flags = ["apply", ...this.config.flags, "-f", "-"];
     const input = objects.map(toJSON).join("\n");
     await this.shell("kubectl", flags, { input });
   }
