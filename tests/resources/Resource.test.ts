@@ -1,13 +1,14 @@
+import { Resource, Config } from "../../src";
 import {
   createMockResourceAPI,
   createMockConfig,
-  mockResponse
+  mockResponse,
+  MockResourceAPI
 } from "../factories";
-import { Resource, Config, ResourceAPI } from "../../src";
 
 describe("Resource", () => {
-  let config!: jest.Mocked<Config>;
-  let api!: jest.Mocked<ResourceAPI>;
+  let config!: Config;
+  let api!: MockResourceAPI;
   let resource!: Resource<any>;
 
   beforeEach(() => {
@@ -58,7 +59,7 @@ describe("Resource", () => {
       const error: any = new Error("not found");
       error.code = 404;
 
-      (api("foo").get as any).mockRejectedValue(error);
+      api.byName.get.mockRejectedValue(error);
 
       await expect(resource.exists("foo")).resolves.toEqual(false);
     });
@@ -67,7 +68,7 @@ describe("Resource", () => {
       const error: any = new Error("whoops");
       error.code = 500;
 
-      (api("foo").get as any).mockRejectedValue(error);
+      api.byName.get.mockRejectedValue(error);
 
       await expect(resource.exists("foo")).rejects.toThrow(error);
     });

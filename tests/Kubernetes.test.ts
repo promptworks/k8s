@@ -64,13 +64,13 @@ describe("Kubernetes", () => {
 
   test("apply", async () => {
     const shell = jest.spyOn(k8s, "shell" as any);
+    shell.mockResolvedValue({});
+
     const secret: Secret = {
       apiVersion: "v1",
       kind: "Secret",
       metadata: { name: "example" }
     };
-
-    shell.mockResolvedValue({});
 
     await k8s.apply([secret]);
     expect(shell).toHaveBeenCalledWith(

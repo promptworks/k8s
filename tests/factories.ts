@@ -1,5 +1,9 @@
 import { ResourceAPI, ResourceNameAPI, Config } from "../src";
 
+export interface MockResourceAPI extends jest.Mocked<ResourceAPI> {
+  byName: jest.Mocked<ResourceNameAPI>;
+}
+
 export const mockResponse = {
   code: 200,
   body: {
@@ -12,18 +16,22 @@ export const createMockRequest = () => {
   return jest.fn().mockResolvedValue(mockResponse);
 };
 
-export const createMockResourceNameAPI = (): jest.Mocked<ResourceNameAPI> => ({
+export const createMockResourceNameAPI = () => ({
   get: createMockRequest(),
+  getStream: createMockRequest(),
   delete: createMockRequest(),
   patch: createMockRequest(),
-  put: createMockRequest()
+  put: createMockRequest(),
+  log: { get: createMockRequest(), getStream: createMockRequest() },
+  exec: { post: createMockRequest() }
 });
 
-export const createMockResourceAPI = (): jest.Mocked<ResourceAPI> => {
+export const createMockResourceAPI = () => {
   const nameAPI = createMockResourceNameAPI();
   const mock: any = jest.fn(() => nameAPI);
   mock.get = createMockRequest();
   mock.post = createMockRequest();
+  mock.byName = nameAPI;
   return mock;
 };
 

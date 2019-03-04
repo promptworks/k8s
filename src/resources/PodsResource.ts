@@ -50,14 +50,14 @@ export class PodsResource extends Resource<Pod, ApiV1NamespacesNamePods> {
   /**
    * Run a single command and return the output as a string.
    */
-  public async exec(name: string, opts: ExecOptions): Promise<string> {
+  public async exec(name: string, opts: ExecOptions = {}): Promise<string> {
     return getBody(this.api(name).exec.post({ qs: opts }));
   }
 
   /**
    * Attach to a running container.
    */
-  public async attach(name: string, opts: AttachOptions): Promise<void> {
+  public async attach(name: string, opts: AttachOptions = {}): Promise<void> {
     const flags: string[] = ["attach", name, ...this.config.flags];
 
     if (opts.stdin) flags.push("--stdin");
@@ -74,7 +74,7 @@ export class PodsResource extends Resource<Pod, ApiV1NamespacesNamePods> {
   /**
    * Establish an interactive `exec` session with a running container.
    */
-  public async connect(pod: string, opts: ConnectOptions): Promise<void> {
+  public async connect(pod: string, opts: ConnectOptions = {}): Promise<void> {
     const flags: string[] = ["exec", pod, ...this.config.flags];
 
     if (opts.stdin) flags.push("--stdin");
