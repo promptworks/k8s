@@ -1,8 +1,12 @@
 import { Resource } from "../../src";
-import { createMockResourceAPI, mockResponse } from "../factories";
+import {
+  createMockResourceAPI,
+  mockResponse,
+  MockResourceAPI
+} from "../factories";
 
 describe("Resource", () => {
-  let api: any;
+  let api: MockResourceAPI;
   let resource: Resource<any, any>;
 
   beforeEach(() => {

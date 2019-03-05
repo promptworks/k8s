@@ -12,23 +12,23 @@ export const createMockRequest = () => {
   return jest.fn().mockResolvedValue(mockResponse);
 };
 
-export const createMockResourceNameAPI = () => ({
-  get: createMockRequest(),
-  getStream: createMockRequest(),
-  delete: createMockRequest(),
-  patch: createMockRequest(),
-  put: createMockRequest(),
-  log: { get: createMockRequest(), getStream: createMockRequest() },
-  exec: { post: createMockRequest() }
-});
-
+export type MockResourceAPI = ReturnType<typeof createMockResourceAPI>;
 export const createMockResourceAPI = () => {
-  const nameAPI = createMockResourceNameAPI();
-  const mock: any = jest.fn(() => nameAPI);
-  mock.get = createMockRequest();
-  mock.post = createMockRequest();
-  mock.byName = nameAPI;
-  return mock;
+  const byName = {
+    get: createMockRequest(),
+    getStream: createMockRequest(),
+    delete: createMockRequest(),
+    patch: createMockRequest(),
+    put: createMockRequest(),
+    log: { get: createMockRequest(), getStream: createMockRequest() },
+    exec: { post: createMockRequest() }
+  };
+
+  return Object.assign(jest.fn(() => byName), {
+    byName,
+    get: createMockRequest(),
+    post: createMockRequest()
+  });
 };
 
 const BlackHoleObject = Proxy.bind(null, () => new BlackHoleObject(), {

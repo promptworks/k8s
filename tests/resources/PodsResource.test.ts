@@ -2,18 +2,19 @@ import { PodsResource, Kubectl } from "../../src";
 import {
   createMockResourceAPI,
   createMockKubectl,
-  mockResponse
+  mockResponse,
+  MockResourceAPI
 } from "../factories";
 
 describe("PodsResource", () => {
   let kubectl: jest.Mocked<Kubectl>;
-  let api: any;
+  let api: MockResourceAPI;
   let resource: PodsResource;
 
   beforeEach(() => {
     kubectl = createMockKubectl();
     api = createMockResourceAPI();
-    resource = new PodsResource(api, kubectl);
+    resource = new PodsResource(api as any, kubectl);
   });
 
   test("getLogs", async () => {

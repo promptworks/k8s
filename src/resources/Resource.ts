@@ -1,10 +1,6 @@
 import { getList, getBody, ResourceAPI, DeepPartial } from "./helpers";
-import { AnyObject } from "../types";
 
-export class Resource<
-  T extends AnyObject,
-  API extends ResourceAPI = ResourceAPI
-> {
+export class Resource<T, API extends ResourceAPI = ResourceAPI> {
   protected api: API;
 
   public constructor(api: API) {
