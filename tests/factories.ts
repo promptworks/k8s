@@ -1,8 +1,4 @@
-import { ResourceAPI, ResourceNameAPI, Config } from "../src";
-
-export interface MockResourceAPI extends jest.Mocked<ResourceAPI> {
-  byName: jest.Mocked<ResourceNameAPI>;
-}
+import { Kubectl } from "../src";
 
 export const mockResponse = {
   code: 200,
@@ -45,9 +41,7 @@ export const createMockClient = (): any => {
   return new BlackHoleObject();
 };
 
-export const createMockConfig = (overrides: Partial<Config> = {}): Config => ({
-  namespace: "default",
-  flags: ["--namespace", "default"],
-  client: createMockClient(),
-  ...overrides
-});
+export const createMockKubectl = (): jest.Mocked<Kubectl> => {
+  const run = jest.fn().mockResolvedValue({});
+  return { run } as any;
+};

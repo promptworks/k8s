@@ -1,20 +1,13 @@
-import { Resource, Config } from "../../src";
-import {
-  createMockResourceAPI,
-  createMockConfig,
-  mockResponse,
-  MockResourceAPI
-} from "../factories";
+import { Resource } from "../../src";
+import { createMockResourceAPI, mockResponse } from "../factories";
 
 describe("Resource", () => {
-  let config: Config;
-  let api: MockResourceAPI;
-  let resource: Resource<any>;
+  let api: any;
+  let resource: Resource<any, any>;
 
   beforeEach(() => {
-    config = createMockConfig();
     api = createMockResourceAPI();
-    resource = new Resource(config, api);
+    resource = new Resource(api);
   });
 
   test("list", async () => {

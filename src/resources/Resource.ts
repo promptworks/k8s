@@ -1,37 +1,13 @@
-import { getList, getBody } from "./helpers";
-import { Config } from "../Config";
+import { getList, getBody, ResourceAPI, DeepPartial } from "./helpers";
 import { AnyObject } from "../types";
-
-export type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends Array<infer U>
-    ? Array<DeepPartial<U>>
-    : T[P] extends object
-    ? DeepPartial<T[P]>
-    : T[P]
-};
-
-export interface ResourceNameAPI {
-  get(): Promise<any>;
-  delete(): Promise<any>;
-  put(options?: object): Promise<any>;
-  patch(options?: object): Promise<any>;
-}
-
-export interface ResourceAPI {
-  (name: string): ResourceNameAPI;
-  get(): Promise<any>;
-  post(options?: object): Promise<any>;
-}
 
 export class Resource<
   T extends AnyObject,
-  A extends ResourceAPI = ResourceAPI
+  API extends ResourceAPI = ResourceAPI
 > {
-  protected api: A;
-  protected config: Config;
+  protected api: API;
 
-  public constructor(config: Config, api: A) {
-    this.config = config;
+  public constructor(api: API) {
     this.api = api;
   }
 

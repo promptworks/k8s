@@ -1,5 +1,5 @@
-import { Kubernetes, Config, PodsResource, Resource, Secret } from "../src";
-import { createMockConfig } from "./factories";
+import { Kubernetes, PodsResource, Resource, Secret, Kubectl } from "../src";
+import { createMockKubectl } from "./factories";
 
 const RESOURCES: Array<keyof Kubernetes> = [
   "namespaces",
@@ -18,11 +18,12 @@ const RESOURCES: Array<keyof Kubernetes> = [
 
 describe("Kubernetes", () => {
   let k8s: Kubernetes;
-  let config: jest.Mocked<Config>;
+  let kubectl: jest.Mocked<Kubectl>;
 
   beforeEach(() => {
-    config = createMockConfig();
-    k8s = new Kubernetes(config);
+    kubectl = createMockKubectl();
+    k8s = new Kubernetes();
+    (k8s as any).kubectl = kubectl;
   });
 
   describe("pods", () => {
@@ -38,9 +39,6 @@ describe("Kubernetes", () => {
   });
 
   test("apply", async () => {
-    const shell = jest.spyOn(k8s, "shell" as any);
-    shell.mockResolvedValue({});
-
     const secret: Secret = {
       apiVersion: "v1",
       kind: "Secret",
@@ -48,10 +46,8 @@ describe("Kubernetes", () => {
     };
 
     await k8s.apply([secret]);
-    expect(shell).toHaveBeenCalledWith(
-      "kubectl",
-      ["apply", "--namespace", "default", "-f", "-"],
-      { input: JSON.stringify(secret) }
-    );
+    expect(kubectl.run).toHaveBeenCalledWith(["apply", "-f", "-"], {
+      input: JSON.stringify(secret)
+    });
   });
 });

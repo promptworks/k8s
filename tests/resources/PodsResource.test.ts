@@ -1,20 +1,19 @@
-import { Config, PodsResource } from "../../src";
+import { PodsResource, Kubectl } from "../../src";
 import {
   createMockResourceAPI,
-  createMockConfig,
-  mockResponse,
-  MockResourceAPI
+  createMockKubectl,
+  mockResponse
 } from "../factories";
 
 describe("PodsResource", () => {
-  let config: Config;
-  let api: MockResourceAPI;
+  let kubectl: jest.Mocked<Kubectl>;
+  let api: any;
   let resource: PodsResource;
 
   beforeEach(() => {
-    config = createMockConfig();
+    kubectl = createMockKubectl();
     api = createMockResourceAPI();
-    resource = new PodsResource(config, api as any);
+    resource = new PodsResource(api, kubectl);
   });
 
   test("getLogs", async () => {
@@ -33,35 +32,19 @@ describe("PodsResource", () => {
   });
 
   test("attach", async () => {
-    const shell = jest.spyOn(resource, "shell" as any);
-    shell.mockResolvedValue({});
-
     await resource.attach("foo", {
       tty: true,
       stdin: process.stdin,
       container: "jawn"
     });
 
-    expect(shell).toHaveBeenCalledWith(
-      "kubectl",
-      [
-        "attach",
-        "foo",
-        "--namespace",
-        "default",
-        "--stdin",
-        "--tty",
-        "--container",
-        "jawn"
-      ],
+    expect(kubectl.run).toHaveBeenCalledWith(
+      ["attach", "foo", "--stdin", "--tty", "--container", "jawn"],
       { stdin: process.stdin, stdout: undefined, stderrr: undefined }
     );
   });
 
   test("connect", async () => {
-    const shell = jest.spyOn(resource, "shell" as any);
-    shell.mockResolvedValue({});
-
     await resource.connect("foo", {
       tty: true,
       stdin: process.stdin,
@@ -69,20 +52,8 @@ describe("PodsResource", () => {
       command: ["blah"]
     });
 
-    expect(shell).toHaveBeenCalledWith(
-      "kubectl",
-      [
-        "exec",
-        "foo",
-        "--namespace",
-        "default",
-        "--stdin",
-        "--tty",
-        "--container",
-        "jawn",
-        "--",
-        "blah"
-      ],
+    expect(kubectl.run).toHaveBeenCalledWith(
+      ["exec", "foo", "--stdin", "--tty", "--container", "jawn", "--", "blah"],
       { stdin: process.stdin, stdout: undefined, stderrr: undefined }
     );
   });
