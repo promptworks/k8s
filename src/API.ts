@@ -1,0 +1,78 @@
+import * as k8s from "kubernetes-client";
+import { Options, LogOptions, ExecOptions } from "./types";
+import { Stream } from "stream";
+
+export const getBody = <T>(promise: Promise<{ body: T }>) => {
+  return promise.then(response => response.body);
+};
+
+export const getList = <T>(
+  promise: Promise<{ body: { items: T[] } }>
+): Promise<T[]> => {
+  return getBody(promise).then(body => body.items);
+};
+
+export const exists = async (promise: Promise<any>): Promise<boolean> => {
+  return promise
+    .then(() => true)
+    .catch(err => {
+      if (err.code === 404) {
+        return false;
+      }
+
+      throw err;
+    });
+};
+
+export class API {
+  public readonly namespace: string;
+  protected readonly client: k8s.ApiRoot;
+
+  public constructor({
+    kubeconfig,
+    context,
+    namespace = "default",
+    client = new k8s.Client1_10({
+      config: k8s.config.fromKubeconfig(kubeconfig, context)
+    })
+  }: Options = {}) {
+    this.namespace = namespace;
+    this.client = client;
+  }
+
+  /**
+   * Get the logs from a container, and return them as a string.
+   */
+  public getLogs(name: string, opts: LogOptions = {}): Promise<string> {
+    return getBody(
+      this.client.api.v1
+        .ns(this.namespace)
+        .pods(name)
+        .log.get({ qs: opts })
+    );
+  }
+
+  /**
+   * Get a log stream from a running container.
+   */
+  public followLogs(name: string, opts: LogOptions = {}): Stream {
+    return this.client.api.v1
+      .ns(this.namespace)
+      .pods(name)
+      .log.getStream({
+        qs: { ...opts, follow: true }
+      });
+  }
+
+  /**
+   * Run a single command and return the output as a string.
+   */
+  public async exec(name: string, opts: ExecOptions = {}): Promise<string> {
+    return getBody(
+      this.client.api.v1
+        .ns(this.namespace)
+        .pods(name)
+        .exec.post({ qs: opts })
+    );
+  }
+}

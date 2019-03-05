@@ -1,0 +1,48 @@
+[
+  {
+    "name": "Namespace",
+    "api": "this.client.api.v1.namespaces"
+  },
+  {
+    "name": "Pod",
+    "api": "this.client.api.v1.ns(this.namespace).pods"
+  },
+  {
+    "name": "ConfigMap",
+    "api": "this.client.api.v1.ns(this.namespace).configmaps"
+  },
+  {
+    "name": "Deployment",
+    "api": "this.client.apis.apps.v1.ns(this.namespace).deployments"
+  },
+  {
+    "name": "Ingress",
+    "api": "this.client.apis.extensions.v1beta1.ns(this.namespace).ingresses"
+  },
+  { "name": "Secret", "api": "this.client.api.v1.ns(this.namespace).secrets" },
+  {
+    "name": "Service",
+    "api": "this.client.api.v1.ns(this.namespace).services"
+  },
+  {
+    "name": "DaemonSet",
+    "api": "this.client.apis.apps.v1.ns(this.namespace).daemonsets"
+  },
+  {
+    "name": "ReplicaSet",
+    "api": "this.client.apis.apps.v1.ns(this.namespace).replicasets"
+  },
+  { "name": "Job", "api": "this.client.apis.batch.v1.ns(this.namespace).jobs" },
+  {
+    "name": "CronJob",
+    "api": "this.client.apis.batch.v1beta1.ns(this.namespace).cronjobs"
+  },
+  {
+    "name": "HorizontalPodAutoscaler",
+    "api": "this.client.apis.autoscaling.v1.ns(this.namespace).horizontalpodautoscalers"
+  },
+  {
+    "name": "PersistentVolumeClaim",
+    "api": "this.client.api.v1.ns(this.namespace).persistentvolumeclaim"
+  }
+]
