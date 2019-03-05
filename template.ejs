@@ -1,0 +1,55 @@
+import { API, getList, getBody, exists } from "./API";
+import { DeepPartial, <%= objects.map(o => o.type).join(', ') %> } from "./types";
+
+export class Kubernetes extends API {
+  <% for (const o of objects) { %>
+  /**
+   * List all <%= o.plural %>
+   */
+  public list<%= o.plural %>(): Promise<<%= o.type %>[]> {
+    return getList(this.<%= o.api %>.get());
+  }
+
+  /**
+   * Get <%= o.name %> by name
+   */
+  public get<%= o.name %>(name: string): Promise<<%= o.type %>> {
+    return getBody(this.<%= o.api %>(name).get());
+  }
+
+  /**
+   * Create a new <%= o.name %>
+   */
+  public create<%= o.name %>(resource: <%= o.type %>): Promise<<%= o.type %>> {
+    return getBody(this.<%= o.api %>.post({ body: resource }));
+  }
+
+  /**
+   * Replace a <%= o.name %> by name
+   */
+  public replace<%= o.name %>(name: string, resource: <%= o.type %>): Promise<<%= o.type %>> {
+    return getBody(this.<%= o.api %>(name).put({ body: resource }));
+  }
+
+  /**
+   * Patch a <%= o.name %> by name
+   */
+  public patch<%= o.name %>(name: string, resource: DeepPartial<<%= o.type %>>): Promise<<%= o.type %>> {
+    return getBody(this.<%= o.api %>(name).patch({ body: resource }));
+  }
+
+  /**
+   * Delete a <%= o.name %> by name
+   */
+  public delete<%= o.name %>(name: string): Promise<<%= o.type %>> {
+    return getBody(this.<%= o.api %>(name).delete());
+  }
+
+  /**
+   * Does a <%= o.name %> with the given name exist?
+   */
+  public has<%= o.name %>(name: string): Promise<boolean> {
+    return exists(this.get<%= o.name %>(name));
+  }
+  <% } %>
+}

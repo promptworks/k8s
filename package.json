@@ -15,7 +15,8 @@
     "lint": "tsc --noEmit -p .",
     "format": "prettier --write '{src,tests}/**/*.ts'",
     "format:check": "prettier --list-different '{src,tests}/**/*.ts'",
-    "generate": "bin/generate",
+    "generate:types": "bin/generate-types",
+    "generate:client": "bin/generate-client",
     "test": "jest"
   },
   "jest": {
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@types/jest": "^24.0.6",
     "barrelsby": "^2.0.0",
+    "ejs": "^2.6.1",
     "jest": "^24.1.0",
     "json-schema-to-typescript": "^6.1.1",
     "prettier": "^1.16.4",

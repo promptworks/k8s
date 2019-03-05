@@ -1,0 +1,46 @@
+#!/usr/bin/env node
+
+const ejs = require("ejs");
+const path = require("path");
+const prettier = require("prettier");
+const fs = require("fs");
+const { promisify } = require("util");
+
+const writeFile = promisify(fs.writeFile);
+
+const withDefaults = items =>
+  items.map(item => ({
+    plural: `${item.name}s`,
+    type: item.name,
+    ...item
+  }));
+
+const template = path.join(__dirname, "../template.ejs");
+const objects = [
+  { name: "Namespace", api: "core.namespaces" },
+  { name: "Pod", api: "v1.pods" },
+  { name: "ConfigMap", api: "v1.configmaps" },
+  { name: "Deployment", api: "v1apps.deployments" },
+  { name: "Ingress", api: "v1beta1extensions.ingresses" },
+  { name: "Secret", api: "v1.secrets" },
+  { name: "Service", api: "v1.services" },
+  { name: "DaemonSet", api: "v1apps.daemonsets" },
+  { name: "ReplicaSet", api: "v1apps.replicasets" },
+  { name: "Job", api: "v1batch.jobs" },
+  { name: "CronJob", api: "v1beta1batch.cronjobs" },
+  {
+    name: "HorizontalPodAutoscaler",
+    api: "v1autoscaling.horizontalpodautoscalers"
+  },
+  { name: "PersistentVolumeClaim", api: "v1.persistentvolumeclaim" }
+];
+
+const data = {
+  objects: withDefaults(objects)
+};
+
+ejs
+  .renderFile(template, data)
+  .then(code => prettier.format(code, { parser: "typescript" }))
+  .then(code => writeFile("src/Kubernetes.ts", code))
+  .catch(err => console.error(err));
