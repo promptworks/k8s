@@ -26,6 +26,8 @@ export interface Options {
   namespace?: string;
   kubeconfig?: string;
   context?: string;
+  kubectl?: Kubectl;
+  client?: k8s.ApiRoot;
 }
 
 export class Kubernetes {
@@ -37,19 +39,15 @@ export class Kubernetes {
   public constructor({
     kubeconfig,
     context,
-    namespace = "default"
+    namespace = "default",
+    kubectl = new Kubectl({ kubeconfig, context, namespace }),
+    client = new k8s.Client1_10({
+      config: k8s.config.fromKubeconfig(kubeconfig, context)
+    })
   }: Options = {}) {
     this.namespace = namespace;
-
-    this.kubectl = new Kubectl({
-      namespace,
-      context,
-      kubeconfig
-    });
-
-    this.client = new k8s.Client1_10({
-      config: k8s.config.fromKubeconfig(kubeconfig, context)
-    });
+    this.kubectl = kubectl;
+    this.client = client;
   }
 
   public get namespaces(): Resource<Namespace> {

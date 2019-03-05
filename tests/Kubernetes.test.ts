@@ -1,5 +1,5 @@
 import { Kubernetes, PodsResource, Resource, Secret, Kubectl } from "../src";
-import { createMockKubectl } from "./factories";
+import { createMockKubectl, createMockClient } from "./factories";
 
 const RESOURCES: Array<keyof Kubernetes> = [
   "namespaces",
@@ -22,8 +22,10 @@ describe("Kubernetes", () => {
 
   beforeEach(() => {
     kubectl = createMockKubectl();
-    k8s = new Kubernetes();
-    (k8s as any).kubectl = kubectl;
+    k8s = new Kubernetes({
+      kubectl,
+      client: createMockClient()
+    });
   });
 
   describe("pods", () => {
