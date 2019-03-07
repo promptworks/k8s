@@ -27,14 +27,14 @@ const toJSON = (input: any) => {
 
 export class Kubectl {
   private flags: string[];
-  private exec = execa;
+  private shell = execa;
 
   public constructor(options: object = {}) {
     this.flags = toFlags(options);
   }
 
   public run(args: string[], opts: execa.Options = {}) {
-    return this.exec("kubectl", this.flags.concat(args), opts);
+    return this.shell("kubectl", this.flags.concat(args), opts);
   }
 
   /**
@@ -66,12 +66,12 @@ export class Kubectl {
   /**
    * Establish an interactive `exec` session with a running container.
    */
-  public async connect(pod: string, opts: ConnectOptions = {}): Promise<void> {
+  public async exec(pod: string, opts: ConnectOptions = {}): Promise<void> {
     const command = opts.command ? ["--", ...opts.command] : [];
     const flags = toFlags({
-      stdin: Boolean(opts.stdin),
       tty: opts.tty,
-      container: opts.container
+      container: opts.container,
+      stdin: Boolean(opts.stdin)
     });
 
     await this.run(["exec", pod, ...flags, ...command], {
