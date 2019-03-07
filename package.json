@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "A simple Kubernetes client library",
   "main": "lib/index.js",
-  "types": "lib/types.d.ts",
+  "types": "lib/index.d.ts",
   "license": "MIT",
   "engines": {
     "node": ">=6.0.0"
