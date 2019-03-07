@@ -1,5 +1,6 @@
 {
   "name": "@promptly/k8s",
+  "author": "Ray Zane",
   "version": "1.0.0",
   "description": "A simple Kubernetes client library",
   "main": "lib/index.js",
@@ -11,12 +12,14 @@
   "files": [
     "lib"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/promptworks/k8s.git"
+  },
   "scripts": {
+    "prepack": "tsc -b",
     "lint": "tsc --noEmit -p .",
     "format": "prettier --write '{src,tests}/**/*.ts'",
-    "format:check": "prettier --list-different '{src,tests}/**/*.ts'",
-    "generate:types": "bin/generate-types",
-    "generate:client": "bin/generate-client",
     "test": "jest"
   },
   "jest": {
