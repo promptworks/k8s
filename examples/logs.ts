@@ -6,7 +6,7 @@ const finished = promisify(stream.finished);
 
 export default async () => {
   const k8s = new Kubernetes();
-  const logs = k8s.pods.followLogs("looper");
+  const logs = k8s.followLogs("looper");
 
   logs.pipe(process.stdout);
   await finished(logs as any);

@@ -1,9 +1,9 @@
-import { Kubernetes } from "../src";
+import { Kubectl } from "../src";
 
 export default async () => {
-  const k8s = new Kubernetes();
+  const kubectl = new Kubectl();
 
-  k8s.apply([
+  kubectl.apply([
     {
       kind: "Secret",
       apiVersion: "v1",

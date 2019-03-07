@@ -8,12 +8,12 @@ const print = (heading: string) => (data: any) => {
 export default async () => {
   const k8s = new Kubernetes();
 
-  await k8s.namespaces.get("default").then(print("Namespace"));
-  await k8s.namespaces.list().then(print("Namespaces"));
-  await k8s.pods.list().then(print("Pods"));
-  await k8s.services.list().then(print("Services"));
-  await k8s.secrets.list().then(print("Secrets"));
-  await k8s.configMaps.list().then(print("Configmaps"));
-  await k8s.deployments.list().then(print("Deployments"));
-  await k8s.ingresses.list().then(print("Ingresses"));
+  await k8s.getNamespace("default").then(print("Namespace"));
+  await k8s.listNamespaces().then(print("Namespaces"));
+  await k8s.listPods().then(print("Pods"));
+  await k8s.listServices().then(print("Services"));
+  await k8s.listSecrets().then(print("Secrets"));
+  await k8s.listConfigMaps().then(print("Configmaps"));
+  await k8s.listDeployments().then(print("Deployments"));
+  await k8s.listIngresses().then(print("Ingresses"));
 };
