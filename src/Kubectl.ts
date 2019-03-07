@@ -1,7 +1,7 @@
 import * as execa from "execa";
-import { AnyObject, AttachOptions, ConnectOptions } from "./types";
+import { AnyObject, AttachOptions, ConnectOptions, Flags } from "./types";
 
-const toFlags = (options: object) => {
+const toFlags = (options: Flags) => {
   const reducer = (flags: string[], [key, value]: [string, any]) => {
     if (!value) {
       return flags;
@@ -29,7 +29,7 @@ export class Kubectl {
   private flags: string[];
   private shell = execa;
 
-  public constructor(options: object = {}) {
+  public constructor(options: Flags = {}) {
     this.flags = toFlags(options);
   }
 

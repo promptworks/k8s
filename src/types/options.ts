@@ -10,6 +10,10 @@ export interface Options {
   client?: k8s.ApiRoot;
 }
 
+export interface Flags {
+  [key: string]: string | boolean | null | undefined;
+}
+
 export interface LogOptions {
   container?: string;
 }
