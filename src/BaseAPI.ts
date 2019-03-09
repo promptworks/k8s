@@ -1,6 +1,7 @@
 import * as k8s from "kubernetes-client";
 import { Options, LogOptions, ExecOptions } from "./types";
 import { Stream } from "stream";
+import { Kubectl } from "./Kubectl";
 
 export const getBody = <T>(promise: Promise<{ body: T }>) => {
   return promise.then(response => response.body);
@@ -24,7 +25,7 @@ export const exists = async (promise: Promise<any>): Promise<boolean> => {
     });
 };
 
-export class API {
+export class BaseAPI extends Kubectl {
   public readonly kubeconfig: any;
   public readonly namespace: string;
   public readonly context?: string;
@@ -36,6 +37,12 @@ export class API {
     const config = k8s.config.fromKubeconfig(kubeconfig, opts.context);
     const context = opts.context || kubeconfig["current-context"];
     const client = new k8s.Client1_10({ config });
+
+    super({
+      namespace,
+      context,
+      kubeconfig: opts.kubeconfig
+    });
 
     this.namespace = namespace;
     this.kubeconfig = kubeconfig;

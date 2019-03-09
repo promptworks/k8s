@@ -36,7 +36,7 @@ export class Kubectl {
   /**
    * Run an arbitrary shell command.
    */
-  public run(
+  public kubectl(
     args: string[],
     opts: execa.Options = {}
   ): execa.ExecaChildProcess {
@@ -50,7 +50,7 @@ export class Kubectl {
     objects: AnyObject[],
     opts: execa.Options = {}
   ): execa.ExecaChildProcess {
-    return this.run(["apply", "-f", "-"], {
+    return this.kubectl(["apply", "-f", "-"], {
       input: objects.map(toJSON).join("\n"),
       ...opts
     });
@@ -69,13 +69,13 @@ export class Kubectl {
       stdin: Boolean(opts.stdin)
     });
 
-    return this.run(["attach", pod, ...flags], opts);
+    return this.kubectl(["attach", pod, ...flags], opts);
   }
 
   /**
    * Establish an interactive `exec` session with a running container.
    */
-  public exec(
+  public connect(
     pod: string,
     opts: ConnectOptions & execa.Options = {}
   ): execa.ExecaChildProcess {
@@ -86,6 +86,6 @@ export class Kubectl {
       stdin: Boolean(opts.stdin)
     });
 
-    return this.run(["exec", pod, ...flags, ...command], opts);
+    return this.kubectl(["exec", pod, ...flags, ...command], opts);
   }
 }
