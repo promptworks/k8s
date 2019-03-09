@@ -31,13 +31,10 @@ export class API {
 
   protected readonly client: k8s.ApiRoot;
 
-  public constructor({
-    namespace = "default",
-    ...opts
-  }: Options = {}) {
+  public constructor({ namespace = "default", ...opts }: Options = {}) {
     const kubeconfig = k8s.config.loadKubeconfig(opts.kubeconfig);
     const config = k8s.config.fromKubeconfig(kubeconfig, opts.context);
-    const context = opts.context || kubeconfig['current-context'];
+    const context = opts.context || kubeconfig["current-context"];
     const client = new k8s.Client1_10({ config });
 
     this.namespace = namespace;
