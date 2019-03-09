@@ -1,9 +1,17 @@
 import * as fs from "fs";
 import { promisify } from "util";
 import dtsGenerator from "dtsgenerator";
+import { renderFile } from "ejs";
 
-export const readFile = promisify(fs.readFile);
-export const writeFile = promisify(fs.writeFile);
+const prettier = require('prettier');
+const data = require("./data.json");
+
+const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
+
+const formatCode = (code: string) => {
+  return prettier.format(code, { parser: "typescript" });
+}
 
 export const generateTypes = async (input: string, output: string) => {
   const content = await readFile(input, "utf-8");
@@ -20,6 +28,12 @@ export const generateTypes = async (input: string, output: string) => {
   );
 };
 
+export const generateTemplate = async (input: string, output: string) => {
+  const code = await renderFile<string>(input, data);
+  await writeFile(output, formatCode(code));
+}
+
 export const generators = {
-  types: generateTypes
+  types: generateTypes,
+  template: generateTemplate
 };

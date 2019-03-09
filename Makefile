@@ -1,5 +1,7 @@
-SOURCES=$(wildcard bin/* gen/*.)
+SOURCES=$(wildcard bin/* gen/*)
 SWAGGER=https://raw.githubusercontent.com/kubernetes/kubernetes/v1.13.4/api/openapi-spec/swagger.json
+
+all: src/Kubernetes.ts
 
 tmp:
 	mkdir tmp
@@ -10,4 +12,8 @@ tmp/swagger.json: tmp
 src/types/generated.ts: tmp/swagger.json $(SOURCES)
 	bin/generate types tmp/swagger.json src/types/generated.ts
 
-types: src/types/generated.ts
+src/types/objects.ts: src/types/generated.ts $(SOURCES)
+	bin/generate template gen/objects.ejs src/types/objects.ts
+
+src/Kubernetes.ts: src/types/objects.ts $(SOURCES)
+	bin/generate template gen/Kubernetes.ejs src/Kubernetes.ts

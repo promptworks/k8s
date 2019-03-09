@@ -1,80 +1,82 @@
-[
-  {
-    "name": "Namespace",
-    "plural": "Namespaces",
-    "api": "this.client.api.v1.namespaces",
-    "type": "IoK8sApiCoreV1Namespace"
-  },
-  {
-    "name": "Pod",
-    "plural": "Pods",
-    "api": "this.client.api.v1.ns(this.namespace).pods",
-    "type": "IoK8sApiCoreV1Pod"
-  },
-  {
-    "name": "ConfigMap",
-    "plural": "ConfigMaps",
-    "api": "this.client.api.v1.ns(this.namespace).configmaps",
-    "type": "IoK8sApiCoreV1ConfigMap"
-  },
-  {
-    "name": "Deployment",
-    "plural": "Deployments",
-    "api": "this.client.apis.apps.v1.ns(this.namespace).deployments",
-    "type": "IoK8sApiAppsV1Deployment"
-  },
-  {
-    "name": "Ingress",
-    "plural": "Ingresses",
-    "api": "this.client.apis.extensions.v1beta1.ns(this.namespace).ingresses",
-    "type": "IoK8sApiExtensionsV1beta1Ingress"
-  },
-  {
-    "name": "Secret",
-    "plural": "Secrets",
-    "api": "this.client.api.v1.ns(this.namespace).secrets",
-    "type": "IoK8sApiCoreV1Secret"
-  },
-  {
-    "name": "Service",
-    "plural": "Services",
-    "api": "this.client.api.v1.ns(this.namespace).services",
-    "type": "IoK8sApiCoreV1Service"
-  },
-  {
-    "name": "DaemonSet",
-    "plural": "DaemonSets",
-    "api": "this.client.apis.apps.v1.ns(this.namespace).daemonsets",
-    "type": "IoK8sApiAppsV1DaemonSet"
-  },
-  {
-    "name": "ReplicaSet",
-    "plural": "ReplicaSets",
-    "api": "this.client.apis.apps.v1.ns(this.namespace).replicasets",
-    "type": "IoK8sApiAppsV1ReplicaSet"
-  },
-  {
-    "name": "Job",
-    "plural": "Jobs",
-    "api": "this.client.apis.batch.v1.ns(this.namespace).jobs",
-    "type": "IoK8sApiBatchV1Job"
-  },
-  {
-    "name": "CronJob",
-    "plural": "CronJobs",
-    "api": "this.client.apis.batch.v1beta1.ns(this.namespace).cronjobs",
-    "type": "IoK8sApiBatchV1beta1CronJob"
-  },
-  {
-    "name": "HorizontalPodAutoscaler",
-    "plural": "HorizontalPodAutoscalers",
-    "api": "this.client.apis.autoscaling.v1.ns(this.namespace).horizontalpodautoscalers",
-    "type": "IoK8sApiAutoscalingV1HorizontalPodAutoscaler"
-  },
-  {
-    "name": "PersistentVolumeClaim",
-    "plural": "PersistentVolumeClaims",
-    "api": "this.client.api.v1.ns(this.namespace).persistentvolumeclaim",
-    "type": "IoK8sApiCoreV1PersistentVolumeClaim"
-  }
-]
+{
+  "objects": [
+    {
+      "name": "Namespace",
+      "plural": "Namespaces",
+      "api": "this.client.api.v1.namespaces",
+      "type": "IoK8sApiCoreV1Namespace"
+    },
+    {
+      "name": "Pod",
+      "plural": "Pods",
+      "api": "this.client.api.v1.ns(this.namespace).pods",
+      "type": "IoK8sApiCoreV1Pod"
+    },
+    {
+      "name": "ConfigMap",
+      "plural": "ConfigMaps",
+      "api": "this.client.api.v1.ns(this.namespace).configmaps",
+      "type": "IoK8sApiCoreV1ConfigMap"
+    },
+    {
+      "name": "Deployment",
+      "plural": "Deployments",
+      "api": "this.client.apis.apps.v1.ns(this.namespace).deployments",
+      "type": "IoK8sApiAppsV1Deployment"
+    },
+    {
+      "name": "Ingress",
+      "plural": "Ingresses",
+      "api": "this.client.apis.extensions.v1beta1.ns(this.namespace).ingresses",
+      "type": "IoK8sApiExtensionsV1beta1Ingress"
+    },
+    {
+      "name": "Secret",
+      "plural": "Secrets",
+      "api": "this.client.api.v1.ns(this.namespace).secrets",
+      "type": "IoK8sApiCoreV1Secret"
+    },
+    {
+      "name": "Service",
+      "plural": "Services",
+      "api": "this.client.api.v1.ns(this.namespace).services",
+      "type": "IoK8sApiCoreV1Service"
+    },
+    {
+      "name": "DaemonSet",
+      "plural": "DaemonSets",
+      "api": "this.client.apis.apps.v1.ns(this.namespace).daemonsets",
+      "type": "IoK8sApiAppsV1DaemonSet"
+    },
+    {
+      "name": "ReplicaSet",
+      "plural": "ReplicaSets",
+      "api": "this.client.apis.apps.v1.ns(this.namespace).replicasets",
+      "type": "IoK8sApiAppsV1ReplicaSet"
+    },
+    {
+      "name": "Job",
+      "plural": "Jobs",
+      "api": "this.client.apis.batch.v1.ns(this.namespace).jobs",
+      "type": "IoK8sApiBatchV1Job"
+    },
+    {
+      "name": "CronJob",
+      "plural": "CronJobs",
+      "api": "this.client.apis.batch.v1beta1.ns(this.namespace).cronjobs",
+      "type": "IoK8sApiBatchV1beta1CronJob"
+    },
+    {
+      "name": "HorizontalPodAutoscaler",
+      "plural": "HorizontalPodAutoscalers",
+      "api": "this.client.apis.autoscaling.v1.ns(this.namespace).horizontalpodautoscalers",
+      "type": "IoK8sApiAutoscalingV1HorizontalPodAutoscaler"
+    },
+    {
+      "name": "PersistentVolumeClaim",
+      "plural": "PersistentVolumeClaims",
+      "api": "this.client.api.v1.ns(this.namespace).persistentvolumeclaim",
+      "type": "IoK8sApiCoreV1PersistentVolumeClaim"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import * as gen from "./gen";
+import * as gen from "./generated";
 
 export type ObjectMeta = gen.IoK8sApimachineryPkgApisMetaV1ObjectMeta;
 export type Container = gen.IoK8sApiCoreV1Container;
@@ -23,5 +23,5 @@ export interface <%= o.name %> extends gen.<%= o.type %> {
 <% } %>
 
 export type AnyObject =
-<%= objects.map(o => `  | ${o.type}`).join('\n') %>
+<%= objects.map(o => `  | ${o.name}`).join('\n') %>
   | GenericObject;
