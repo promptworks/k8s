@@ -16,7 +16,7 @@ export interface GenericObject {
 
 <% for (const o of objects) { %>
 export interface <%= o.name %> extends gen.<%= o.type %> {
-  kind: "<%= o.type %>";
+  kind: "<%= o.name %>";
   apiVersion: string;
   metadata: ObjectMeta & { name: string }
 }

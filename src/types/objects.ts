@@ -15,81 +15,81 @@ export interface GenericObject {
 }
 
 export interface Namespace extends gen.IoK8sApiCoreV1Namespace {
-  kind: "IoK8sApiCoreV1Namespace";
+  kind: "Namespace";
   apiVersion: string;
   metadata: ObjectMeta & { name: string };
 }
 
 export interface Pod extends gen.IoK8sApiCoreV1Pod {
-  kind: "IoK8sApiCoreV1Pod";
+  kind: "Pod";
   apiVersion: string;
   metadata: ObjectMeta & { name: string };
 }
 
 export interface ConfigMap extends gen.IoK8sApiCoreV1ConfigMap {
-  kind: "IoK8sApiCoreV1ConfigMap";
+  kind: "ConfigMap";
   apiVersion: string;
   metadata: ObjectMeta & { name: string };
 }
 
 export interface Deployment extends gen.IoK8sApiAppsV1Deployment {
-  kind: "IoK8sApiAppsV1Deployment";
+  kind: "Deployment";
   apiVersion: string;
   metadata: ObjectMeta & { name: string };
 }
 
 export interface Ingress extends gen.IoK8sApiExtensionsV1beta1Ingress {
-  kind: "IoK8sApiExtensionsV1beta1Ingress";
+  kind: "Ingress";
   apiVersion: string;
   metadata: ObjectMeta & { name: string };
 }
 
 export interface Secret extends gen.IoK8sApiCoreV1Secret {
-  kind: "IoK8sApiCoreV1Secret";
+  kind: "Secret";
   apiVersion: string;
   metadata: ObjectMeta & { name: string };
 }
 
 export interface Service extends gen.IoK8sApiCoreV1Service {
-  kind: "IoK8sApiCoreV1Service";
+  kind: "Service";
   apiVersion: string;
   metadata: ObjectMeta & { name: string };
 }
 
 export interface DaemonSet extends gen.IoK8sApiAppsV1DaemonSet {
-  kind: "IoK8sApiAppsV1DaemonSet";
+  kind: "DaemonSet";
   apiVersion: string;
   metadata: ObjectMeta & { name: string };
 }
 
 export interface ReplicaSet extends gen.IoK8sApiAppsV1ReplicaSet {
-  kind: "IoK8sApiAppsV1ReplicaSet";
+  kind: "ReplicaSet";
   apiVersion: string;
   metadata: ObjectMeta & { name: string };
 }
 
 export interface Job extends gen.IoK8sApiBatchV1Job {
-  kind: "IoK8sApiBatchV1Job";
+  kind: "Job";
   apiVersion: string;
   metadata: ObjectMeta & { name: string };
 }
 
 export interface CronJob extends gen.IoK8sApiBatchV1beta1CronJob {
-  kind: "IoK8sApiBatchV1beta1CronJob";
+  kind: "CronJob";
   apiVersion: string;
   metadata: ObjectMeta & { name: string };
 }
 
 export interface HorizontalPodAutoscaler
   extends gen.IoK8sApiAutoscalingV1HorizontalPodAutoscaler {
-  kind: "IoK8sApiAutoscalingV1HorizontalPodAutoscaler";
+  kind: "HorizontalPodAutoscaler";
   apiVersion: string;
   metadata: ObjectMeta & { name: string };
 }
 
 export interface PersistentVolumeClaim
   extends gen.IoK8sApiCoreV1PersistentVolumeClaim {
-  kind: "IoK8sApiCoreV1PersistentVolumeClaim";
+  kind: "PersistentVolumeClaim";
   apiVersion: string;
   metadata: ObjectMeta & { name: string };
 }
