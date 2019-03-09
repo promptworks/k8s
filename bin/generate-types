@@ -6,15 +6,19 @@ base_url="https://raw.githubusercontent.com/garethr/kubernetes-json-schema/maste
 
 objects=(
   configmap
+  container
   cronjob
   daemonset
   deployment
+  envvar
   horizontalpodautoscaler
   ingress
   job
   namespace
+  objectmeta
   persistentvolumeclaim
   pod
+  probe
   replicaset
   secret
   service
