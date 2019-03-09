@@ -1,9 +1,12 @@
 import * as gen from "./gen";
 
-export type ObjectMeta = gen.Objectmeta;
-export type Container = gen.Container;
-export type EnvVar = gen.Envvar;
-export type Probe = gen.Probe;
+export type ObjectMeta = gen.IoK8sApimachineryPkgApisMetaV1ObjectMeta;
+export type Container = gen.IoK8sApiCoreV1Container;
+export type EnvVar = gen.IoK8sApiCoreV1EnvVar;
+export type EnvFromSource = gen.IoK8sApiCoreV1EnvFromSource;
+export type Probe = gen.IoK8sApiCoreV1Probe;
+export type ContainerPort = gen.IoK8sApiCoreV1ContainerPort
+export type VolumeMount = gen.IoK8sApiCoreV1VolumeMount;
 
 export interface GenericObject {
   apiVersion: string;
@@ -12,7 +15,7 @@ export interface GenericObject {
 }
 
 <% for (const o of objects) { %>
-export interface <%= o.type %> extends gen.<%= o.generatedType %> {
+export interface <%= o.name %> extends gen.<%= o.type %> {
   kind: "<%= o.type %>";
   apiVersion: string;
   metadata: ObjectMeta & { name: string }

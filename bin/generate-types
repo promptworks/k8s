@@ -1,45 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env node
 
-set -e
+require('ts-node/register');
 
-base_url="https://raw.githubusercontent.com/garethr/kubernetes-json-schema/master/v1.12.2-standalone"
+const { generateTypes, writeFile } = require('../gen');
 
-objects=(
-  configmap
-  container
-  cronjob
-  daemonset
-  deployment
-  envvar
-  horizontalpodautoscaler
-  ingress
-  job
-  namespace
-  objectmeta
-  persistentvolumeclaim
-  pod
-  probe
-  replicaset
-  secret
-  service
-  statefulset
-)
-
-generate() {
-  local object="$1"
-  local infile="tmp/$object.json"
-  local outfile="src/types/gen/$object.ts"
-
-  echo "Generating $outfile..."
-  wget -q -N -O "$infile" "$base_url/$object.json"
-  node_modules/.bin/json2ts -i "$infile" -o "$outfile"
-}
-
-rm -rf src/types/gen/
-mkdir -p tmp/ src/types/gen/
-
-for object in "${objects[@]}"; do
-  generate "$object"
-done
-
-node_modules/.bin/barrelsby --delete --directory src/types/gen
+generateTypes('tmp/swagger.json')
+  .then(code => writeFile('src/types/generated.ts', code))
+  .catch(err => console.error(err))
