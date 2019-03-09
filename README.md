@@ -1,6 +1,23 @@
-# k8s
+# @promptly/k8s
 
-A really simple Kubernetes client for Node.js based on [`kubernetes-client`](https://github.com/godaddy/kubernetes-client).
+A simple Kubernetes client for Node.js based on [`kubernetes-client`](https://github.com/godaddy/kubernetes-client).
 
-Features that aren't available in `kuberentes-client` (`apply`, `exec`, `attach`) are implemented by shelling out to `kubectl`. As features are added to `kubernetes-client`, the goal is to eventually remove the need for `kubectl`.
+Because some functionality isn't yet supported by  `kubernetes-client`, this package also provides convenience methods for shelling out to `kubectl`.
 
+[View the documentation](docs/README.md)
+
+## Installing
+
+    $ yarn add @promptly/k8s
+
+## Usage
+
+```typescript
+import { Kubernetes, Kubectl } from '@promptly/k8s';
+
+// This is a wrapper around `kubernetes-client`
+const kubernetes = new Kubernetes();
+
+// This is a wrapper around `kubectl`
+const kubectl = new Kubectl();
+```
