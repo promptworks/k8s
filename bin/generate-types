@@ -1,9 +1,0 @@
-#!/usr/bin/env node
-
-require('ts-node/register');
-
-const { generateTypes, writeFile } = require('../gen');
-
-generateTypes('tmp/swagger.json')
-  .then(code => writeFile('src/types/generated.ts', code))
-  .catch(err => console.error(err))
