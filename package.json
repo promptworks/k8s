@@ -34,10 +34,9 @@
   },
   "devDependencies": {
     "@types/jest": "^24.0.6",
-    "barrelsby": "^2.0.0",
+    "dtsgenerator": "^2.0.6",
     "ejs": "^2.6.1",
     "jest": "^24.1.0",
-    "json-schema-to-typescript": "^6.1.1",
     "pluralize": "^7.0.0",
     "prettier": "^1.16.4",
     "ts-jest": "^24.0.0",

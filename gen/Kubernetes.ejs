@@ -3,49 +3,49 @@
  */
 
 import { API, getList, getBody, exists } from "./API";
-import { DeepPartial, <%= objects.map(o => o.type).join(', ') %> } from "./types";
+import { DeepPartial, <%= objects.map(o => o.name).join(', ') %> } from "./types";
 
 export class Kubernetes extends API {
   <% for (const o of objects) { %>
   /**
    * List all <%= o.plural %>
    */
-  public list<%= o.plural %>(): Promise<<%= o.type %>[]> {
+  public list<%= o.plural %>(): Promise<<%= o.name %>[]> {
     return getList(<%= o.api %>.get());
   }
 
   /**
    * Get <%= o.name %> by name
    */
-  public get<%= o.name %>(name: string): Promise<<%= o.type %>> {
+  public get<%= o.name %>(name: string): Promise<<%= o.name %>> {
     return getBody(<%= o.api %>(name).get());
   }
 
   /**
    * Create a new <%= o.name %>
    */
-  public create<%= o.name %>(resource: <%= o.type %>): Promise<<%= o.type %>> {
+  public create<%= o.name %>(resource: <%= o.name %>): Promise<<%= o.name %>> {
     return getBody(<%= o.api %>.post({ body: resource }));
   }
 
   /**
    * Replace a <%= o.name %> by name
    */
-  public replace<%= o.name %>(name: string, resource: <%= o.type %>): Promise<<%= o.type %>> {
+  public replace<%= o.name %>(name: string, resource: <%= o.name %>): Promise<<%= o.name %>> {
     return getBody(<%= o.api %>(name).put({ body: resource }));
   }
 
   /**
    * Patch a <%= o.name %> by name
    */
-  public patch<%= o.name %>(name: string, resource: DeepPartial<<%= o.type %>>): Promise<<%= o.type %>> {
+  public patch<%= o.name %>(name: string, resource: DeepPartial<<%= o.name %>>): Promise<<%= o.name %>> {
     return getBody(<%= o.api %>(name).patch({ body: resource }));
   }
 
   /**
    * Delete a <%= o.name %> by name
    */
-  public delete<%= o.name %>(name: string): Promise<<%= o.type %>> {
+  public delete<%= o.name %>(name: string): Promise<<%= o.name %>> {
     return getBody(<%= o.api %>(name).delete());
   }
 
