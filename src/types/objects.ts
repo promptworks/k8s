@@ -1,9 +1,14 @@
 import * as gen from "./gen";
 
+export type ObjectMeta = gen.Objectmeta;
+export type Container = gen.Container;
+export type EnvVar = gen.Envvar;
+export type Probe = gen.Probe;
+
 export interface GenericObject<K = string> {
   apiVersion: string;
   kind: K;
-  metadata: { name: string };
+  metadata: ObjectMeta & { name: string };
 }
 
 type Kind<K, T> = T & GenericObject<K>;
