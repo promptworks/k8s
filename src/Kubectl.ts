@@ -33,6 +33,9 @@ export class Kubectl {
     this.flags = toFlags(options);
   }
 
+  /**
+   * Run an arbitrary shell command.
+   */
   public run(args: string[], opts: execa.Options = {}) {
     return this.shell("kubectl", this.flags.concat(args), opts);
   }
