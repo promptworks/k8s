@@ -3,6 +3,9 @@ SWAGGER=https://raw.githubusercontent.com/kubernetes/kubernetes/v1.13.4/api/open
 
 all: src/Kubernetes.ts
 
+build: all
+	node_modules/.bin/tsc -b
+
 tmp:
 	mkdir tmp
 

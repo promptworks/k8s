@@ -17,12 +17,11 @@
     "url": "git+https://github.com/promptworks/k8s.git"
   },
   "scripts": {
-    "prepack": "tsc -b",
+    "prepack": "make build",
     "lint": "tsc --noEmit -p .",
     "format": "prettier --write '{src,tests}/**/*.ts'",
     "test": "jest",
-    "docs": "typedoc --options typedoc.config.json",
-    "generate": "make"
+    "docs": "typedoc --options typedoc.config.json"
   },
   "jest": {
     "preset": "ts-jest"
