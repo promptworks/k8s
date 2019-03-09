@@ -5,48 +5,102 @@ export type Container = gen.Container;
 export type EnvVar = gen.Envvar;
 export type Probe = gen.Probe;
 
-export interface GenericObject<K = string> {
+export interface GenericObject {
   apiVersion: string;
-  kind: K;
+  kind: string;
   metadata: ObjectMeta & { name: string };
 }
 
-type Kind<K, T> = T & GenericObject<K>;
+export interface Namespace extends gen.Namespace {
+  kind: "Namespace";
+  apiVersion: string;
+  metadata: ObjectMeta & { name: string };
+}
 
-export type ConfigMap = Kind<"ConfigMap", gen.Configmap>;
-export type CronJob = Kind<"CronJob", gen.Cronjob>;
-export type DaemonSet = Kind<"DaemonSet", gen.Daemonset>;
-export type Deployment = Kind<"Deployment", gen.Deployment>;
-export type HorizontalPodAutoscaler = Kind<
-  "HorizontalPodAutoscaler",
-  gen.Horizontalpodautoscaler
->;
-export type Ingress = Kind<"Ingress", gen.Ingress>;
-export type Job = Kind<"Job", gen.Job>;
-export type Namespace = Kind<"Namespace", gen.Namespace>;
-export type Pod = Kind<"Pod", gen.Pod>;
-export type ReplicaSet = Kind<"ReplicaSet", gen.Replicaset>;
-export type Secret = Kind<"Secret", gen.Secret>;
-export type Service = Kind<"Service", gen.Service>;
-export type StatefulSet = Kind<"StatefulSet", gen.Statefulset>;
-export type PersistentVolumeClaim = Kind<
-  "PersistentVolumeClaim",
-  gen.Persistentvolumeclaim
->;
+export interface Pod extends gen.Pod {
+  kind: "Pod";
+  apiVersion: string;
+  metadata: ObjectMeta & { name: string };
+}
+
+export interface ConfigMap extends gen.Configmap {
+  kind: "ConfigMap";
+  apiVersion: string;
+  metadata: ObjectMeta & { name: string };
+}
+
+export interface Deployment extends gen.Deployment {
+  kind: "Deployment";
+  apiVersion: string;
+  metadata: ObjectMeta & { name: string };
+}
+
+export interface Ingress extends gen.Ingress {
+  kind: "Ingress";
+  apiVersion: string;
+  metadata: ObjectMeta & { name: string };
+}
+
+export interface Secret extends gen.Secret {
+  kind: "Secret";
+  apiVersion: string;
+  metadata: ObjectMeta & { name: string };
+}
+
+export interface Service extends gen.Service {
+  kind: "Service";
+  apiVersion: string;
+  metadata: ObjectMeta & { name: string };
+}
+
+export interface DaemonSet extends gen.Daemonset {
+  kind: "DaemonSet";
+  apiVersion: string;
+  metadata: ObjectMeta & { name: string };
+}
+
+export interface ReplicaSet extends gen.Replicaset {
+  kind: "ReplicaSet";
+  apiVersion: string;
+  metadata: ObjectMeta & { name: string };
+}
+
+export interface Job extends gen.Job {
+  kind: "Job";
+  apiVersion: string;
+  metadata: ObjectMeta & { name: string };
+}
+
+export interface CronJob extends gen.Cronjob {
+  kind: "CronJob";
+  apiVersion: string;
+  metadata: ObjectMeta & { name: string };
+}
+
+export interface HorizontalPodAutoscaler extends gen.Horizontalpodautoscaler {
+  kind: "HorizontalPodAutoscaler";
+  apiVersion: string;
+  metadata: ObjectMeta & { name: string };
+}
+
+export interface PersistentVolumeClaim extends gen.Persistentvolumeclaim {
+  kind: "PersistentVolumeClaim";
+  apiVersion: string;
+  metadata: ObjectMeta & { name: string };
+}
 
 export type AnyObject =
-  | ConfigMap
-  | CronJob
-  | DaemonSet
-  | Deployment
-  | Ingress
-  | HorizontalPodAutoscaler
-  | Job
   | Namespace
   | Pod
-  | ReplicaSet
+  | ConfigMap
+  | Deployment
+  | Ingress
   | Secret
   | Service
-  | StatefulSet
+  | DaemonSet
+  | ReplicaSet
+  | Job
+  | CronJob
+  | HorizontalPodAutoscaler
   | PersistentVolumeClaim
   | GenericObject;

@@ -24,16 +24,24 @@ const withDefaults = items => {
     generatedType: toGeneratedName(item.name),
     ...item
   }));
-}
-
-const client = path.join(__dirname, "../gen/client.ejs");
-const types = path.join(__dirname, "../gen/types.ejs");
+};
 
 const data = {
   objects: withDefaults(require("../gen/input.json"))
 };
 
-Promise.all([
-  ejs.render(client, data).then(code => writeCode("src/Kubernetes.ts", code)),
-  ejs.render(types, data).then(code => writeCode("src/types/objects.ts", code))
-]).catch(console.error);
+const generateKubernetes = async () => {
+  const template = path.join(__dirname, "../gen/Kubernetes.ejs");
+  const code = await ejs.renderFile(template, data);
+  await writeCode("src/Kubernetes.ts", code);
+};
+
+const generateObjects = async () => {
+  const template = path.join(__dirname, "../gen/objects.ejs");
+  const code = await ejs.renderFile(template, data);
+  await writeCode("src/types/objects.ts", code);
+};
+
+generateKubernetes()
+  .then(() => generateObjects())
+  .catch(error => console.error(error));

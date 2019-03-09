@@ -13,12 +13,12 @@ export interface GenericObject {
 
 <% for (const o of objects) { %>
 export interface <%= o.type %> extends gen.<%= o.generatedType %> {
-  kind: <%= o.type %>;
+  kind: "<%= o.type %>";
   apiVersion: string;
   metadata: ObjectMeta & { name: string }
 }
 <% } %>
 
 export type AnyObject =
-<% objects.map(o => `  | ${o.type}`).join('\n') %>
+<%= objects.map(o => `  | ${o.type}`).join('\n') %>
   | GenericObject;
