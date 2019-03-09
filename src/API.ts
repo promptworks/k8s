@@ -25,18 +25,24 @@ export const exists = async (promise: Promise<any>): Promise<boolean> => {
 };
 
 export class API {
+  public readonly kubeconfig: any;
   public readonly namespace: string;
+  public readonly context?: string;
+
   protected readonly client: k8s.ApiRoot;
 
   public constructor({
-    kubeconfig,
-    context,
     namespace = "default",
-    client = new k8s.Client1_10({
-      config: k8s.config.fromKubeconfig(kubeconfig, context)
-    })
+    ...opts
   }: Options = {}) {
+    const kubeconfig = k8s.config.loadKubeconfig(opts.kubeconfig);
+    const config = k8s.config.fromKubeconfig(kubeconfig, opts.context);
+    const context = opts.context || kubeconfig['current-context'];
+    const client = new k8s.Client1_10({ config });
+
     this.namespace = namespace;
+    this.kubeconfig = kubeconfig;
+    this.context = context;
     this.client = client;
   }
 

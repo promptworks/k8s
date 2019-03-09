@@ -1,13 +1,9 @@
-import * as k8s from "kubernetes-client";
-import { Kubectl } from "../Kubectl";
 import { Stream } from "stream";
 
 export interface Options {
   namespace?: string;
   kubeconfig?: string;
   context?: string;
-  kubectl?: Kubectl;
-  client?: k8s.ApiRoot;
 }
 
 export interface Flags {
