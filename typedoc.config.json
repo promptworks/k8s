@@ -1,0 +1,11 @@
+{
+  "name": "@promptly/k8s",
+  "theme": "markdown",
+  "out": "./docs",
+  "mode": "file",
+  "tsconfig": "tsconfig.json",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeExternals": true,
+  "excludeNotExported": true
+}
