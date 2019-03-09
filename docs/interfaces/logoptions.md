@@ -22,7 +22,7 @@
 
 **● container**: *`undefined` \| `string`*
 
-*Defined in [types/options.ts:18](https://github.com/rzane/k8s/blob/67fb0bc/src/types/options.ts#L18)*
+*Defined in [types/options.ts:14](https://github.com/rzane/k8s/blob/0f3ff00/src/types/options.ts#L14)*
 
 ___
 

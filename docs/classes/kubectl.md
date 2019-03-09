@@ -29,7 +29,7 @@
 
 ⊕ **new Kubectl**(options?: *[Flags](../interfaces/flags.md)*): [Kubectl](kubectl.md)
 
-*Defined in [Kubectl.ts:30](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubectl.ts#L30)*
+*Defined in [Kubectl.ts:30](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubectl.ts#L30)*
 
 **Parameters:**
 
@@ -49,7 +49,7 @@ ___
 
 ▸ **apply**(objects: *[AnyObject](../#anyobject)[]*): `Promise`<`void`>
 
-*Defined in [Kubectl.ts:46](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubectl.ts#L46)*
+*Defined in [Kubectl.ts:46](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubectl.ts#L46)*
 
 Apply a configuration to a resource.
 
@@ -68,7 +68,7 @@ ___
 
 ▸ **attach**(pod: *`string`*, opts?: *[AttachOptions](../interfaces/attachoptions.md)*): `Promise`<`void`>
 
-*Defined in [Kubectl.ts:55](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubectl.ts#L55)*
+*Defined in [Kubectl.ts:55](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubectl.ts#L55)*
 
 Attach to a running container.
 
@@ -88,7 +88,7 @@ ___
 
 ▸ **exec**(pod: *`string`*, opts?: *[ConnectOptions](../interfaces/connectoptions.md)*): `Promise`<`void`>
 
-*Defined in [Kubectl.ts:72](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubectl.ts#L72)*
+*Defined in [Kubectl.ts:72](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubectl.ts#L72)*
 
 Establish an interactive `exec` session with a running container.
 
@@ -108,7 +108,7 @@ ___
 
 ▸ **run**(args: *`string`[]*, opts?: *`Options`*): `ChildProcess` & `ExecaChildPromise` & `Promise`<`ExecaReturns`>
 
-*Defined in [Kubectl.ts:39](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubectl.ts#L39)*
+*Defined in [Kubectl.ts:39](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubectl.ts#L39)*
 
 Run an arbitrary shell command.
 

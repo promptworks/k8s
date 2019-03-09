@@ -28,7 +28,7 @@
 
 **● container**: *`undefined` \| `string`*
 
-*Defined in [types/options.ts:29](https://github.com/rzane/k8s/blob/67fb0bc/src/types/options.ts#L29)*
+*Defined in [types/options.ts:25](https://github.com/rzane/k8s/blob/0f3ff00/src/types/options.ts#L25)*
 
 ___
 <a id="stderr"></a>
@@ -37,7 +37,7 @@ ___
 
 **● stderr**: *`Stream`*
 
-*Defined in [types/options.ts:30](https://github.com/rzane/k8s/blob/67fb0bc/src/types/options.ts#L30)*
+*Defined in [types/options.ts:26](https://github.com/rzane/k8s/blob/0f3ff00/src/types/options.ts#L26)*
 
 ___
 <a id="stdin"></a>
@@ -46,7 +46,7 @@ ___
 
 **● stdin**: *`Stream`*
 
-*Defined in [types/options.ts:31](https://github.com/rzane/k8s/blob/67fb0bc/src/types/options.ts#L31)*
+*Defined in [types/options.ts:27](https://github.com/rzane/k8s/blob/0f3ff00/src/types/options.ts#L27)*
 
 ___
 <a id="stdout"></a>
@@ -55,7 +55,7 @@ ___
 
 **● stdout**: *`Stream`*
 
-*Defined in [types/options.ts:32](https://github.com/rzane/k8s/blob/67fb0bc/src/types/options.ts#L32)*
+*Defined in [types/options.ts:28](https://github.com/rzane/k8s/blob/0f3ff00/src/types/options.ts#L28)*
 
 ___
 <a id="tty"></a>
@@ -64,7 +64,7 @@ ___
 
 **● tty**: *`undefined` \| `false` \| `true`*
 
-*Defined in [types/options.ts:33](https://github.com/rzane/k8s/blob/67fb0bc/src/types/options.ts#L33)*
+*Defined in [types/options.ts:29](https://github.com/rzane/k8s/blob/0f3ff00/src/types/options.ts#L29)*
 
 ___
 

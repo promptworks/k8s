@@ -16,6 +16,8 @@
 
 ### Properties
 
+* [context](api.md#context)
+* [kubeconfig](api.md#kubeconfig)
 * [namespace](api.md#namespace)
 
 ### Methods
@@ -34,7 +36,7 @@
 
 ⊕ **new API**(__namedParameters?: *`object`*): [API](api.md)
 
-*Defined in [API.ts:29](https://github.com/rzane/k8s/blob/67fb0bc/src/API.ts#L29)*
+*Defined in [API.ts:32](https://github.com/rzane/k8s/blob/0f3ff00/src/API.ts#L32)*
 
 **Parameters:**
 
@@ -48,13 +50,31 @@ ___
 
 ## Properties
 
+<a id="context"></a>
+
+### `<Optional>` context
+
+**● context**: *`undefined` \| `string`*
+
+*Defined in [API.ts:30](https://github.com/rzane/k8s/blob/0f3ff00/src/API.ts#L30)*
+
+___
+<a id="kubeconfig"></a>
+
+###  kubeconfig
+
+**● kubeconfig**: *`any`*
+
+*Defined in [API.ts:28](https://github.com/rzane/k8s/blob/0f3ff00/src/API.ts#L28)*
+
+___
 <a id="namespace"></a>
 
 ###  namespace
 
 **● namespace**: *`string`*
 
-*Defined in [API.ts:28](https://github.com/rzane/k8s/blob/67fb0bc/src/API.ts#L28)*
+*Defined in [API.ts:29](https://github.com/rzane/k8s/blob/0f3ff00/src/API.ts#L29)*
 
 ___
 
@@ -66,7 +86,7 @@ ___
 
 ▸ **exec**(name: *`string`*, opts?: *[ExecOptions](../interfaces/execoptions.md)*): `Promise`<`string`>
 
-*Defined in [API.ts:70](https://github.com/rzane/k8s/blob/67fb0bc/src/API.ts#L70)*
+*Defined in [API.ts:76](https://github.com/rzane/k8s/blob/0f3ff00/src/API.ts#L76)*
 
 Run a single command and return the output as a string.
 
@@ -86,7 +106,7 @@ ___
 
 ▸ **followLogs**(name: *`string`*, opts?: *[LogOptions](../interfaces/logoptions.md)*): `Stream`
 
-*Defined in [API.ts:58](https://github.com/rzane/k8s/blob/67fb0bc/src/API.ts#L58)*
+*Defined in [API.ts:64](https://github.com/rzane/k8s/blob/0f3ff00/src/API.ts#L64)*
 
 Get a log stream from a running container.
 
@@ -106,7 +126,7 @@ ___
 
 ▸ **getLogs**(name: *`string`*, opts?: *[LogOptions](../interfaces/logoptions.md)*): `Promise`<`string`>
 
-*Defined in [API.ts:46](https://github.com/rzane/k8s/blob/67fb0bc/src/API.ts#L46)*
+*Defined in [API.ts:52](https://github.com/rzane/k8s/blob/0f3ff00/src/API.ts#L52)*
 
 Get the logs from a container, and return them as a string.
 

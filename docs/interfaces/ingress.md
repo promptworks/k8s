@@ -33,7 +33,7 @@ Ingress is a collection of rules that allow inbound connections to reach the end
 
 **● apiVersion**: *`string` \| `null`*
 
-*Defined in [types/gen/ingress.ts:124](https://github.com/rzane/k8s/blob/67fb0bc/src/types/gen/ingress.ts#L124)*
+*Defined in [types/gen/ingress.ts:124](https://github.com/rzane/k8s/blob/0f3ff00/src/types/gen/ingress.ts#L124)*
 
 APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: [https://git.k8s.io/community/contributors/devel/api-conventions.md#resources](https://git.k8s.io/community/contributors/devel/api-conventions.md#resources)
 
@@ -44,7 +44,7 @@ ___
 
 **● kind**: *`string` \| `null`*
 
-*Defined in [types/gen/ingress.ts:41](https://github.com/rzane/k8s/blob/67fb0bc/src/types/gen/ingress.ts#L41)*
+*Defined in [types/gen/ingress.ts:41](https://github.com/rzane/k8s/blob/0f3ff00/src/types/gen/ingress.ts#L41)*
 
 Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: [https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds)
 
@@ -55,7 +55,7 @@ ___
 
 **● metadata**: *`undefined` \| `object`*
 
-*Defined in [types/gen/ingress.ts:128](https://github.com/rzane/k8s/blob/67fb0bc/src/types/gen/ingress.ts#L128)*
+*Defined in [types/gen/ingress.ts:128](https://github.com/rzane/k8s/blob/0f3ff00/src/types/gen/ingress.ts#L128)*
 
 Standard object's metadata. More info: [https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata](https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata)
 
@@ -66,7 +66,7 @@ ___
 
 **● spec**: *`undefined` \| `object`*
 
-*Defined in [types/gen/ingress.ts:45](https://github.com/rzane/k8s/blob/67fb0bc/src/types/gen/ingress.ts#L45)*
+*Defined in [types/gen/ingress.ts:45](https://github.com/rzane/k8s/blob/0f3ff00/src/types/gen/ingress.ts#L45)*
 
 Spec is the desired state of the Ingress. More info: [https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status](https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status)
 
@@ -77,7 +77,7 @@ ___
 
 **● status**: *`undefined` \| `object`*
 
-*Defined in [types/gen/ingress.ts:15](https://github.com/rzane/k8s/blob/67fb0bc/src/types/gen/ingress.ts#L15)*
+*Defined in [types/gen/ingress.ts:15](https://github.com/rzane/k8s/blob/0f3ff00/src/types/gen/ingress.ts#L15)*
 
 Status is the current state of the Ingress. More info: [https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status](https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status)
 

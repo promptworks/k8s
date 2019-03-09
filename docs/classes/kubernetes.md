@@ -16,6 +16,8 @@
 
 ### Properties
 
+* [context](kubernetes.md#context)
+* [kubeconfig](kubernetes.md#kubeconfig)
 * [namespace](kubernetes.md#namespace)
 
 ### Methods
@@ -127,7 +129,7 @@
 
 *Inherited from [API](api.md).[constructor](api.md#constructor)*
 
-*Defined in [API.ts:29](https://github.com/rzane/k8s/blob/67fb0bc/src/API.ts#L29)*
+*Defined in [API.ts:32](https://github.com/rzane/k8s/blob/0f3ff00/src/API.ts#L32)*
 
 **Parameters:**
 
@@ -141,6 +143,28 @@ ___
 
 ## Properties
 
+<a id="context"></a>
+
+### `<Optional>` context
+
+**● context**: *`undefined` \| `string`*
+
+*Inherited from [API](api.md).[context](api.md#context)*
+
+*Defined in [API.ts:30](https://github.com/rzane/k8s/blob/0f3ff00/src/API.ts#L30)*
+
+___
+<a id="kubeconfig"></a>
+
+###  kubeconfig
+
+**● kubeconfig**: *`any`*
+
+*Inherited from [API](api.md).[kubeconfig](api.md#kubeconfig)*
+
+*Defined in [API.ts:28](https://github.com/rzane/k8s/blob/0f3ff00/src/API.ts#L28)*
+
+___
 <a id="namespace"></a>
 
 ###  namespace
@@ -149,7 +173,7 @@ ___
 
 *Inherited from [API](api.md).[namespace](api.md#namespace)*
 
-*Defined in [API.ts:28](https://github.com/rzane/k8s/blob/67fb0bc/src/API.ts#L28)*
+*Defined in [API.ts:29](https://github.com/rzane/k8s/blob/0f3ff00/src/API.ts#L29)*
 
 ___
 
@@ -161,7 +185,7 @@ ___
 
 ▸ **createConfigMap**(resource: *[ConfigMap](../#configmap)*): `Promise`<[ConfigMap](../#configmap)>
 
-*Defined in [Kubernetes.ts:179](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L179)*
+*Defined in [Kubernetes.ts:179](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L179)*
 
 Create a new ConfigMap
 
@@ -180,7 +204,7 @@ ___
 
 ▸ **createCronJob**(resource: *[CronJob](../#cronjob)*): `Promise`<[CronJob](../#cronjob)>
 
-*Defined in [Kubernetes.ts:838](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L838)*
+*Defined in [Kubernetes.ts:838](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L838)*
 
 Create a new CronJob
 
@@ -199,7 +223,7 @@ ___
 
 ▸ **createDaemonSet**(resource: *[DaemonSet](../#daemonset)*): `Promise`<[DaemonSet](../#daemonset)>
 
-*Defined in [Kubernetes.ts:590](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L590)*
+*Defined in [Kubernetes.ts:590](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L590)*
 
 Create a new DaemonSet
 
@@ -218,7 +242,7 @@ ___
 
 ▸ **createDeployment**(resource: *[Deployment](../interfaces/deployment.md)*): `Promise`<[Deployment](../interfaces/deployment.md)>
 
-*Defined in [Kubernetes.ts:263](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L263)*
+*Defined in [Kubernetes.ts:263](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L263)*
 
 Create a new Deployment
 
@@ -237,7 +261,7 @@ ___
 
 ▸ **createHorizontalPodAutoscaler**(resource: *[HorizontalPodAutoscaler](../#horizontalpodautoscaler)*): `Promise`<[HorizontalPodAutoscaler](../#horizontalpodautoscaler)>
 
-*Defined in [Kubernetes.ts:925](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L925)*
+*Defined in [Kubernetes.ts:925](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L925)*
 
 Create a new HorizontalPodAutoscaler
 
@@ -256,7 +280,7 @@ ___
 
 ▸ **createIngress**(resource: *[Ingress](../interfaces/ingress.md)*): `Promise`<[Ingress](../interfaces/ingress.md)>
 
-*Defined in [Kubernetes.ts:349](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L349)*
+*Defined in [Kubernetes.ts:349](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L349)*
 
 Create a new Ingress
 
@@ -275,7 +299,7 @@ ___
 
 ▸ **createJob**(resource: *[Job](../interfaces/job.md)*): `Promise`<[Job](../interfaces/job.md)>
 
-*Defined in [Kubernetes.ts:760](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L760)*
+*Defined in [Kubernetes.ts:760](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L760)*
 
 Create a new Job
 
@@ -294,7 +318,7 @@ ___
 
 ▸ **createNamespace**(resource: *[Namespace](../interfaces/namespace.md)*): `Promise`<[Namespace](../interfaces/namespace.md)>
 
-*Defined in [Kubernetes.ts:41](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L41)*
+*Defined in [Kubernetes.ts:41](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L41)*
 
 Create a new Namespace
 
@@ -313,7 +337,7 @@ ___
 
 ▸ **createPersistentVolumeClaim**(resource: *[PersistentVolumeClaim](../#persistentvolumeclaim)*): `Promise`<[PersistentVolumeClaim](../#persistentvolumeclaim)>
 
-*Defined in [Kubernetes.ts:1017](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L1017)*
+*Defined in [Kubernetes.ts:1017](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L1017)*
 
 Create a new PersistentVolumeClaim
 
@@ -332,7 +356,7 @@ ___
 
 ▸ **createPod**(resource: *[Pod](../interfaces/pod.md)*): `Promise`<[Pod](../interfaces/pod.md)>
 
-*Defined in [Kubernetes.ts:103](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L103)*
+*Defined in [Kubernetes.ts:103](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L103)*
 
 Create a new Pod
 
@@ -351,7 +375,7 @@ ___
 
 ▸ **createReplicaSet**(resource: *[ReplicaSet](../#replicaset)*): `Promise`<[ReplicaSet](../#replicaset)>
 
-*Defined in [Kubernetes.ts:676](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L676)*
+*Defined in [Kubernetes.ts:676](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L676)*
 
 Create a new ReplicaSet
 
@@ -370,7 +394,7 @@ ___
 
 ▸ **createSecret**(resource: *[Secret](../interfaces/secret.md)*): `Promise`<[Secret](../interfaces/secret.md)>
 
-*Defined in [Kubernetes.ts:430](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L430)*
+*Defined in [Kubernetes.ts:430](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L430)*
 
 Create a new Secret
 
@@ -389,7 +413,7 @@ ___
 
 ▸ **createService**(resource: *[Service](../interfaces/service.md)*): `Promise`<[Service](../interfaces/service.md)>
 
-*Defined in [Kubernetes.ts:509](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L509)*
+*Defined in [Kubernetes.ts:509](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L509)*
 
 Create a new Service
 
@@ -408,7 +432,7 @@ ___
 
 ▸ **deleteConfigMap**(name: *`string`*): `Promise`<[ConfigMap](../#configmap)>
 
-*Defined in [Kubernetes.ts:218](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L218)*
+*Defined in [Kubernetes.ts:218](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L218)*
 
 Delete a ConfigMap by name
 
@@ -427,7 +451,7 @@ ___
 
 ▸ **deleteCronJob**(name: *`string`*): `Promise`<[CronJob](../#cronjob)>
 
-*Defined in [Kubernetes.ts:876](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L876)*
+*Defined in [Kubernetes.ts:876](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L876)*
 
 Delete a CronJob by name
 
@@ -446,7 +470,7 @@ ___
 
 ▸ **deleteDaemonSet**(name: *`string`*): `Promise`<[DaemonSet](../#daemonset)>
 
-*Defined in [Kubernetes.ts:631](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L631)*
+*Defined in [Kubernetes.ts:631](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L631)*
 
 Delete a DaemonSet by name
 
@@ -465,7 +489,7 @@ ___
 
 ▸ **deleteDeployment**(name: *`string`*): `Promise`<[Deployment](../interfaces/deployment.md)>
 
-*Defined in [Kubernetes.ts:304](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L304)*
+*Defined in [Kubernetes.ts:304](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L304)*
 
 Delete a Deployment by name
 
@@ -484,7 +508,7 @@ ___
 
 ▸ **deleteHorizontalPodAutoscaler**(name: *`string`*): `Promise`<[HorizontalPodAutoscaler](../#horizontalpodautoscaler)>
 
-*Defined in [Kubernetes.ts:968](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L968)*
+*Defined in [Kubernetes.ts:968](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L968)*
 
 Delete a HorizontalPodAutoscaler by name
 
@@ -503,7 +527,7 @@ ___
 
 ▸ **deleteIngress**(name: *`string`*): `Promise`<[Ingress](../interfaces/ingress.md)>
 
-*Defined in [Kubernetes.ts:387](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L387)*
+*Defined in [Kubernetes.ts:387](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L387)*
 
 Delete a Ingress by name
 
@@ -522,7 +546,7 @@ ___
 
 ▸ **deleteJob**(name: *`string`*): `Promise`<[Job](../interfaces/job.md)>
 
-*Defined in [Kubernetes.ts:793](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L793)*
+*Defined in [Kubernetes.ts:793](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L793)*
 
 Delete a Job by name
 
@@ -541,7 +565,7 @@ ___
 
 ▸ **deleteNamespace**(name: *`string`*): `Promise`<[Namespace](../interfaces/namespace.md)>
 
-*Defined in [Kubernetes.ts:70](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L70)*
+*Defined in [Kubernetes.ts:70](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L70)*
 
 Delete a Namespace by name
 
@@ -560,7 +584,7 @@ ___
 
 ▸ **deletePersistentVolumeClaim**(name: *`string`*): `Promise`<[PersistentVolumeClaim](../#persistentvolumeclaim)>
 
-*Defined in [Kubernetes.ts:1060](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L1060)*
+*Defined in [Kubernetes.ts:1060](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L1060)*
 
 Delete a PersistentVolumeClaim by name
 
@@ -579,7 +603,7 @@ ___
 
 ▸ **deletePod**(name: *`string`*): `Promise`<[Pod](../interfaces/pod.md)>
 
-*Defined in [Kubernetes.ts:136](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L136)*
+*Defined in [Kubernetes.ts:136](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L136)*
 
 Delete a Pod by name
 
@@ -598,7 +622,7 @@ ___
 
 ▸ **deleteReplicaSet**(name: *`string`*): `Promise`<[ReplicaSet](../#replicaset)>
 
-*Defined in [Kubernetes.ts:717](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L717)*
+*Defined in [Kubernetes.ts:717](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L717)*
 
 Delete a ReplicaSet by name
 
@@ -617,7 +641,7 @@ ___
 
 ▸ **deleteSecret**(name: *`string`*): `Promise`<[Secret](../interfaces/secret.md)>
 
-*Defined in [Kubernetes.ts:466](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L466)*
+*Defined in [Kubernetes.ts:466](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L466)*
 
 Delete a Secret by name
 
@@ -636,7 +660,7 @@ ___
 
 ▸ **deleteService**(name: *`string`*): `Promise`<[Service](../interfaces/service.md)>
 
-*Defined in [Kubernetes.ts:545](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L545)*
+*Defined in [Kubernetes.ts:545](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L545)*
 
 Delete a Service by name
 
@@ -657,7 +681,7 @@ ___
 
 *Inherited from [API](api.md).[exec](api.md#exec)*
 
-*Defined in [API.ts:70](https://github.com/rzane/k8s/blob/67fb0bc/src/API.ts#L70)*
+*Defined in [API.ts:76](https://github.com/rzane/k8s/blob/0f3ff00/src/API.ts#L76)*
 
 Run a single command and return the output as a string.
 
@@ -679,7 +703,7 @@ ___
 
 *Inherited from [API](api.md).[followLogs](api.md#followlogs)*
 
-*Defined in [API.ts:58](https://github.com/rzane/k8s/blob/67fb0bc/src/API.ts#L58)*
+*Defined in [API.ts:64](https://github.com/rzane/k8s/blob/0f3ff00/src/API.ts#L64)*
 
 Get a log stream from a running container.
 
@@ -699,7 +723,7 @@ ___
 
 ▸ **getConfigMap**(name: *`string`*): `Promise`<[ConfigMap](../#configmap)>
 
-*Defined in [Kubernetes.ts:167](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L167)*
+*Defined in [Kubernetes.ts:167](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L167)*
 
 Get ConfigMap by name
 
@@ -718,7 +742,7 @@ ___
 
 ▸ **getCronJob**(name: *`string`*): `Promise`<[CronJob](../#cronjob)>
 
-*Defined in [Kubernetes.ts:826](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L826)*
+*Defined in [Kubernetes.ts:826](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L826)*
 
 Get CronJob by name
 
@@ -737,7 +761,7 @@ ___
 
 ▸ **getDaemonSet**(name: *`string`*): `Promise`<[DaemonSet](../#daemonset)>
 
-*Defined in [Kubernetes.ts:578](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L578)*
+*Defined in [Kubernetes.ts:578](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L578)*
 
 Get DaemonSet by name
 
@@ -756,7 +780,7 @@ ___
 
 ▸ **getDeployment**(name: *`string`*): `Promise`<[Deployment](../interfaces/deployment.md)>
 
-*Defined in [Kubernetes.ts:251](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L251)*
+*Defined in [Kubernetes.ts:251](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L251)*
 
 Get Deployment by name
 
@@ -775,7 +799,7 @@ ___
 
 ▸ **getHorizontalPodAutoscaler**(name: *`string`*): `Promise`<[HorizontalPodAutoscaler](../#horizontalpodautoscaler)>
 
-*Defined in [Kubernetes.ts:911](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L911)*
+*Defined in [Kubernetes.ts:911](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L911)*
 
 Get HorizontalPodAutoscaler by name
 
@@ -794,7 +818,7 @@ ___
 
 ▸ **getIngress**(name: *`string`*): `Promise`<[Ingress](../interfaces/ingress.md)>
 
-*Defined in [Kubernetes.ts:337](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L337)*
+*Defined in [Kubernetes.ts:337](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L337)*
 
 Get Ingress by name
 
@@ -813,7 +837,7 @@ ___
 
 ▸ **getJob**(name: *`string`*): `Promise`<[Job](../interfaces/job.md)>
 
-*Defined in [Kubernetes.ts:748](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L748)*
+*Defined in [Kubernetes.ts:748](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L748)*
 
 Get Job by name
 
@@ -834,7 +858,7 @@ ___
 
 *Inherited from [API](api.md).[getLogs](api.md#getlogs)*
 
-*Defined in [API.ts:46](https://github.com/rzane/k8s/blob/67fb0bc/src/API.ts#L46)*
+*Defined in [API.ts:52](https://github.com/rzane/k8s/blob/0f3ff00/src/API.ts#L52)*
 
 Get the logs from a container, and return them as a string.
 
@@ -854,7 +878,7 @@ ___
 
 ▸ **getNamespace**(name: *`string`*): `Promise`<[Namespace](../interfaces/namespace.md)>
 
-*Defined in [Kubernetes.ts:34](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L34)*
+*Defined in [Kubernetes.ts:34](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L34)*
 
 Get Namespace by name
 
@@ -873,7 +897,7 @@ ___
 
 ▸ **getPersistentVolumeClaim**(name: *`string`*): `Promise`<[PersistentVolumeClaim](../#persistentvolumeclaim)>
 
-*Defined in [Kubernetes.ts:1003](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L1003)*
+*Defined in [Kubernetes.ts:1003](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L1003)*
 
 Get PersistentVolumeClaim by name
 
@@ -892,7 +916,7 @@ ___
 
 ▸ **getPod**(name: *`string`*): `Promise`<[Pod](../interfaces/pod.md)>
 
-*Defined in [Kubernetes.ts:91](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L91)*
+*Defined in [Kubernetes.ts:91](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L91)*
 
 Get Pod by name
 
@@ -911,7 +935,7 @@ ___
 
 ▸ **getReplicaSet**(name: *`string`*): `Promise`<[ReplicaSet](../#replicaset)>
 
-*Defined in [Kubernetes.ts:664](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L664)*
+*Defined in [Kubernetes.ts:664](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L664)*
 
 Get ReplicaSet by name
 
@@ -930,7 +954,7 @@ ___
 
 ▸ **getSecret**(name: *`string`*): `Promise`<[Secret](../interfaces/secret.md)>
 
-*Defined in [Kubernetes.ts:418](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L418)*
+*Defined in [Kubernetes.ts:418](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L418)*
 
 Get Secret by name
 
@@ -949,7 +973,7 @@ ___
 
 ▸ **getService**(name: *`string`*): `Promise`<[Service](../interfaces/service.md)>
 
-*Defined in [Kubernetes.ts:497](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L497)*
+*Defined in [Kubernetes.ts:497](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L497)*
 
 Get Service by name
 
@@ -968,7 +992,7 @@ ___
 
 ▸ **hasConfigMap**(name: *`string`*): `Promise`<`boolean`>
 
-*Defined in [Kubernetes.ts:230](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L230)*
+*Defined in [Kubernetes.ts:230](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L230)*
 
 Does a ConfigMap with the given name exist?
 
@@ -987,7 +1011,7 @@ ___
 
 ▸ **hasCronJob**(name: *`string`*): `Promise`<`boolean`>
 
-*Defined in [Kubernetes.ts:888](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L888)*
+*Defined in [Kubernetes.ts:888](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L888)*
 
 Does a CronJob with the given name exist?
 
@@ -1006,7 +1030,7 @@ ___
 
 ▸ **hasDaemonSet**(name: *`string`*): `Promise`<`boolean`>
 
-*Defined in [Kubernetes.ts:643](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L643)*
+*Defined in [Kubernetes.ts:643](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L643)*
 
 Does a DaemonSet with the given name exist?
 
@@ -1025,7 +1049,7 @@ ___
 
 ▸ **hasDeployment**(name: *`string`*): `Promise`<`boolean`>
 
-*Defined in [Kubernetes.ts:316](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L316)*
+*Defined in [Kubernetes.ts:316](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L316)*
 
 Does a Deployment with the given name exist?
 
@@ -1044,7 +1068,7 @@ ___
 
 ▸ **hasHorizontalPodAutoscaler**(name: *`string`*): `Promise`<`boolean`>
 
-*Defined in [Kubernetes.ts:982](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L982)*
+*Defined in [Kubernetes.ts:982](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L982)*
 
 Does a HorizontalPodAutoscaler with the given name exist?
 
@@ -1063,7 +1087,7 @@ ___
 
 ▸ **hasIngress**(name: *`string`*): `Promise`<`boolean`>
 
-*Defined in [Kubernetes.ts:399](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L399)*
+*Defined in [Kubernetes.ts:399](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L399)*
 
 Does a Ingress with the given name exist?
 
@@ -1082,7 +1106,7 @@ ___
 
 ▸ **hasJob**(name: *`string`*): `Promise`<`boolean`>
 
-*Defined in [Kubernetes.ts:805](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L805)*
+*Defined in [Kubernetes.ts:805](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L805)*
 
 Does a Job with the given name exist?
 
@@ -1101,7 +1125,7 @@ ___
 
 ▸ **hasNamespace**(name: *`string`*): `Promise`<`boolean`>
 
-*Defined in [Kubernetes.ts:77](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L77)*
+*Defined in [Kubernetes.ts:77](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L77)*
 
 Does a Namespace with the given name exist?
 
@@ -1120,7 +1144,7 @@ ___
 
 ▸ **hasPersistentVolumeClaim**(name: *`string`*): `Promise`<`boolean`>
 
-*Defined in [Kubernetes.ts:1074](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L1074)*
+*Defined in [Kubernetes.ts:1074](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L1074)*
 
 Does a PersistentVolumeClaim with the given name exist?
 
@@ -1139,7 +1163,7 @@ ___
 
 ▸ **hasPod**(name: *`string`*): `Promise`<`boolean`>
 
-*Defined in [Kubernetes.ts:148](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L148)*
+*Defined in [Kubernetes.ts:148](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L148)*
 
 Does a Pod with the given name exist?
 
@@ -1158,7 +1182,7 @@ ___
 
 ▸ **hasReplicaSet**(name: *`string`*): `Promise`<`boolean`>
 
-*Defined in [Kubernetes.ts:729](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L729)*
+*Defined in [Kubernetes.ts:729](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L729)*
 
 Does a ReplicaSet with the given name exist?
 
@@ -1177,7 +1201,7 @@ ___
 
 ▸ **hasSecret**(name: *`string`*): `Promise`<`boolean`>
 
-*Defined in [Kubernetes.ts:478](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L478)*
+*Defined in [Kubernetes.ts:478](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L478)*
 
 Does a Secret with the given name exist?
 
@@ -1196,7 +1220,7 @@ ___
 
 ▸ **hasService**(name: *`string`*): `Promise`<`boolean`>
 
-*Defined in [Kubernetes.ts:557](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L557)*
+*Defined in [Kubernetes.ts:557](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L557)*
 
 Does a Service with the given name exist?
 
@@ -1215,7 +1239,7 @@ ___
 
 ▸ **listConfigMaps**(): `Promise`<[ConfigMap](../#configmap)[]>
 
-*Defined in [Kubernetes.ts:160](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L160)*
+*Defined in [Kubernetes.ts:160](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L160)*
 
 List all ConfigMaps
 
@@ -1228,7 +1252,7 @@ ___
 
 ▸ **listCronJobs**(): `Promise`<[CronJob](../#cronjob)[]>
 
-*Defined in [Kubernetes.ts:817](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L817)*
+*Defined in [Kubernetes.ts:817](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L817)*
 
 List all CronJobs
 
@@ -1241,7 +1265,7 @@ ___
 
 ▸ **listDaemonSets**(): `Promise`<[DaemonSet](../#daemonset)[]>
 
-*Defined in [Kubernetes.ts:569](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L569)*
+*Defined in [Kubernetes.ts:569](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L569)*
 
 List all DaemonSets
 
@@ -1254,7 +1278,7 @@ ___
 
 ▸ **listDeployments**(): `Promise`<[Deployment](../interfaces/deployment.md)[]>
 
-*Defined in [Kubernetes.ts:242](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L242)*
+*Defined in [Kubernetes.ts:242](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L242)*
 
 List all Deployments
 
@@ -1267,7 +1291,7 @@ ___
 
 ▸ **listHorizontalPodAutoscalers**(): `Promise`<[HorizontalPodAutoscaler](../#horizontalpodautoscaler)[]>
 
-*Defined in [Kubernetes.ts:900](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L900)*
+*Defined in [Kubernetes.ts:900](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L900)*
 
 List all HorizontalPodAutoscalers
 
@@ -1280,7 +1304,7 @@ ___
 
 ▸ **listIngresses**(): `Promise`<[Ingress](../interfaces/ingress.md)[]>
 
-*Defined in [Kubernetes.ts:328](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L328)*
+*Defined in [Kubernetes.ts:328](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L328)*
 
 List all Ingresses
 
@@ -1293,7 +1317,7 @@ ___
 
 ▸ **listJobs**(): `Promise`<[Job](../interfaces/job.md)[]>
 
-*Defined in [Kubernetes.ts:741](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L741)*
+*Defined in [Kubernetes.ts:741](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L741)*
 
 List all Jobs
 
@@ -1306,7 +1330,7 @@ ___
 
 ▸ **listNamespaces**(): `Promise`<[Namespace](../interfaces/namespace.md)[]>
 
-*Defined in [Kubernetes.ts:27](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L27)*
+*Defined in [Kubernetes.ts:27](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L27)*
 
 List all Namespaces
 
@@ -1319,7 +1343,7 @@ ___
 
 ▸ **listPersistentVolumeClaims**(): `Promise`<[PersistentVolumeClaim](../#persistentvolumeclaim)[]>
 
-*Defined in [Kubernetes.ts:994](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L994)*
+*Defined in [Kubernetes.ts:994](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L994)*
 
 List all PersistentVolumeClaims
 
@@ -1332,7 +1356,7 @@ ___
 
 ▸ **listPods**(): `Promise`<[Pod](../interfaces/pod.md)[]>
 
-*Defined in [Kubernetes.ts:84](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L84)*
+*Defined in [Kubernetes.ts:84](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L84)*
 
 List all Pods
 
@@ -1345,7 +1369,7 @@ ___
 
 ▸ **listReplicaSets**(): `Promise`<[ReplicaSet](../#replicaset)[]>
 
-*Defined in [Kubernetes.ts:655](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L655)*
+*Defined in [Kubernetes.ts:655](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L655)*
 
 List all ReplicaSets
 
@@ -1358,7 +1382,7 @@ ___
 
 ▸ **listSecrets**(): `Promise`<[Secret](../interfaces/secret.md)[]>
 
-*Defined in [Kubernetes.ts:411](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L411)*
+*Defined in [Kubernetes.ts:411](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L411)*
 
 List all Secrets
 
@@ -1371,7 +1395,7 @@ ___
 
 ▸ **listServices**(): `Promise`<[Service](../interfaces/service.md)[]>
 
-*Defined in [Kubernetes.ts:490](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L490)*
+*Defined in [Kubernetes.ts:490](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L490)*
 
 List all Services
 
@@ -1384,7 +1408,7 @@ ___
 
 ▸ **patchConfigMap**(name: *`string`*, resource: *[DeepPartial](../#deeppartial)<[ConfigMap](../#configmap)>*): `Promise`<[ConfigMap](../#configmap)>
 
-*Defined in [Kubernetes.ts:203](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L203)*
+*Defined in [Kubernetes.ts:203](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L203)*
 
 Patch a ConfigMap by name
 
@@ -1404,7 +1428,7 @@ ___
 
 ▸ **patchCronJob**(name: *`string`*, resource: *[DeepPartial](../#deeppartial)<[CronJob](../#cronjob)>*): `Promise`<[CronJob](../#cronjob)>
 
-*Defined in [Kubernetes.ts:861](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L861)*
+*Defined in [Kubernetes.ts:861](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L861)*
 
 Patch a CronJob by name
 
@@ -1424,7 +1448,7 @@ ___
 
 ▸ **patchDaemonSet**(name: *`string`*, resource: *[DeepPartial](../#deeppartial)<[DaemonSet](../#daemonset)>*): `Promise`<[DaemonSet](../#daemonset)>
 
-*Defined in [Kubernetes.ts:616](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L616)*
+*Defined in [Kubernetes.ts:616](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L616)*
 
 Patch a DaemonSet by name
 
@@ -1444,7 +1468,7 @@ ___
 
 ▸ **patchDeployment**(name: *`string`*, resource: *[DeepPartial](../#deeppartial)<[Deployment](../interfaces/deployment.md)>*): `Promise`<[Deployment](../interfaces/deployment.md)>
 
-*Defined in [Kubernetes.ts:289](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L289)*
+*Defined in [Kubernetes.ts:289](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L289)*
 
 Patch a Deployment by name
 
@@ -1464,7 +1488,7 @@ ___
 
 ▸ **patchHorizontalPodAutoscaler**(name: *`string`*, resource: *[DeepPartial](../#deeppartial)<[HorizontalPodAutoscaler](../#horizontalpodautoscaler)>*): `Promise`<[HorizontalPodAutoscaler](../#horizontalpodautoscaler)>
 
-*Defined in [Kubernetes.ts:953](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L953)*
+*Defined in [Kubernetes.ts:953](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L953)*
 
 Patch a HorizontalPodAutoscaler by name
 
@@ -1484,7 +1508,7 @@ ___
 
 ▸ **patchIngress**(name: *`string`*, resource: *[DeepPartial](../#deeppartial)<[Ingress](../interfaces/ingress.md)>*): `Promise`<[Ingress](../interfaces/ingress.md)>
 
-*Defined in [Kubernetes.ts:372](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L372)*
+*Defined in [Kubernetes.ts:372](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L372)*
 
 Patch a Ingress by name
 
@@ -1504,7 +1528,7 @@ ___
 
 ▸ **patchJob**(name: *`string`*, resource: *[DeepPartial](../#deeppartial)<[Job](../interfaces/job.md)>*): `Promise`<[Job](../interfaces/job.md)>
 
-*Defined in [Kubernetes.ts:781](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L781)*
+*Defined in [Kubernetes.ts:781](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L781)*
 
 Patch a Job by name
 
@@ -1524,7 +1548,7 @@ ___
 
 ▸ **patchNamespace**(name: *`string`*, resource: *[DeepPartial](../#deeppartial)<[Namespace](../interfaces/namespace.md)>*): `Promise`<[Namespace](../interfaces/namespace.md)>
 
-*Defined in [Kubernetes.ts:58](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L58)*
+*Defined in [Kubernetes.ts:58](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L58)*
 
 Patch a Namespace by name
 
@@ -1544,7 +1568,7 @@ ___
 
 ▸ **patchPersistentVolumeClaim**(name: *`string`*, resource: *[DeepPartial](../#deeppartial)<[PersistentVolumeClaim](../#persistentvolumeclaim)>*): `Promise`<[PersistentVolumeClaim](../#persistentvolumeclaim)>
 
-*Defined in [Kubernetes.ts:1045](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L1045)*
+*Defined in [Kubernetes.ts:1045](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L1045)*
 
 Patch a PersistentVolumeClaim by name
 
@@ -1564,7 +1588,7 @@ ___
 
 ▸ **patchPod**(name: *`string`*, resource: *[DeepPartial](../#deeppartial)<[Pod](../interfaces/pod.md)>*): `Promise`<[Pod](../interfaces/pod.md)>
 
-*Defined in [Kubernetes.ts:124](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L124)*
+*Defined in [Kubernetes.ts:124](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L124)*
 
 Patch a Pod by name
 
@@ -1584,7 +1608,7 @@ ___
 
 ▸ **patchReplicaSet**(name: *`string`*, resource: *[DeepPartial](../#deeppartial)<[ReplicaSet](../#replicaset)>*): `Promise`<[ReplicaSet](../#replicaset)>
 
-*Defined in [Kubernetes.ts:702](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L702)*
+*Defined in [Kubernetes.ts:702](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L702)*
 
 Patch a ReplicaSet by name
 
@@ -1604,7 +1628,7 @@ ___
 
 ▸ **patchSecret**(name: *`string`*, resource: *[DeepPartial](../#deeppartial)<[Secret](../interfaces/secret.md)>*): `Promise`<[Secret](../interfaces/secret.md)>
 
-*Defined in [Kubernetes.ts:451](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L451)*
+*Defined in [Kubernetes.ts:451](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L451)*
 
 Patch a Secret by name
 
@@ -1624,7 +1648,7 @@ ___
 
 ▸ **patchService**(name: *`string`*, resource: *[DeepPartial](../#deeppartial)<[Service](../interfaces/service.md)>*): `Promise`<[Service](../interfaces/service.md)>
 
-*Defined in [Kubernetes.ts:530](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L530)*
+*Defined in [Kubernetes.ts:530](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L530)*
 
 Patch a Service by name
 
@@ -1644,7 +1668,7 @@ ___
 
 ▸ **replaceConfigMap**(name: *`string`*, resource: *[ConfigMap](../#configmap)*): `Promise`<[ConfigMap](../#configmap)>
 
-*Defined in [Kubernetes.ts:188](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L188)*
+*Defined in [Kubernetes.ts:188](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L188)*
 
 Replace a ConfigMap by name
 
@@ -1664,7 +1688,7 @@ ___
 
 ▸ **replaceCronJob**(name: *`string`*, resource: *[CronJob](../#cronjob)*): `Promise`<[CronJob](../#cronjob)>
 
-*Defined in [Kubernetes.ts:849](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L849)*
+*Defined in [Kubernetes.ts:849](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L849)*
 
 Replace a CronJob by name
 
@@ -1684,7 +1708,7 @@ ___
 
 ▸ **replaceDaemonSet**(name: *`string`*, resource: *[DaemonSet](../#daemonset)*): `Promise`<[DaemonSet](../#daemonset)>
 
-*Defined in [Kubernetes.ts:601](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L601)*
+*Defined in [Kubernetes.ts:601](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L601)*
 
 Replace a DaemonSet by name
 
@@ -1704,7 +1728,7 @@ ___
 
 ▸ **replaceDeployment**(name: *`string`*, resource: *[Deployment](../interfaces/deployment.md)*): `Promise`<[Deployment](../interfaces/deployment.md)>
 
-*Defined in [Kubernetes.ts:274](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L274)*
+*Defined in [Kubernetes.ts:274](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L274)*
 
 Replace a Deployment by name
 
@@ -1724,7 +1748,7 @@ ___
 
 ▸ **replaceHorizontalPodAutoscaler**(name: *`string`*, resource: *[HorizontalPodAutoscaler](../#horizontalpodautoscaler)*): `Promise`<[HorizontalPodAutoscaler](../#horizontalpodautoscaler)>
 
-*Defined in [Kubernetes.ts:938](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L938)*
+*Defined in [Kubernetes.ts:938](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L938)*
 
 Replace a HorizontalPodAutoscaler by name
 
@@ -1744,7 +1768,7 @@ ___
 
 ▸ **replaceIngress**(name: *`string`*, resource: *[Ingress](../interfaces/ingress.md)*): `Promise`<[Ingress](../interfaces/ingress.md)>
 
-*Defined in [Kubernetes.ts:360](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L360)*
+*Defined in [Kubernetes.ts:360](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L360)*
 
 Replace a Ingress by name
 
@@ -1764,7 +1788,7 @@ ___
 
 ▸ **replaceJob**(name: *`string`*, resource: *[Job](../interfaces/job.md)*): `Promise`<[Job](../interfaces/job.md)>
 
-*Defined in [Kubernetes.ts:769](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L769)*
+*Defined in [Kubernetes.ts:769](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L769)*
 
 Replace a Job by name
 
@@ -1784,7 +1808,7 @@ ___
 
 ▸ **replaceNamespace**(name: *`string`*, resource: *[Namespace](../interfaces/namespace.md)*): `Promise`<[Namespace](../interfaces/namespace.md)>
 
-*Defined in [Kubernetes.ts:48](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L48)*
+*Defined in [Kubernetes.ts:48](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L48)*
 
 Replace a Namespace by name
 
@@ -1804,7 +1828,7 @@ ___
 
 ▸ **replacePersistentVolumeClaim**(name: *`string`*, resource: *[PersistentVolumeClaim](../#persistentvolumeclaim)*): `Promise`<[PersistentVolumeClaim](../#persistentvolumeclaim)>
 
-*Defined in [Kubernetes.ts:1030](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L1030)*
+*Defined in [Kubernetes.ts:1030](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L1030)*
 
 Replace a PersistentVolumeClaim by name
 
@@ -1824,7 +1848,7 @@ ___
 
 ▸ **replacePod**(name: *`string`*, resource: *[Pod](../interfaces/pod.md)*): `Promise`<[Pod](../interfaces/pod.md)>
 
-*Defined in [Kubernetes.ts:112](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L112)*
+*Defined in [Kubernetes.ts:112](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L112)*
 
 Replace a Pod by name
 
@@ -1844,7 +1868,7 @@ ___
 
 ▸ **replaceReplicaSet**(name: *`string`*, resource: *[ReplicaSet](../#replicaset)*): `Promise`<[ReplicaSet](../#replicaset)>
 
-*Defined in [Kubernetes.ts:687](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L687)*
+*Defined in [Kubernetes.ts:687](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L687)*
 
 Replace a ReplicaSet by name
 
@@ -1864,7 +1888,7 @@ ___
 
 ▸ **replaceSecret**(name: *`string`*, resource: *[Secret](../interfaces/secret.md)*): `Promise`<[Secret](../interfaces/secret.md)>
 
-*Defined in [Kubernetes.ts:439](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L439)*
+*Defined in [Kubernetes.ts:439](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L439)*
 
 Replace a Secret by name
 
@@ -1884,7 +1908,7 @@ ___
 
 ▸ **replaceService**(name: *`string`*, resource: *[Service](../interfaces/service.md)*): `Promise`<[Service](../interfaces/service.md)>
 
-*Defined in [Kubernetes.ts:518](https://github.com/rzane/k8s/blob/67fb0bc/src/Kubernetes.ts#L518)*
+*Defined in [Kubernetes.ts:518](https://github.com/rzane/k8s/blob/0f3ff00/src/Kubernetes.ts#L518)*
 
 Replace a Service by name
 

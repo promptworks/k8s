@@ -10,32 +10,21 @@
 
 ### Properties
 
-* [client](options.md#client)
 * [context](options.md#context)
 * [kubeconfig](options.md#kubeconfig)
-* [kubectl](options.md#kubectl)
 * [namespace](options.md#namespace)
 
 ---
 
 ## Properties
 
-<a id="client"></a>
-
-### `<Optional>` client
-
-**● client**: *`k8s.ApiRoot`*
-
-*Defined in [types/options.ts:10](https://github.com/rzane/k8s/blob/67fb0bc/src/types/options.ts#L10)*
-
-___
 <a id="context"></a>
 
 ### `<Optional>` context
 
 **● context**: *`undefined` \| `string`*
 
-*Defined in [types/options.ts:8](https://github.com/rzane/k8s/blob/67fb0bc/src/types/options.ts#L8)*
+*Defined in [types/options.ts:6](https://github.com/rzane/k8s/blob/0f3ff00/src/types/options.ts#L6)*
 
 ___
 <a id="kubeconfig"></a>
@@ -44,16 +33,7 @@ ___
 
 **● kubeconfig**: *`undefined` \| `string`*
 
-*Defined in [types/options.ts:7](https://github.com/rzane/k8s/blob/67fb0bc/src/types/options.ts#L7)*
-
-___
-<a id="kubectl"></a>
-
-### `<Optional>` kubectl
-
-**● kubectl**: *[Kubectl](../classes/kubectl.md)*
-
-*Defined in [types/options.ts:9](https://github.com/rzane/k8s/blob/67fb0bc/src/types/options.ts#L9)*
+*Defined in [types/options.ts:5](https://github.com/rzane/k8s/blob/0f3ff00/src/types/options.ts#L5)*
 
 ___
 <a id="namespace"></a>
@@ -62,7 +42,7 @@ ___
 
 **● namespace**: *`undefined` \| `string`*
 
-*Defined in [types/options.ts:6](https://github.com/rzane/k8s/blob/67fb0bc/src/types/options.ts#L6)*
+*Defined in [types/options.ts:4](https://github.com/rzane/k8s/blob/0f3ff00/src/types/options.ts#L4)*
 
 ___
 

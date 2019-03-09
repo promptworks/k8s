@@ -33,7 +33,7 @@ Deprecated. Please use io.k8s.api.core.v1.Pod instead.
 
 **● apiVersion**: *`undefined` \| `string`*
 
-*Defined in [types/gen/pod.ts:3120](https://github.com/rzane/k8s/blob/67fb0bc/src/types/gen/pod.ts#L3120)*
+*Defined in [types/gen/pod.ts:3120](https://github.com/rzane/k8s/blob/0f3ff00/src/types/gen/pod.ts#L3120)*
 
 APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: [https://git.k8s.io/community/contributors/devel/api-conventions.md#resources](https://git.k8s.io/community/contributors/devel/api-conventions.md#resources)
 
@@ -44,7 +44,7 @@ ___
 
 **● kind**: *`undefined` \| `string`*
 
-*Defined in [types/gen/pod.ts:403](https://github.com/rzane/k8s/blob/67fb0bc/src/types/gen/pod.ts#L403)*
+*Defined in [types/gen/pod.ts:403](https://github.com/rzane/k8s/blob/0f3ff00/src/types/gen/pod.ts#L403)*
 
 Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: [https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds)
 
@@ -55,7 +55,7 @@ ___
 
 **● metadata**: *`undefined` \| `object`*
 
-*Defined in [types/gen/pod.ts:3124](https://github.com/rzane/k8s/blob/67fb0bc/src/types/gen/pod.ts#L3124)*
+*Defined in [types/gen/pod.ts:3124](https://github.com/rzane/k8s/blob/0f3ff00/src/types/gen/pod.ts#L3124)*
 
 Standard object's metadata. More info: [https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata](https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata)
 
@@ -66,7 +66,7 @@ ___
 
 **● spec**: *`undefined` \| `object`*
 
-*Defined in [types/gen/pod.ts:407](https://github.com/rzane/k8s/blob/67fb0bc/src/types/gen/pod.ts#L407)*
+*Defined in [types/gen/pod.ts:407](https://github.com/rzane/k8s/blob/0f3ff00/src/types/gen/pod.ts#L407)*
 
 Specification of the desired behavior of the pod. More info: [https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status](https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status)
 
@@ -77,7 +77,7 @@ ___
 
 **● status**: *`undefined` \| `object`*
 
-*Defined in [types/gen/pod.ts:15](https://github.com/rzane/k8s/blob/67fb0bc/src/types/gen/pod.ts#L15)*
+*Defined in [types/gen/pod.ts:15](https://github.com/rzane/k8s/blob/0f3ff00/src/types/gen/pod.ts#L15)*
 
 Most recently observed status of the pod. This data may not be up to date. Populated by the system. Read-only. More info: [https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status](https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status)
 

@@ -39,7 +39,7 @@ DEPRECATED - This group version of StatefulSet is deprecated by apps/v1beta2/Sta
 
 **● apiVersion**: *`string` \| `null`*
 
-*Defined in [types/gen/statefulset.ts:3471](https://github.com/rzane/k8s/blob/67fb0bc/src/types/gen/statefulset.ts#L3471)*
+*Defined in [types/gen/statefulset.ts:3471](https://github.com/rzane/k8s/blob/0f3ff00/src/types/gen/statefulset.ts#L3471)*
 
 APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: [https://git.k8s.io/community/contributors/devel/api-conventions.md#resources](https://git.k8s.io/community/contributors/devel/api-conventions.md#resources)
 
@@ -50,7 +50,7 @@ ___
 
 **● kind**: *`string` \| `null`*
 
-*Defined in [types/gen/statefulset.ts:82](https://github.com/rzane/k8s/blob/67fb0bc/src/types/gen/statefulset.ts#L82)*
+*Defined in [types/gen/statefulset.ts:82](https://github.com/rzane/k8s/blob/0f3ff00/src/types/gen/statefulset.ts#L82)*
 
 Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: [https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds)
 
@@ -61,7 +61,7 @@ ___
 
 **● metadata**: *`undefined` \| `object`*
 
-*Defined in [types/gen/statefulset.ts:3475](https://github.com/rzane/k8s/blob/67fb0bc/src/types/gen/statefulset.ts#L3475)*
+*Defined in [types/gen/statefulset.ts:3475](https://github.com/rzane/k8s/blob/0f3ff00/src/types/gen/statefulset.ts#L3475)*
 
 ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.
 
@@ -72,7 +72,7 @@ ___
 
 **● spec**: *`undefined` \| `object`*
 
-*Defined in [types/gen/statefulset.ts:86](https://github.com/rzane/k8s/blob/67fb0bc/src/types/gen/statefulset.ts#L86)*
+*Defined in [types/gen/statefulset.ts:86](https://github.com/rzane/k8s/blob/0f3ff00/src/types/gen/statefulset.ts#L86)*
 
 Spec defines the desired identities of pods in this set.
 
@@ -83,7 +83,7 @@ ___
 
 **● status**: *`undefined` \| `object`*
 
-*Defined in [types/gen/statefulset.ts:18](https://github.com/rzane/k8s/blob/67fb0bc/src/types/gen/statefulset.ts#L18)*
+*Defined in [types/gen/statefulset.ts:18](https://github.com/rzane/k8s/blob/0f3ff00/src/types/gen/statefulset.ts#L18)*
 
 Status is the current status of Pods in this StatefulSet. This data may be out of date by some window of time.
 

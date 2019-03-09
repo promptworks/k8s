@@ -25,7 +25,7 @@
 
 **● command**: *`string`[]*
 
-*Defined in [types/options.ts:22](https://github.com/rzane/k8s/blob/67fb0bc/src/types/options.ts#L22)*
+*Defined in [types/options.ts:18](https://github.com/rzane/k8s/blob/0f3ff00/src/types/options.ts#L18)*
 
 ___
 <a id="container"></a>
@@ -34,7 +34,7 @@ ___
 
 **● container**: *`undefined` \| `string`*
 
-*Defined in [types/options.ts:23](https://github.com/rzane/k8s/blob/67fb0bc/src/types/options.ts#L23)*
+*Defined in [types/options.ts:19](https://github.com/rzane/k8s/blob/0f3ff00/src/types/options.ts#L19)*
 
 ___
 <a id="stderr"></a>
@@ -43,7 +43,7 @@ ___
 
 **● stderr**: *`undefined` \| `false` \| `true`*
 
-*Defined in [types/options.ts:24](https://github.com/rzane/k8s/blob/67fb0bc/src/types/options.ts#L24)*
+*Defined in [types/options.ts:20](https://github.com/rzane/k8s/blob/0f3ff00/src/types/options.ts#L20)*
 
 ___
 <a id="stdout"></a>
@@ -52,7 +52,7 @@ ___
 
 **● stdout**: *`undefined` \| `false` \| `true`*
 
-*Defined in [types/options.ts:25](https://github.com/rzane/k8s/blob/67fb0bc/src/types/options.ts#L25)*
+*Defined in [types/options.ts:21](https://github.com/rzane/k8s/blob/0f3ff00/src/types/options.ts#L21)*
 
 ___
 

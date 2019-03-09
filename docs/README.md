@@ -87,7 +87,7 @@ const kubectl = new Kubectl();
 
 **Ƭ AnyObject**: *[ConfigMap](#configmap) \| [CronJob](#cronjob) \| [DaemonSet](#daemonset) \| [Deployment](interfaces/deployment.md) \| [Ingress](interfaces/ingress.md) \| [HorizontalPodAutoscaler](#horizontalpodautoscaler) \| [Job](interfaces/job.md) \| [Namespace](interfaces/namespace.md) \| [Pod](interfaces/pod.md) \| [ReplicaSet](#replicaset) \| [Secret](interfaces/secret.md) \| [Service](interfaces/service.md) \| [StatefulSet](#statefulset) \| [PersistentVolumeClaim](#persistentvolumeclaim) \| `GenericObject`*
 
-*Defined in [types/objects.ts:32](https://github.com/rzane/k8s/blob/67fb0bc/src/types/objects.ts#L32)*
+*Defined in [types/objects.ts:32](https://github.com/rzane/k8s/blob/0f3ff00/src/types/objects.ts#L32)*
 
 ___
 <a id="configmap"></a>
@@ -96,7 +96,7 @@ ___
 
 **Ƭ ConfigMap**: *`Kind`<"ConfigMap", [Configmap](interfaces/configmap.md)>*
 
-*Defined in [types/objects.ts:11](https://github.com/rzane/k8s/blob/67fb0bc/src/types/objects.ts#L11)*
+*Defined in [types/objects.ts:11](https://github.com/rzane/k8s/blob/0f3ff00/src/types/objects.ts#L11)*
 
 ___
 <a id="cronjob"></a>
@@ -105,7 +105,7 @@ ___
 
 **Ƭ CronJob**: *`Kind`<"CronJob", [Cronjob](interfaces/cronjob.md)>*
 
-*Defined in [types/objects.ts:12](https://github.com/rzane/k8s/blob/67fb0bc/src/types/objects.ts#L12)*
+*Defined in [types/objects.ts:12](https://github.com/rzane/k8s/blob/0f3ff00/src/types/objects.ts#L12)*
 
 ___
 <a id="daemonset"></a>
@@ -114,7 +114,7 @@ ___
 
 **Ƭ DaemonSet**: *`Kind`<"DaemonSet", [Daemonset](interfaces/daemonset.md)>*
 
-*Defined in [types/objects.ts:13](https://github.com/rzane/k8s/blob/67fb0bc/src/types/objects.ts#L13)*
+*Defined in [types/objects.ts:13](https://github.com/rzane/k8s/blob/0f3ff00/src/types/objects.ts#L13)*
 
 ___
 <a id="deeppartial"></a>
@@ -123,7 +123,7 @@ ___
 
 **Ƭ DeepPartial**: *`object`*
 
-*Defined in [types/index.ts:4](https://github.com/rzane/k8s/blob/67fb0bc/src/types/index.ts#L4)*
+*Defined in [types/index.ts:4](https://github.com/rzane/k8s/blob/0f3ff00/src/types/index.ts#L4)*
 
 #### Type declaration
 
@@ -134,7 +134,7 @@ ___
 
 **Ƭ HorizontalPodAutoscaler**: *`Kind`<"HorizontalPodAutoscaler", [Horizontalpodautoscaler](interfaces/horizontalpodautoscaler.md)>*
 
-*Defined in [types/objects.ts:15](https://github.com/rzane/k8s/blob/67fb0bc/src/types/objects.ts#L15)*
+*Defined in [types/objects.ts:15](https://github.com/rzane/k8s/blob/0f3ff00/src/types/objects.ts#L15)*
 
 ___
 <a id="persistentvolumeclaim"></a>
@@ -143,7 +143,7 @@ ___
 
 **Ƭ PersistentVolumeClaim**: *`Kind`<"PersistentVolumeClaim", [Persistentvolumeclaim](interfaces/persistentvolumeclaim.md)>*
 
-*Defined in [types/objects.ts:27](https://github.com/rzane/k8s/blob/67fb0bc/src/types/objects.ts#L27)*
+*Defined in [types/objects.ts:27](https://github.com/rzane/k8s/blob/0f3ff00/src/types/objects.ts#L27)*
 
 ___
 <a id="replicaset"></a>
@@ -152,7 +152,7 @@ ___
 
 **Ƭ ReplicaSet**: *`Kind`<"ReplicaSet", [Replicaset](interfaces/replicaset.md)>*
 
-*Defined in [types/objects.ts:23](https://github.com/rzane/k8s/blob/67fb0bc/src/types/objects.ts#L23)*
+*Defined in [types/objects.ts:23](https://github.com/rzane/k8s/blob/0f3ff00/src/types/objects.ts#L23)*
 
 ___
 <a id="statefulset"></a>
@@ -161,7 +161,7 @@ ___
 
 **Ƭ StatefulSet**: *`Kind`<"StatefulSet", [Statefulset](interfaces/statefulset.md)>*
 
-*Defined in [types/objects.ts:26](https://github.com/rzane/k8s/blob/67fb0bc/src/types/objects.ts#L26)*
+*Defined in [types/objects.ts:26](https://github.com/rzane/k8s/blob/0f3ff00/src/types/objects.ts#L26)*
 
 ___
 
@@ -173,7 +173,7 @@ ___
 
 ▸ **exists**(promise: *`Promise`<`any`>*): `Promise`<`boolean`>
 
-*Defined in [API.ts:15](https://github.com/rzane/k8s/blob/67fb0bc/src/API.ts#L15)*
+*Defined in [API.ts:15](https://github.com/rzane/k8s/blob/0f3ff00/src/API.ts#L15)*
 
 **Parameters:**
 
@@ -190,7 +190,7 @@ ___
 
 ▸ **getBody**<`T`>(promise: *`Promise`<`object`>*): `Promise`<`T`>
 
-*Defined in [API.ts:5](https://github.com/rzane/k8s/blob/67fb0bc/src/API.ts#L5)*
+*Defined in [API.ts:5](https://github.com/rzane/k8s/blob/0f3ff00/src/API.ts#L5)*
 
 **Type parameters:**
 
@@ -210,7 +210,7 @@ ___
 
 ▸ **getList**<`T`>(promise: *`Promise`<`object`>*): `Promise`<`T`[]>
 
-*Defined in [API.ts:9](https://github.com/rzane/k8s/blob/67fb0bc/src/API.ts#L9)*
+*Defined in [API.ts:9](https://github.com/rzane/k8s/blob/0f3ff00/src/API.ts#L9)*
 
 **Type parameters:**
 
