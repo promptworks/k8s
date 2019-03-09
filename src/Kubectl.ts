@@ -36,40 +36,49 @@ export class Kubectl {
   /**
    * Run an arbitrary shell command.
    */
-  public run(args: string[], opts: execa.Options = {}) {
+  public run(
+    args: string[],
+    opts: execa.Options = {}
+  ): execa.ExecaChildProcess {
     return this.shell("kubectl", this.flags.concat(args), opts);
   }
 
   /**
    * Apply a configuration to a resource.
    */
-  public async apply(objects: AnyObject[]): Promise<void> {
-    await this.run(["apply", "-f", "-"], {
-      input: objects.map(toJSON).join("\n")
+  public apply(
+    objects: AnyObject[],
+    opts: execa.Options = {}
+  ): execa.ExecaChildProcess {
+    return this.run(["apply", "-f", "-"], {
+      input: objects.map(toJSON).join("\n"),
+      ...opts
     });
   }
 
   /**
    * Attach to a running container.
    */
-  public async attach(pod: string, opts: AttachOptions = {}): Promise<void> {
+  public attach(
+    pod: string,
+    opts: AttachOptions & execa.Options = {}
+  ): execa.ExecaChildProcess {
     const flags = toFlags({
       tty: opts.tty,
       container: opts.container,
       stdin: Boolean(opts.stdin)
     });
 
-    await this.run(["attach", pod, ...flags], {
-      stdin: opts.stdin,
-      stdout: opts.stdout,
-      stderr: opts.stderr
-    });
+    return this.run(["attach", pod, ...flags], opts);
   }
 
   /**
    * Establish an interactive `exec` session with a running container.
    */
-  public async exec(pod: string, opts: ConnectOptions = {}): Promise<void> {
+  public exec(
+    pod: string,
+    opts: ConnectOptions & execa.Options = {}
+  ): execa.ExecaChildProcess {
     const command = opts.command ? ["--", ...opts.command] : [];
     const flags = toFlags({
       tty: opts.tty,
@@ -77,10 +86,6 @@ export class Kubectl {
       stdin: Boolean(opts.stdin)
     });
 
-    await this.run(["exec", pod, ...flags, ...command], {
-      stdin: opts.stdin,
-      stdout: opts.stdout,
-      stderr: opts.stderr
-    });
+    return this.run(["exec", pod, ...flags, ...command], opts);
   }
 }
