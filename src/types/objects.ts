@@ -5,8 +5,11 @@ export type Container = gen.IoK8sApiCoreV1Container;
 export type EnvVar = gen.IoK8sApiCoreV1EnvVar;
 export type EnvFromSource = gen.IoK8sApiCoreV1EnvFromSource;
 export type Probe = gen.IoK8sApiCoreV1Probe;
-export type ContainerPort = gen.IoK8sApiCoreV1ContainerPort;
 export type VolumeMount = gen.IoK8sApiCoreV1VolumeMount;
+export type ContainerPort = gen.IoK8sApiCoreV1ContainerPort;
+export type ServicePort = gen.IoK8sApiCoreV1ServicePort;
+export type IngressRule = gen.IoK8sApiExtensionsV1beta1IngressRule;
+export type IngressBackend = gen.IoK8sApiExtensionsV1beta1IngressBackend;
 
 export interface GenericObject {
   apiVersion: string;
