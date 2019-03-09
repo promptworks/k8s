@@ -9,18 +9,31 @@ const { promisify } = require("util");
 
 const writeFile = promisify(fs.writeFile);
 
-const withDefaults = items =>
-  items.map(item => ({
+const writeCode = (file, code) => {
+  return writeFile(file, prettier.format(code, { parser: "typescript" }));
+};
+
+const toGeneratedName = name => {
+  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+};
+
+const withDefaults = items => {
+  return items.map(item => ({
     plural: pluralize(item.name),
     type: item.name,
+    generatedType: toGeneratedName(item.name),
     ...item
   }));
+}
 
-const template = path.join(__dirname, "../gen/template.ejs");
-const data = { objects: withDefaults(require("../gen/input.json")) };
+const client = path.join(__dirname, "../gen/client.ejs");
+const types = path.join(__dirname, "../gen/types.ejs");
 
-ejs
-  .renderFile(template, data)
-  .then(code => prettier.format(code, { parser: "typescript" }))
-  .then(code => writeFile("src/Kubernetes.ts", code))
-  .catch(err => console.error(err));
+const data = {
+  objects: withDefaults(require("../gen/input.json"))
+};
+
+Promise.all([
+  ejs.render(client, data).then(code => writeCode("src/Kubernetes.ts", code)),
+  ejs.render(types, data).then(code => writeCode("src/types/objects.ts", code))
+]).catch(console.error);

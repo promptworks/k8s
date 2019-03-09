@@ -1,0 +1,24 @@
+import * as gen from "./gen";
+
+export type ObjectMeta = gen.Objectmeta;
+export type Container = gen.Container;
+export type EnvVar = gen.Envvar;
+export type Probe = gen.Probe;
+
+export interface GenericObject {
+  apiVersion: string;
+  kind: string;
+  metadata: ObjectMeta & { name: string };
+}
+
+<% for (const o of objects) { %>
+export interface <%= o.type %> extends gen.<%= o.generatedType %> {
+  kind: <%= o.type %>;
+  apiVersion: string;
+  metadata: ObjectMeta & { name: string }
+}
+<% } %>
+
+export type AnyObject =
+<% objects.map(o => `  | ${o.type}`).join('\n') %>
+  | GenericObject;
