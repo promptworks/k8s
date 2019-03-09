@@ -1,6 +1,6 @@
 import * as gen from "./gen";
 
-interface GenericObject<K = string> {
+export interface GenericObject<K = string> {
   apiVersion: string;
   kind: K;
   metadata: { name: string };

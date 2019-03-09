@@ -6,15 +6,15 @@
  */
 
 /**
- * Deprecated. Please use io.k8s.api.core.v1.EnvVar instead.
+ * EnvVar represents an environment variable present in a Container.
  */
 export interface Envvar {
   /**
-   * Source for the environment variable's value. Cannot be used if value is not empty.
+   * EnvVarSource represents a source for the value of an EnvVar.
    */
   valueFrom?: {
     /**
-     * Selects a key of a secret in the pod's namespace
+     * SecretKeySelector selects a key of a Secret.
      */
     secretKeyRef?: {
       /**
@@ -24,7 +24,7 @@ export interface Envvar {
       /**
        * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
        */
-      name?: string;
+      name?: string | null;
       /**
        * The key of the secret to select from.  Must be a valid secret key.
        */
@@ -32,7 +32,7 @@ export interface Envvar {
       [k: string]: any;
     };
     /**
-     * Selects a field of the pod: supports metadata.name, metadata.namespace, metadata.labels, metadata.annotations, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP.
+     * ObjectFieldSelector selects an APIVersioned field of an object.
      */
     fieldRef?: {
       /**
@@ -42,11 +42,11 @@ export interface Envvar {
       /**
        * Version of the schema the FieldPath is written in terms of, defaults to "v1".
        */
-      apiVersion?: string;
+      apiVersion?: string | null;
       [k: string]: any;
     };
     /**
-     * Selects a key of a ConfigMap.
+     * Selects a key from a ConfigMap.
      */
     configMapKeyRef?: {
       /**
@@ -56,7 +56,7 @@ export interface Envvar {
       /**
        * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
        */
-      name?: string;
+      name?: string | null;
       /**
        * The key to select.
        */
@@ -64,21 +64,18 @@ export interface Envvar {
       [k: string]: any;
     };
     /**
-     * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+     * ResourceFieldSelector represents container resources (cpu, memory) and their output format
      */
     resourceFieldRef?: {
       /**
        * Container name: required for volumes, optional for env vars
        */
-      containerName?: string;
+      containerName?: string | null;
       /**
        * Required: resource to select
        */
       resource: string;
-      /**
-       * Specifies the output format of the exposed resources, defaults to "1"
-       */
-      divisor?: string | number;
+      divisor?: (string | null) | number;
       [k: string]: any;
     };
     [k: string]: any;
@@ -86,10 +83,10 @@ export interface Envvar {
   /**
    * Name of the environment variable. Must be a C_IDENTIFIER.
    */
-  name?: string;
+  name: string | null;
   /**
    * Variable references $(VAR_NAME) are expanded using the previous defined environment variables in the container and any service environment variables. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. Defaults to "".
    */
-  value?: string;
+  value?: string | null;
   [k: string]: any;
 }

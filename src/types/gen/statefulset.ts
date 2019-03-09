@@ -13,13 +13,13 @@
  */
 export interface Statefulset {
   /**
-   * Status is the current status of Pods in this StatefulSet. This data may be out of date by some window of time.
+   * StatefulSetStatus represents the current state of a StatefulSet.
    */
   status?: {
     /**
      * updateRevision, if not empty, indicates the version of the StatefulSet used to generate Pods in the sequence [replicas-updatedReplicas,replicas)
      */
-    updateRevision?: string;
+    updateRevision?: string | null;
     /**
      * collisionCount is the count of hash collisions for the StatefulSet. The StatefulSet controller uses this field as a collision avoidance mechanism when it needs to create the name for the newest ControllerRevision.
      */
@@ -43,7 +43,7 @@ export interface Statefulset {
     /**
      * currentRevision, if not empty, indicates the version of the StatefulSet used to generate Pods in the sequence [0,currentReplicas).
      */
-    currentRevision?: string;
+    currentRevision?: string | null;
     /**
      * readyReplicas is the number of Pods created by the StatefulSet controller that have a Ready Condition.
      */
@@ -57,13 +57,13 @@ export interface Statefulset {
        */
       status: string;
       /**
-       * Last time the condition transitioned from one status to another.
+       * Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.
        */
-      lastTransitionTime?: string;
+      lastTransitionTime?: string | null;
       /**
        * A human readable message indicating details about the transition.
        */
-      message?: string;
+      message?: string | null;
       /**
        * Type of statefulset condition.
        */
@@ -71,7 +71,7 @@ export interface Statefulset {
       /**
        * The reason for the condition's last transition.
        */
-      reason?: string;
+      reason?: string | null;
       [k: string]: any;
     }[];
     [k: string]: any;
@@ -81,7 +81,7 @@ export interface Statefulset {
    */
   kind?: string | null;
   /**
-   * Spec defines the desired identities of pods in this set.
+   * A StatefulSetSpec is the specification of a StatefulSet.
    */
   spec?: {
     /**
@@ -93,22 +93,22 @@ export interface Statefulset {
      */
     volumeClaimTemplates?: {
       /**
-       * Status represents the current information/status of a persistent volume claim. Read-only. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+       * PersistentVolumeClaimStatus is the current status of a persistent volume claim.
        */
       status?: {
         /**
          * Phase represents the current phase of PersistentVolumeClaim.
          */
-        phase?: string;
+        phase?: string | null;
         /**
          * AccessModes contains the actual access modes the volume backing the PVC has. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes-1
          */
-        accessModes?: string[];
+        accessModes?: (string | null)[];
         /**
          * Represents the actual resources of the underlying volume.
          */
         capacity?: {
-          [k: string]: string | number;
+          [k: string]: (string | null) | number;
         };
         /**
          * Current Condition of persistent volume claim. If underlying persistent volume is being resized then the Condition will be set to 'ResizeStarted'.
@@ -116,22 +116,22 @@ export interface Statefulset {
         conditions?: {
           status: string;
           /**
+           * Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.
+           */
+          lastTransitionTime?: string | null;
+          /**
            * Unique, this should be a short, machine understandable string that gives the reason for condition's last transition. If it reports "ResizeStarted" that means the underlying persistent volume is being resized.
            */
-          reason?: string;
+          reason?: string | null;
           /**
-           * Last time we probed the condition.
+           * Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.
            */
-          lastProbeTime?: string;
-          type: string;
+          lastProbeTime?: string | null;
           /**
            * Human-readable message indicating details about last transition.
            */
-          message?: string;
-          /**
-           * Last time the condition transitioned from one status to another.
-           */
-          lastTransitionTime?: string;
+          message?: string | null;
+          type: string;
           [k: string]: any;
         }[];
         [k: string]: any;
@@ -139,27 +139,61 @@ export interface Statefulset {
       /**
        * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds
        */
-      kind?: string;
+      kind?: string | null;
       /**
-       * Spec defines the desired characteristics of a volume requested by a pod author. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+       * PersistentVolumeClaimSpec describes the common attributes of storage devices and allows a Source for provider-specific attributes
        */
       spec?: {
         /**
          * Name of the StorageClass required by the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#class-1
          */
-        storageClassName?: string;
+        storageClassName?: string | null;
+        /**
+         * volumeMode defines what type of volume is required by the claim. Value of Filesystem is implied when not included in claim spec. This is an alpha feature and may change in the future.
+         */
+        volumeMode?: string | null;
+        /**
+         * A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects.
+         */
+        selector?: {
+          /**
+           * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+           */
+          matchLabels?: {
+            [k: string]: string | null;
+          };
+          /**
+           * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+           */
+          matchExpressions?: {
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: (string | null)[];
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            [k: string]: any;
+          }[];
+          [k: string]: any;
+        };
         /**
          * AccessModes contains the desired access modes the volume should have. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes-1
          */
-        accessModes?: string[];
+        accessModes?: (string | null)[];
         /**
-         * This field requires the VolumeSnapshotDataSource alpha feature gate to be enabled and currently VolumeSnapshot is the only supported data source. If the provisioner can support VolumeSnapshot data source, it will create a new volume and data will be restored to the volume at the same time. If the provisioner does not support VolumeSnapshot data source, volume will not be created and the failure will be reported as an event. In the future, we plan to support more data source types and the behavior of the provisioner may change.
+         * TypedLocalObjectReference contains enough information to let you locate the typed referenced object inside the same namespace.
          */
         dataSource?: {
           /**
            * APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.
            */
-          apiGroup?: string;
+          apiGroup?: string | null;
           /**
            * Kind is the type of resource being referenced
            */
@@ -173,57 +207,23 @@ export interface Statefulset {
         /**
          * VolumeName is the binding reference to the PersistentVolume backing this claim.
          */
-        volumeName?: string;
+        volumeName?: string | null;
         /**
-         * volumeMode defines what type of volume is required by the claim. Value of Filesystem is implied when not included in claim spec. This is an alpha feature and may change in the future.
-         */
-        volumeMode?: string;
-        /**
-         * Resources represents the minimum resources the volume should have. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
+         * ResourceRequirements describes the compute resource requirements.
          */
         resources?: {
           /**
            * Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
            */
           requests?: {
-            [k: string]: string | number;
+            [k: string]: (string | null) | number;
           };
           /**
            * Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
            */
           limits?: {
-            [k: string]: string | number;
+            [k: string]: (string | null) | number;
           };
-          [k: string]: any;
-        };
-        /**
-         * A label query over volumes to consider for binding.
-         */
-        selector?: {
-          /**
-           * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
-           */
-          matchLabels?: {
-            [k: string]: string;
-          };
-          /**
-           * matchExpressions is a list of label selector requirements. The requirements are ANDed.
-           */
-          matchExpressions?: {
-            /**
-             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
-             */
-            operator: string;
-            /**
-             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
-             */
-            values?: string[];
-            /**
-             * key is the label key that the selector applies to.
-             */
-            key: string;
-            [k: string]: any;
-          }[];
           [k: string]: any;
         };
         [k: string]: any;
@@ -231,37 +231,11 @@ export interface Statefulset {
       /**
        * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources
        */
-      apiVersion?: string;
+      apiVersion?: string | null;
       /**
-       * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
+       * ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.
        */
       metadata?: {
-        /**
-         * Must be empty before the object is deleted from the registry. Each entry is an identifier for the responsible component that will remove the entry from the list. If the deletionTimestamp of the object is non-nil, entries in this list can only be removed.
-         */
-        finalizers?: string[];
-        /**
-         * The name of the cluster which the object belongs to. This is used to distinguish resources with same name and namespace in different clusters. This field is not set anywhere right now and apiserver is going to ignore it if set in create or update request.
-         */
-        clusterName?: string;
-        /**
-         * Number of seconds allowed for this object to gracefully terminate before it will be removed from the system. Only set when deletionTimestamp is also set. May only be shortened. Read-only.
-         */
-        deletionGracePeriodSeconds?: number;
-        /**
-         * Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels
-         */
-        labels?: {
-          [k: string]: string;
-        };
-        /**
-         * GenerateName is an optional prefix, used by the server, to generate a unique name ONLY IF the Name field has not been provided. If this field is used, the name returned to the client will be different than the name passed. This value will also be combined with a unique suffix. The provided value has the same validation rules as the Name field, and may be truncated by the length of the suffix required to make the value unique on the server.
-         *
-         * If this field is specified and the generated name exists, the server will NOT return a 409 - instead, it will either return 201 Created or 500 with Reason ServerTimeout indicating a unique name could not be found in the time allotted, and the client should retry (optionally after the time indicated in the Retry-After header).
-         *
-         * Applied only if Name is not specified. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#idempotency
-         */
-        generateName?: string;
         /**
          * List of objects depended by this object. If ALL objects in the list have been deleted, this object will be garbage collected. If this object is managed by a controller, then an entry in this list will point to this controller, with the controller field set to true. There cannot be more than one managing controller.
          */
@@ -271,21 +245,21 @@ export interface Statefulset {
            */
           kind: string;
           /**
-           * If true, AND if the owner has the "foregroundDeletion" finalizer, then the owner cannot be deleted from the key-value store until this reference is removed. Defaults to false. To set this field, a user needs "delete" permission of the owner, otherwise 422 (Unprocessable Entity) will be returned.
-           */
-          blockOwnerDeletion?: boolean;
-          /**
            * UID of the referent. More info: http://kubernetes.io/docs/user-guide/identifiers#uids
            */
           uid: string;
+          /**
+           * API version of the referent.
+           */
+          apiVersion: string;
           /**
            * If true, this reference points to the managing controller.
            */
           controller?: boolean;
           /**
-           * API version of the referent.
+           * If true, AND if the owner has the "foregroundDeletion" finalizer, then the owner cannot be deleted from the key-value store until this reference is removed. Defaults to false. To set this field, a user needs "delete" permission of the owner, otherwise 422 (Unprocessable Entity) will be returned.
            */
-          apiVersion: string;
+          blockOwnerDeletion?: boolean;
           /**
            * Name of the referent. More info: http://kubernetes.io/docs/user-guide/identifiers#names
            */
@@ -293,55 +267,59 @@ export interface Statefulset {
           [k: string]: any;
         }[];
         /**
-         * CreationTimestamp is a timestamp representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations. Clients may not set this value. It is represented in RFC3339 form and is in UTC.
-         *
-         * Populated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
-         */
-        creationTimestamp?: string;
-        /**
          * UID is the unique in time and space value for this object. It is typically generated by the server on successful creation of a resource and is not allowed to change on PUT operations.
          *
          * Populated by the system. Read-only. More info: http://kubernetes.io/docs/user-guide/identifiers#uids
          */
-        uid?: string;
+        uid?: string | null;
         /**
-         * Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names
+         * Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.
          */
-        name?: string;
+        deletionTimestamp?: string | null;
         /**
-         * DeletionTimestamp is RFC 3339 date and time at which this resource will be deleted. This field is set by the server when a graceful deletion is requested by the user, and is not directly settable by a client. The resource is expected to be deleted (no longer visible from resource lists, and not reachable by name) after the time in this field, once the finalizers list is empty. As long as the finalizers list contains items, deletion is blocked. Once the deletionTimestamp is set, this value may not be unset or be set further into the future, although it may be shortened or the resource may be deleted prior to this time. For example, a user may request that a pod is deleted in 30 seconds. The Kubelet will react by sending a graceful termination signal to the containers in the pod. After that 30 seconds, the Kubelet will send a hard termination signal (SIGKILL) to the container and after cleanup, remove the pod from the API. In the presence of network partitions, this object may still exist after this timestamp, until an administrator or automated process can determine the resource is fully terminated. If not set, graceful deletion of the object has not been requested.
-         *
-         * Populated by the system when a graceful deletion is requested. Read-only. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
+         * The name of the cluster which the object belongs to. This is used to distinguish resources with same name and namespace in different clusters. This field is not set anywhere right now and apiserver is going to ignore it if set in create or update request.
          */
-        deletionTimestamp?: string;
+        clusterName?: string | null;
+        /**
+         * Number of seconds allowed for this object to gracefully terminate before it will be removed from the system. Only set when deletionTimestamp is also set. May only be shortened. Read-only.
+         */
+        deletionGracePeriodSeconds?: number;
+        /**
+         * Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels
+         */
+        labels?: {
+          [k: string]: string | null;
+        };
         /**
          * Namespace defines the space within each name must be unique. An empty namespace is equivalent to the "default" namespace, but "default" is the canonical representation. Not all objects are required to be scoped to a namespace - the value of this field for those objects will be empty.
          *
          * Must be a DNS_LABEL. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/namespaces
          */
-        namespace?: string;
+        namespace?: string | null;
+        /**
+         * Must be empty before the object is deleted from the registry. Each entry is an identifier for the responsible component that will remove the entry from the list. If the deletionTimestamp of the object is non-nil, entries in this list can only be removed.
+         */
+        finalizers?: (string | null)[];
         /**
          * A sequence number representing a specific generation of the desired state. Populated by the system. Read-only.
          */
         generation?: number;
         /**
-         * An initializer is a controller which enforces some system invariant at object creation time. This field is a list of initializers that have not yet acted on this object. If nil or empty, this object has been completely initialized. Otherwise, the object is considered uninitialized and is hidden (in list/watch and get calls) from clients that haven't explicitly asked to observe uninitialized objects.
-         *
-         * When an object is created, the system will populate this list with the current set of initializers. Only privileged users may set or modify this list. Once it is empty, it may not be modified further by any user.
+         * Initializers tracks the progress of initialization.
          */
         initializers?: {
           /**
-           * If result is set with the Failure field, the object will be persisted to storage and then deleted, ensuring that other clients can observe the deletion.
+           * Status is a return value for calls that don't return other objects.
            */
           result?: {
             /**
              * Status of the operation. One of: "Success" or "Failure". More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status
              */
-            status?: string;
+            status?: string | null;
             /**
              * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds
              */
-            kind?: string;
+            kind?: string | null;
             /**
              * Suggested HTTP return code for this status, 0 if not set.
              */
@@ -349,27 +327,27 @@ export interface Statefulset {
             /**
              * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources
              */
-            apiVersion?: string;
+            apiVersion?: string | null;
             /**
              * A machine-readable description of why this operation is in the "Failure" status. If this value is empty there is no information available. A Reason clarifies an HTTP status code but does not override it.
              */
-            reason?: string;
+            reason?: string | null;
             /**
-             * Extended data associated with the reason.  Each reason may define its own extended details. This field is optional and the data returned is not guaranteed to conform to any schema except that defined by the reason type.
+             * StatusDetails is a set of additional properties that MAY be set by the server to provide additional information about a response. The Reason field of a Status object defines what attributes will be set. Clients must ignore fields that do not match the defined type of each attribute, and should assume that any attribute may be empty, invalid, or under defined.
              */
             details?: {
               /**
                * The kind attribute of the resource associated with the status StatusReason. On some operations may differ from the requested resource Kind. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds
                */
-              kind?: string;
+              kind?: string | null;
               /**
                * The group attribute of the resource associated with the status StatusReason.
                */
-              group?: string;
+              group?: string | null;
               /**
                * The name attribute of the resource associated with the status StatusReason (when there is a single name which can be described).
                */
-              name?: string;
+              name?: string | null;
               /**
                * If specified, the time in seconds before the operation should be retried. Some errors may indicate the client must take an alternate action - for those errors this field may indicate how long to wait before taking the alternate action.
                */
@@ -385,43 +363,43 @@ export interface Statefulset {
                  *   "name" - the field "name" on the current resource
                  *   "items[0].name" - the field "name" on the first array entry in "items"
                  */
-                field?: string;
+                field?: string | null;
                 /**
                  * A human-readable description of the cause of the error.  This field may be presented as-is to a reader.
                  */
-                message?: string;
+                message?: string | null;
                 /**
                  * A machine-readable description of the cause of the error. If this value is empty there is no information available.
                  */
-                reason?: string;
+                reason?: string | null;
                 [k: string]: any;
               }[];
               /**
                * UID of the resource. (when there is a single resource which can be described). More info: http://kubernetes.io/docs/user-guide/identifiers#uids
                */
-              uid?: string;
+              uid?: string | null;
               [k: string]: any;
             };
             /**
              * A human-readable description of the status of this operation.
              */
-            message?: string;
+            message?: string | null;
             /**
-             * Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds
+             * ListMeta describes metadata that synthetic resources must have, including lists and various status objects. A resource may have only one of {ObjectMeta, ListMeta}.
              */
             metadata?: {
               /**
                * continue may be set if the user set a limit on the number of items returned, and indicates that the server has more data available. The value is opaque and may be used to issue another request to the endpoint that served this list to retrieve the next set of available objects. Continuing a consistent list may not be possible if the server configuration has changed or more than a few minutes have passed. The resourceVersion field returned when using this continue value will be identical to the value in the first response, unless you have received this token from an error message.
                */
-              continue?: string;
+              continue?: string | null;
               /**
                * selfLink is a URL representing this object. Populated by the system. Read-only.
                */
-              selfLink?: string;
+              selfLink?: string | null;
               /**
                * String that identifies the server's internal version of this object that can be used by clients to determine when objects have changed. Value must be treated as opaque by clients and passed unmodified back to the server. Populated by the system. Read-only. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#concurrency-control-and-consistency
                */
-              resourceVersion?: string;
+              resourceVersion?: string | null;
               [k: string]: any;
             };
             [k: string]: any;
@@ -443,17 +421,33 @@ export interface Statefulset {
          *
          * Populated by the system. Read-only. Value must be treated as opaque by clients and . More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#concurrency-control-and-consistency
          */
-        resourceVersion?: string;
+        resourceVersion?: string | null;
+        /**
+         * GenerateName is an optional prefix, used by the server, to generate a unique name ONLY IF the Name field has not been provided. If this field is used, the name returned to the client will be different than the name passed. This value will also be combined with a unique suffix. The provided value has the same validation rules as the Name field, and may be truncated by the length of the suffix required to make the value unique on the server.
+         *
+         * If this field is specified and the generated name exists, the server will NOT return a 409 - instead, it will either return 201 Created or 500 with Reason ServerTimeout indicating a unique name could not be found in the time allotted, and the client should retry (optionally after the time indicated in the Retry-After header).
+         *
+         * Applied only if Name is not specified. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#idempotency
+         */
+        generateName?: string | null;
+        /**
+         * Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.
+         */
+        creationTimestamp?: string | null;
         /**
          * Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations
          */
         annotations?: {
-          [k: string]: string;
+          [k: string]: string | null;
         };
         /**
          * SelfLink is a URL representing this object. Populated by the system. Read-only.
          */
-        selfLink?: string;
+        selfLink?: string | null;
+        /**
+         * Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names
+         */
+        name?: string | null;
         [k: string]: any;
       };
       [k: string]: any;
@@ -461,16 +455,16 @@ export interface Statefulset {
     /**
      * podManagementPolicy controls how pods are created during initial scale up, when replacing pods on nodes, or when scaling down. The default policy is `OrderedReady`, where pods are created in increasing order (pod-0, then pod-1, etc) and the controller will wait until each pod is ready before continuing. When scaling down, the pods are removed in the opposite order. The alternative policy is `Parallel` which will create pods in parallel to match the desired scale without waiting, and on scale down will delete all pods at once.
      */
-    podManagementPolicy?: string;
+    podManagementPolicy?: string | null;
     /**
-     * selector is a label query over pods that should match the replica count. If empty, defaulted to labels on the pod template. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
+     * A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects.
      */
     selector?: {
       /**
        * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
        */
       matchLabels?: {
-        [k: string]: string;
+        [k: string]: string | null;
       };
       /**
        * matchExpressions is a list of label selector requirements. The requirements are ANDed.
@@ -483,7 +477,7 @@ export interface Statefulset {
         /**
          * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
          */
-        values?: string[];
+        values?: (string | null)[];
         /**
          * key is the label key that the selector applies to.
          */
@@ -497,29 +491,17 @@ export interface Statefulset {
      */
     serviceName: string;
     /**
-     * template is the object that describes the pod that will be created if insufficient replicas are detected. Each pod stamped out by the StatefulSet will fulfill this Template, but have a unique identity from the rest of the StatefulSet.
+     * PodTemplateSpec describes the data a pod should have when created from a template
      */
     template: {
       /**
-       * Specification of the desired behavior of the pod. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status
+       * PodSpec is a description of a pod.
        */
       spec?: {
         /**
-         * Share a single process namespace between all of the containers in a pod. When this is set containers will be able to view and signal processes from other containers in the same pod, and the first process in each container will not be assigned PID 1. HostPID and ShareProcessNamespace cannot both be set. Optional: Default to false. This field is beta-level and may be disabled with the PodShareProcessNamespace feature.
-         */
-        shareProcessNamespace?: boolean;
-        /**
          * Set DNS policy for the pod. Defaults to "ClusterFirst". Valid values are 'ClusterFirstWithHostNet', 'ClusterFirst', 'Default' or 'None'. DNS parameters given in DNSConfig will be merged with the policy selected with DNSPolicy. To have DNS options set along with hostNetwork, you have to specify DNS policy explicitly to 'ClusterFirstWithHostNet'.
          */
-        dnsPolicy?: string;
-        /**
-         * ServiceAccountName is the name of the ServiceAccount to use to run this pod. More info: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
-         */
-        serviceAccountName?: string;
-        /**
-         * If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler.
-         */
-        schedulerName?: string;
+        dnsPolicy?: string | null;
         /**
          * Host networking requested for this pod. Use the host's network namespace. If this option is set, the ports that will be used must be specified. Default to false.
          */
@@ -527,66 +509,19 @@ export interface Statefulset {
         /**
          * Restart policy for all containers within the pod. One of Always, OnFailure, Never. Default to Always. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#restart-policy
          */
-        restartPolicy?: string;
-        /**
-         * Use the host's ipc namespace. Optional: Default to false.
-         */
-        hostIPC?: boolean;
+        restartPolicy?: string | null;
         /**
          * AutomountServiceAccountToken indicates whether a service account token should be automatically mounted.
          */
         automountServiceAccountToken?: boolean;
         /**
-         * If specified, indicates the pod's priority. "system-node-critical" and "system-cluster-critical" are two special keywords which indicate the highest priorities with the former being the highest priority. Any other name must be defined by creating a PriorityClass object with that name. If not specified, the pod priority will be default or zero if there is no default.
+         * Share a single process namespace between all of the containers in a pod. When this is set containers will be able to view and signal processes from other containers in the same pod, and the first process in each container will not be assigned PID 1. HostPID and ShareProcessNamespace cannot both be set. Optional: Default to false. This field is beta-level and may be disabled with the PodShareProcessNamespace feature.
          */
-        priorityClassName?: string;
+        shareProcessNamespace?: boolean;
         /**
-         * Specifies the DNS parameters of a pod. Parameters specified here will be merged to the generated DNS configuration based on DNSPolicy.
-         */
-        dnsConfig?: {
-          /**
-           * A list of DNS name server IP addresses. This will be appended to the base nameservers generated from DNSPolicy. Duplicated nameservers will be removed.
-           */
-          nameservers?: string[];
-          /**
-           * A list of DNS search domains for host-name lookup. This will be appended to the base search paths generated from DNSPolicy. Duplicated search paths will be removed.
-           */
-          searches?: string[];
-          /**
-           * A list of DNS resolver options. This will be merged with the base options generated from DNSPolicy. Duplicated entries will be removed. Resolution options given in Options will override those that appear in the base DNSPolicy.
-           */
-          options?: {
-            /**
-             * Required.
-             */
-            name?: string;
-            value?: string;
-            [k: string]: any;
-          }[];
-          [k: string]: any;
-        };
-        /**
-         * SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty.  See type description for default values of each field.
+         * PodSecurityContext holds pod-level security attributes and common container settings. Some fields are also present in container.securityContext.  Field values of container.securityContext take precedence over field values of PodSecurityContext.
          */
         securityContext?: {
-          /**
-           * Indicates that the container must run as a non-root user. If true, the Kubelet will validate the image at runtime to ensure that it does not run as UID 0 (root) and fail to start the container if it does. If unset or false, no such validation will be performed. May also be set in SecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
-           */
-          runAsNonRoot?: boolean;
-          /**
-           * Sysctls hold a list of namespaced sysctls used for the pod. Pods with unsupported sysctls (by the container runtime) might fail to launch.
-           */
-          sysctls?: {
-            /**
-             * Name of a property to set
-             */
-            name: string;
-            /**
-             * Value of a property to set
-             */
-            value: string;
-            [k: string]: any;
-          }[];
           /**
            * The GID to run the entrypoint of the container process. Uses runtime default if unset. May also be set in SecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence for that container.
            */
@@ -608,25 +543,43 @@ export interface Statefulset {
            */
           fsGroup?: number;
           /**
-           * The SELinux context to be applied to all containers. If unspecified, the container runtime will allocate a random SELinux context for each container.  May also be set in SecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence for that container.
+           * Sysctls hold a list of namespaced sysctls used for the pod. Pods with unsupported sysctls (by the container runtime) might fail to launch.
+           */
+          sysctls?: {
+            /**
+             * Name of a property to set
+             */
+            name: string;
+            /**
+             * Value of a property to set
+             */
+            value: string;
+            [k: string]: any;
+          }[];
+          /**
+           * Indicates that the container must run as a non-root user. If true, the Kubelet will validate the image at runtime to ensure that it does not run as UID 0 (root) and fail to start the container if it does. If unset or false, no such validation will be performed. May also be set in SecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
+           */
+          runAsNonRoot?: boolean;
+          /**
+           * SELinuxOptions are the labels to be applied to the container
            */
           seLinuxOptions?: {
             /**
              * Role is a SELinux role label that applies to the container.
              */
-            role?: string;
+            role?: string | null;
             /**
              * Type is a SELinux type label that applies to the container.
              */
-            type?: string;
+            type?: string | null;
             /**
              * User is a SELinux user label that applies to the container.
              */
-            user?: string;
+            user?: string | null;
             /**
              * Level is SELinux level label that applies to the container.
              */
-            level?: string;
+            level?: string | null;
             [k: string]: any;
           };
           [k: string]: any;
@@ -634,11 +587,7 @@ export interface Statefulset {
         /**
          * NodeName is a request to schedule this pod onto a specific node. If it is non-empty, the scheduler simply schedules this pod onto that node, assuming that it fits resource requirements.
          */
-        nodeName?: string;
-        /**
-         * RuntimeClassName refers to a RuntimeClass object in the node.k8s.io group, which should be used to run this pod.  If no RuntimeClass resource matches the named class, the pod will not be run. If unset or empty, the "legacy" RuntimeClass will be used, which is an implicit class with an empty definition that uses the default runtime handler. More info: https://github.com/kubernetes/community/blob/master/keps/sig-node/0014-runtime-class.md This is an alpha feature and may change in the future.
-         */
-        runtimeClassName?: string;
+        nodeName?: string | null;
         /**
          * HostAliases is an optional list of hosts and IPs that will be injected into the pod's hosts file if specified. This is only valid for non-hostNetwork pods.
          */
@@ -646,55 +595,37 @@ export interface Statefulset {
           /**
            * IP address of the host file entry.
            */
-          ip?: string;
+          ip?: string | null;
           /**
            * Hostnames for the above IP address.
            */
-          hostnames?: string[];
+          hostnames?: (string | null)[];
           [k: string]: any;
         }[];
         /**
          * Specifies the hostname of the Pod If not specified, the pod's hostname will be set to a system-defined value.
          */
-        hostname?: string;
+        hostname?: string | null;
         /**
          * DeprecatedServiceAccount is a depreciated alias for ServiceAccountName. Deprecated: Use serviceAccountName instead.
          */
-        serviceAccount?: string;
-        /**
-         * Optional duration in seconds the pod may be active on the node relative to StartTime before the system will actively try to mark it failed and kill associated containers. Value must be a positive integer.
-         */
-        activeDeadlineSeconds?: number;
+        serviceAccount?: string | null;
         /**
          * NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
          */
         nodeSelector?: {
-          [k: string]: string;
+          [k: string]: string | null;
         };
         /**
          * The priority value. Various system components use this field to find the priority of the pod. When Priority Admission Controller is enabled, it prevents users from setting this field. The admission controller populates this field from PriorityClassName. The higher the value, the higher the priority.
          */
         priority?: number;
         /**
-         * Optional duration in seconds the pod needs to terminate gracefully. May be decreased in delete request. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period will be used instead. The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal. Set this value longer than the expected cleanup time for your process. Defaults to 30 seconds.
-         */
-        terminationGracePeriodSeconds?: number;
-        /**
-         * If specified, all readiness gates will be evaluated for pod readiness. A pod is ready when all its containers are ready AND all conditions specified in the readiness gates have status equal to "True" More info: https://github.com/kubernetes/community/blob/master/keps/sig-network/0007-pod-ready%2B%2B.md
-         */
-        readinessGates?: {
-          /**
-           * ConditionType refers to a condition in the pod's condition list with matching type.
-           */
-          conditionType: string;
-          [k: string]: any;
-        }[];
-        /**
-         * If specified, the pod's scheduling constraints
+         * Affinity is a group of affinity scheduling rules.
          */
         affinity?: {
           /**
-           * Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
+           * Pod affinity is a group of inter pod affinity scheduling rules.
            */
           podAffinity?: {
             /**
@@ -702,14 +633,14 @@ export interface Statefulset {
              */
             requiredDuringSchedulingIgnoredDuringExecution?: {
               /**
-               * A label query over a set of resources, in this case pods.
+               * A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects.
                */
               labelSelector?: {
                 /**
                  * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
                  */
                 matchLabels?: {
-                  [k: string]: string;
+                  [k: string]: string | null;
                 };
                 /**
                  * matchExpressions is a list of label selector requirements. The requirements are ANDed.
@@ -722,7 +653,7 @@ export interface Statefulset {
                   /**
                    * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
                    */
-                  values?: string[];
+                  values?: (string | null)[];
                   /**
                    * key is the label key that the selector applies to.
                    */
@@ -734,7 +665,7 @@ export interface Statefulset {
               /**
                * namespaces specifies which namespaces the labelSelector applies to (matches against); null or empty list means "this pod's namespace"
                */
-              namespaces?: string[];
+              namespaces?: (string | null)[];
               /**
                * This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching the labelSelector in the specified namespaces, where co-located is defined as running on a node whose value of the label with key topologyKey matches that of any node on which any of the selected pods is running. Empty topologyKey is not allowed.
                */
@@ -746,18 +677,18 @@ export interface Statefulset {
              */
             preferredDuringSchedulingIgnoredDuringExecution?: {
               /**
-               * Required. A pod affinity term, associated with the corresponding weight.
+               * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
                */
               podAffinityTerm: {
                 /**
-                 * A label query over a set of resources, in this case pods.
+                 * A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects.
                  */
                 labelSelector?: {
                   /**
                    * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
                    */
                   matchLabels?: {
-                    [k: string]: string;
+                    [k: string]: string | null;
                   };
                   /**
                    * matchExpressions is a list of label selector requirements. The requirements are ANDed.
@@ -770,7 +701,7 @@ export interface Statefulset {
                     /**
                      * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
                      */
-                    values?: string[];
+                    values?: (string | null)[];
                     /**
                      * key is the label key that the selector applies to.
                      */
@@ -782,7 +713,7 @@ export interface Statefulset {
                 /**
                  * namespaces specifies which namespaces the labelSelector applies to (matches against); null or empty list means "this pod's namespace"
                  */
-                namespaces?: string[];
+                namespaces?: (string | null)[];
                 /**
                  * This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching the labelSelector in the specified namespaces, where co-located is defined as running on a node whose value of the label with key topologyKey matches that of any node on which any of the selected pods is running. Empty topologyKey is not allowed.
                  */
@@ -798,11 +729,11 @@ export interface Statefulset {
             [k: string]: any;
           };
           /**
-           * Describes node affinity scheduling rules for the pod.
+           * Node affinity is a group of node affinity scheduling rules.
            */
           nodeAffinity?: {
             /**
-             * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
+             * A node selector represents the union of the results of one or more label queries over a set of nodes; that is, it represents the OR of the selectors represented by the node selector terms.
              */
             requiredDuringSchedulingIgnoredDuringExecution?: {
               /**
@@ -820,7 +751,7 @@ export interface Statefulset {
                   /**
                    * An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. If the operator is Gt or Lt, the values array must have a single element, which will be interpreted as an integer. This array is replaced during a strategic merge patch.
                    */
-                  values?: string[];
+                  values?: (string | null)[];
                   /**
                    * The label key that the selector applies to.
                    */
@@ -838,7 +769,7 @@ export interface Statefulset {
                   /**
                    * An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. If the operator is Gt or Lt, the values array must have a single element, which will be interpreted as an integer. This array is replaced during a strategic merge patch.
                    */
-                  values?: string[];
+                  values?: (string | null)[];
                   /**
                    * The label key that the selector applies to.
                    */
@@ -854,7 +785,7 @@ export interface Statefulset {
              */
             preferredDuringSchedulingIgnoredDuringExecution?: {
               /**
-               * A node selector term, associated with the corresponding weight.
+               * A null or empty node selector term matches no objects. The requirements of them are ANDed. The TopologySelectorTerm type implements a subset of the NodeSelectorTerm.
                */
               preference: {
                 /**
@@ -868,7 +799,7 @@ export interface Statefulset {
                   /**
                    * An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. If the operator is Gt or Lt, the values array must have a single element, which will be interpreted as an integer. This array is replaced during a strategic merge patch.
                    */
-                  values?: string[];
+                  values?: (string | null)[];
                   /**
                    * The label key that the selector applies to.
                    */
@@ -886,7 +817,7 @@ export interface Statefulset {
                   /**
                    * An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. If the operator is Gt or Lt, the values array must have a single element, which will be interpreted as an integer. This array is replaced during a strategic merge patch.
                    */
-                  values?: string[];
+                  values?: (string | null)[];
                   /**
                    * The label key that the selector applies to.
                    */
@@ -904,7 +835,7 @@ export interface Statefulset {
             [k: string]: any;
           };
           /**
-           * Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
+           * Pod anti affinity is a group of inter pod anti affinity scheduling rules.
            */
           podAntiAffinity?: {
             /**
@@ -912,14 +843,14 @@ export interface Statefulset {
              */
             requiredDuringSchedulingIgnoredDuringExecution?: {
               /**
-               * A label query over a set of resources, in this case pods.
+               * A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects.
                */
               labelSelector?: {
                 /**
                  * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
                  */
                 matchLabels?: {
-                  [k: string]: string;
+                  [k: string]: string | null;
                 };
                 /**
                  * matchExpressions is a list of label selector requirements. The requirements are ANDed.
@@ -932,7 +863,7 @@ export interface Statefulset {
                   /**
                    * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
                    */
-                  values?: string[];
+                  values?: (string | null)[];
                   /**
                    * key is the label key that the selector applies to.
                    */
@@ -944,7 +875,7 @@ export interface Statefulset {
               /**
                * namespaces specifies which namespaces the labelSelector applies to (matches against); null or empty list means "this pod's namespace"
                */
-              namespaces?: string[];
+              namespaces?: (string | null)[];
               /**
                * This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching the labelSelector in the specified namespaces, where co-located is defined as running on a node whose value of the label with key topologyKey matches that of any node on which any of the selected pods is running. Empty topologyKey is not allowed.
                */
@@ -956,18 +887,18 @@ export interface Statefulset {
              */
             preferredDuringSchedulingIgnoredDuringExecution?: {
               /**
-               * Required. A pod affinity term, associated with the corresponding weight.
+               * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
                */
               podAffinityTerm: {
                 /**
-                 * A label query over a set of resources, in this case pods.
+                 * A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects.
                  */
                 labelSelector?: {
                   /**
                    * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
                    */
                   matchLabels?: {
-                    [k: string]: string;
+                    [k: string]: string | null;
                   };
                   /**
                    * matchExpressions is a list of label selector requirements. The requirements are ANDed.
@@ -980,7 +911,7 @@ export interface Statefulset {
                     /**
                      * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
                      */
-                    values?: string[];
+                    values?: (string | null)[];
                     /**
                      * key is the label key that the selector applies to.
                      */
@@ -992,7 +923,7 @@ export interface Statefulset {
                 /**
                  * namespaces specifies which namespaces the labelSelector applies to (matches against); null or empty list means "this pod's namespace"
                  */
-                namespaces?: string[];
+                namespaces?: (string | null)[];
                 /**
                  * This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching the labelSelector in the specified namespaces, where co-located is defined as running on a node whose value of the label with key topologyKey matches that of any node on which any of the selected pods is running. Empty topologyKey is not allowed.
                  */
@@ -1010,29 +941,59 @@ export interface Statefulset {
           [k: string]: any;
         };
         /**
+         * If specified, the pod's tolerations.
+         */
+        tolerations?: {
+          /**
+           * Operator represents a key's relationship to the value. Valid operators are Exists and Equal. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category.
+           */
+          operator?: string | null;
+          /**
+           * Key is the taint key that the toleration applies to. Empty means match all taint keys. If the key is empty, operator must be Exists; this combination means to match all values and all keys.
+           */
+          key?: string | null;
+          /**
+           * TolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system.
+           */
+          tolerationSeconds?: number;
+          /**
+           * Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
+           */
+          effect?: string | null;
+          /**
+           * Value is the taint value the toleration matches to. If the operator is Exists, the value should be empty, otherwise just a regular string.
+           */
+          value?: string | null;
+          [k: string]: any;
+        }[];
+        /**
+         * If specified, the fully qualified Pod hostname will be "<hostname>.<subdomain>.<pod namespace>.svc.<cluster domain>". If not specified, the pod will not have a domainname at all.
+         */
+        subdomain?: string | null;
+        /**
          * List of containers belonging to the pod. Containers cannot currently be added or removed. There must be at least one container in a Pod. Cannot be updated.
          */
         containers: {
           /**
-           * Periodic probe of container liveness. Container will be restarted if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+           * Probe describes a health check to be performed against a container to determine whether it is alive or ready to receive traffic.
            */
           livenessProbe?: {
             /**
-             * HTTPGet specifies the http request to perform.
+             * HTTPGetAction describes an action based on HTTP Get requests.
              */
             httpGet?: {
               /**
                * Path to access on the HTTP server.
                */
-              path?: string;
+              path?: string | null;
               /**
                * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
                */
-              host?: string;
+              host?: string | null;
               /**
                * Scheme to use for connecting to the host. Defaults to HTTP.
                */
-              scheme?: string;
+              scheme?: string | null;
               /**
                * Custom headers to set in the request. HTTP allows repeated headers.
                */
@@ -1047,10 +1008,7 @@ export interface Statefulset {
                 value: string;
                 [k: string]: any;
               }[];
-              /**
-               * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
-               */
-              port: string | number;
+              port: (string | null) | number;
               [k: string]: any;
             };
             /**
@@ -1058,13 +1016,13 @@ export interface Statefulset {
              */
             timeoutSeconds?: number;
             /**
-             * One and only one of the following should be specified. Exec specifies the action to take.
+             * ExecAction describes a "run in container" action.
              */
             exec?: {
               /**
                * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
                */
-              command?: string[];
+              command?: (string | null)[];
               [k: string]: any;
             };
             /**
@@ -1072,17 +1030,14 @@ export interface Statefulset {
              */
             initialDelaySeconds?: number;
             /**
-             * TCPSocket specifies an action involving a TCP port. TCP hooks not yet supported
+             * TCPSocketAction describes an action based on opening a socket
              */
             tcpSocket?: {
               /**
                * Optional: Host name to connect to, defaults to the pod IP.
                */
-              host?: string;
-              /**
-               * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
-               */
-              port: string | number;
+              host?: string | null;
+              port: (string | null) | number;
               [k: string]: any;
             };
             /**
@@ -1100,45 +1055,95 @@ export interface Statefulset {
             [k: string]: any;
           };
           /**
+           * Arguments to the entrypoint. The docker image's CMD is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+           */
+          args?: (string | null)[];
+          /**
            * Optional: Path at which the file to which the container's termination message will be written is mounted into the container's filesystem. Message written is intended to be brief final status, such as an assertion failure message. Will be truncated by the node if greater than 4096 bytes. The total message length across all containers will be limited to 12kb. Defaults to /dev/termination-log. Cannot be updated.
            */
-          terminationMessagePath?: string;
+          terminationMessagePath?: string | null;
+          /**
+           * Name of the container specified as a DNS_LABEL. Each container in a pod must have a unique name (DNS_LABEL). Cannot be updated.
+           */
+          name: string;
+          /**
+           * List of sources to populate environment variables in the container. The keys defined within a source must be a C_IDENTIFIER. All invalid keys will be reported as an event when the container is starting. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated.
+           */
+          envFrom?: {
+            /**
+             * An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.
+             */
+            prefix?: string | null;
+            /**
+             * ConfigMapEnvSource selects a ConfigMap to populate the environment variables with.
+             *
+             * The contents of the target ConfigMap's Data field will represent the key-value pairs as environment variables.
+             */
+            configMapRef?: {
+              /**
+               * Specify whether the ConfigMap must be defined
+               */
+              optional?: boolean;
+              /**
+               * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+               */
+              name?: string | null;
+              [k: string]: any;
+            };
+            /**
+             * SecretEnvSource selects a Secret to populate the environment variables with.
+             *
+             * The contents of the target Secret's Data field will represent the key-value pairs as environment variables.
+             */
+            secretRef?: {
+              /**
+               * Specify whether the Secret must be defined
+               */
+              optional?: boolean;
+              /**
+               * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+               */
+              name?: string | null;
+              [k: string]: any;
+            };
+            [k: string]: any;
+          }[];
           /**
            * Container's working directory. If not specified, the container runtime's default will be used, which might be configured in the container image. Cannot be updated.
            */
-          workingDir?: string;
+          workingDir?: string | null;
           /**
            * Docker image name. More info: https://kubernetes.io/docs/concepts/containers/images This field is optional to allow higher level config management to default or override container images in workload controllers like Deployments and StatefulSets.
            */
-          image?: string;
+          image?: string | null;
           /**
-           * Arguments to the entrypoint. The docker image's CMD is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+           * Whether this container should allocate a buffer for stdin in the container runtime. If this is not set, reads from stdin in the container will always result in EOF. Default is false.
            */
-          args?: string[];
+          stdin?: boolean;
           /**
            * Pod volumes to mount into the container's filesystem. Cannot be updated.
            */
           volumeMounts?: {
             /**
-             * mountPropagation determines how mounts are propagated from the host to container and the other way around. When not set, MountPropagationNone is used. This field is beta in 1.10.
-             */
-            mountPropagation?: string;
-            /**
              * Mounted read-only if true, read-write otherwise (false or unspecified). Defaults to false.
              */
             readOnly?: boolean;
             /**
-             * Path within the container at which the volume should be mounted.  Must not contain ':'.
+             * mountPropagation determines how mounts are propagated from the host to container and the other way around. When not set, MountPropagationNone is used. This field is beta in 1.10.
              */
-            mountPath: string;
+            mountPropagation?: string | null;
             /**
              * Path within the volume from which the container's volume should be mounted. Defaults to "" (volume's root).
              */
-            subPath?: string;
+            subPath?: string | null;
             /**
              * This must match the Name of a Volume.
              */
             name: string;
+            /**
+             * Path within the container at which the volume should be mounted.  Must not contain ':'.
+             */
+            mountPath: string;
             [k: string]: any;
           }[];
           /**
@@ -1146,145 +1151,224 @@ export interface Statefulset {
            */
           tty?: boolean;
           /**
-           * Actions that the management system should take in response to container lifecycle events. Cannot be updated.
+           * Indicate how the termination message should be populated. File will use the contents of terminationMessagePath to populate the container status message on both success and failure. FallbackToLogsOnError will use the last chunk of container log output if the termination message file is empty and the container exited with an error. The log output is limited to 2048 bytes or 80 lines, whichever is smaller. Defaults to File. Cannot be updated.
            */
-          lifecycle?: {
+          terminationMessagePolicy?: string | null;
+          /**
+           * List of ports to expose from the container. Exposing a port here gives the system additional information about the network connections a container uses, but is primarily informational. Not specifying a port here DOES NOT prevent that port from being exposed. Any port which is listening on the default "0.0.0.0" address inside a container will be accessible from the network. Cannot be updated.
+           */
+          ports?: {
             /**
-             * PreStop is called immediately before a container is terminated. The container is terminated after the handler completes. The reason for termination is passed to the handler. Regardless of the outcome of the handler, the container is eventually terminated. Other management of the container blocks until the hook completes. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+             * What host IP to bind the external port to.
              */
-            preStop?: {
+            hostIP?: string | null;
+            /**
+             * Protocol for port. Must be UDP, TCP, or SCTP. Defaults to "TCP".
+             */
+            protocol?: string | null;
+            /**
+             * Number of port to expose on the pod's IP address. This must be a valid port number, 0 < x < 65536.
+             */
+            containerPort: number;
+            /**
+             * If specified, this must be an IANA_SVC_NAME and unique within the pod. Each named port in a pod must have a unique name. Name for the port that can be referred to by services.
+             */
+            name?: string | null;
+            /**
+             * Number of port to expose on the host. If specified, this must be a valid port number, 0 < x < 65536. If HostNetwork is specified, this must match ContainerPort. Most containers do not need this.
+             */
+            hostPort?: number;
+            [k: string]: any;
+          }[];
+          /**
+           * volumeDevices is the list of block devices to be used by the container. This is an alpha feature and may change in the future.
+           */
+          volumeDevices?: {
+            /**
+             * devicePath is the path inside of the container that the device will be mapped to.
+             */
+            devicePath: string;
+            /**
+             * name must match the name of a persistentVolumeClaim in the pod
+             */
+            name: string;
+            [k: string]: any;
+          }[];
+          /**
+           * Entrypoint array. Not executed within a shell. The docker image's ENTRYPOINT is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+           */
+          command?: (string | null)[];
+          /**
+           * List of environment variables to set in the container. Cannot be updated.
+           */
+          env?: {
+            /**
+             * EnvVarSource represents a source for the value of an EnvVar.
+             */
+            valueFrom?: {
               /**
-               * HTTPGet specifies the http request to perform.
+               * SecretKeySelector selects a key of a Secret.
                */
-              httpGet?: {
+              secretKeyRef?: {
                 /**
-                 * Path to access on the HTTP server.
+                 * Specify whether the Secret or it's key must be defined
                  */
-                path?: string;
+                optional?: boolean;
                 /**
-                 * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
+                 * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
                  */
-                host?: string;
+                name?: string | null;
                 /**
-                 * Scheme to use for connecting to the host. Defaults to HTTP.
+                 * The key of the secret to select from.  Must be a valid secret key.
                  */
-                scheme?: string;
-                /**
-                 * Custom headers to set in the request. HTTP allows repeated headers.
-                 */
-                httpHeaders?: {
-                  /**
-                   * The header field name
-                   */
-                  name: string;
-                  /**
-                   * The header field value
-                   */
-                  value: string;
-                  [k: string]: any;
-                }[];
-                /**
-                 * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
-                 */
-                port: string | number;
+                key: string;
                 [k: string]: any;
               };
               /**
-               * TCPSocket specifies an action involving a TCP port. TCP hooks not yet supported
+               * ObjectFieldSelector selects an APIVersioned field of an object.
                */
-              tcpSocket?: {
+              fieldRef?: {
                 /**
-                 * Optional: Host name to connect to, defaults to the pod IP.
+                 * Path of the field to select in the specified API version.
                  */
-                host?: string;
+                fieldPath: string;
                 /**
-                 * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+                 * Version of the schema the FieldPath is written in terms of, defaults to "v1".
                  */
-                port: string | number;
+                apiVersion?: string | null;
                 [k: string]: any;
               };
               /**
-               * One and only one of the following should be specified. Exec specifies the action to take.
+               * Selects a key from a ConfigMap.
                */
-              exec?: {
+              configMapKeyRef?: {
                 /**
-                 * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+                 * Specify whether the ConfigMap or it's key must be defined
                  */
-                command?: string[];
+                optional?: boolean;
+                /**
+                 * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                 */
+                name?: string | null;
+                /**
+                 * The key to select.
+                 */
+                key: string;
+                [k: string]: any;
+              };
+              /**
+               * ResourceFieldSelector represents container resources (cpu, memory) and their output format
+               */
+              resourceFieldRef?: {
+                /**
+                 * Container name: required for volumes, optional for env vars
+                 */
+                containerName?: string | null;
+                /**
+                 * Required: resource to select
+                 */
+                resource: string;
+                divisor?: (string | null) | number;
                 [k: string]: any;
               };
               [k: string]: any;
             };
             /**
-             * PostStart is called immediately after a container is created. If the handler fails, the container is terminated and restarted according to its restart policy. Other management of the container blocks until the hook completes. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+             * Name of the environment variable. Must be a C_IDENTIFIER.
              */
-            postStart?: {
+            name: string;
+            /**
+             * Variable references $(VAR_NAME) are expanded using the previous defined environment variables in the container and any service environment variables. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. Defaults to "".
+             */
+            value?: string | null;
+            [k: string]: any;
+          }[];
+          /**
+           * Image pull policy. One of Always, Never, IfNotPresent. Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. Cannot be updated. More info: https://kubernetes.io/docs/concepts/containers/images#updating-images
+           */
+          imagePullPolicy?: string | null;
+          /**
+           * Probe describes a health check to be performed against a container to determine whether it is alive or ready to receive traffic.
+           */
+          readinessProbe?: {
+            /**
+             * HTTPGetAction describes an action based on HTTP Get requests.
+             */
+            httpGet?: {
               /**
-               * HTTPGet specifies the http request to perform.
+               * Path to access on the HTTP server.
                */
-              httpGet?: {
-                /**
-                 * Path to access on the HTTP server.
-                 */
-                path?: string;
-                /**
-                 * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
-                 */
-                host?: string;
-                /**
-                 * Scheme to use for connecting to the host. Defaults to HTTP.
-                 */
-                scheme?: string;
-                /**
-                 * Custom headers to set in the request. HTTP allows repeated headers.
-                 */
-                httpHeaders?: {
-                  /**
-                   * The header field name
-                   */
-                  name: string;
-                  /**
-                   * The header field value
-                   */
-                  value: string;
-                  [k: string]: any;
-                }[];
-                /**
-                 * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
-                 */
-                port: string | number;
-                [k: string]: any;
-              };
+              path?: string | null;
               /**
-               * TCPSocket specifies an action involving a TCP port. TCP hooks not yet supported
+               * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
                */
-              tcpSocket?: {
-                /**
-                 * Optional: Host name to connect to, defaults to the pod IP.
-                 */
-                host?: string;
-                /**
-                 * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
-                 */
-                port: string | number;
-                [k: string]: any;
-              };
+              host?: string | null;
               /**
-               * One and only one of the following should be specified. Exec specifies the action to take.
+               * Scheme to use for connecting to the host. Defaults to HTTP.
                */
-              exec?: {
+              scheme?: string | null;
+              /**
+               * Custom headers to set in the request. HTTP allows repeated headers.
+               */
+              httpHeaders?: {
                 /**
-                 * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+                 * The header field name
                  */
-                command?: string[];
+                name: string;
+                /**
+                 * The header field value
+                 */
+                value: string;
                 [k: string]: any;
-              };
+              }[];
+              port: (string | null) | number;
               [k: string]: any;
             };
+            /**
+             * Number of seconds after which the probe times out. Defaults to 1 second. Minimum value is 1. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            timeoutSeconds?: number;
+            /**
+             * ExecAction describes a "run in container" action.
+             */
+            exec?: {
+              /**
+               * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+               */
+              command?: (string | null)[];
+              [k: string]: any;
+            };
+            /**
+             * Number of seconds after the container has started before liveness probes are initiated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            initialDelaySeconds?: number;
+            /**
+             * TCPSocketAction describes an action based on opening a socket
+             */
+            tcpSocket?: {
+              /**
+               * Optional: Host name to connect to, defaults to the pod IP.
+               */
+              host?: string | null;
+              port: (string | null) | number;
+              [k: string]: any;
+            };
+            /**
+             * How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1.
+             */
+            periodSeconds?: number;
+            /**
+             * Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1. Must be 1 for liveness. Minimum value is 1.
+             */
+            successThreshold?: number;
+            /**
+             * Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1.
+             */
+            failureThreshold?: number;
             [k: string]: any;
           };
           /**
-           * Security options the pod should run with. More info: https://kubernetes.io/docs/concepts/policy/security-context/ More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+           * SecurityContext holds security configuration that will be applied to a container. Some fields are present in both SecurityContext and PodSecurityContext.  When both are set, the values in SecurityContext take precedence.
            */
           securityContext?: {
             /**
@@ -1306,45 +1390,45 @@ export interface Statefulset {
             /**
              * procMount denotes the type of proc mount to use for the containers. The default is DefaultProcMount which uses the container runtime defaults for readonly paths and masked paths. This requires the ProcMountType feature flag to be enabled.
              */
-            procMount?: string;
+            procMount?: string | null;
             /**
              * Indicates that the container must run as a non-root user. If true, the Kubelet will validate the image at runtime to ensure that it does not run as UID 0 (root) and fail to start the container if it does. If unset or false, no such validation will be performed. May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
              */
             runAsNonRoot?: boolean;
             /**
-             * The SELinux context to be applied to the container. If unspecified, the container runtime will allocate a random SELinux context for each container.  May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
+             * SELinuxOptions are the labels to be applied to the container
              */
             seLinuxOptions?: {
               /**
                * Role is a SELinux role label that applies to the container.
                */
-              role?: string;
+              role?: string | null;
               /**
                * Type is a SELinux type label that applies to the container.
                */
-              type?: string;
+              type?: string | null;
               /**
                * User is a SELinux user label that applies to the container.
                */
-              user?: string;
+              user?: string | null;
               /**
                * Level is SELinux level label that applies to the container.
                */
-              level?: string;
+              level?: string | null;
               [k: string]: any;
             };
             /**
-             * The capabilities to add/drop when running containers. Defaults to the default set of capabilities granted by the container runtime.
+             * Adds and removes POSIX capabilities from running containers.
              */
             capabilities?: {
               /**
                * Added capabilities
                */
-              add?: string[];
+              add?: (string | null)[];
               /**
                * Removed capabilities
                */
-              drop?: string[];
+              drop?: (string | null)[];
               [k: string]: any;
             };
             /**
@@ -1354,377 +1438,228 @@ export interface Statefulset {
             [k: string]: any;
           };
           /**
-           * Name of the container specified as a DNS_LABEL. Each container in a pod must have a unique name (DNS_LABEL). Cannot be updated.
+           * Lifecycle describes actions that the management system should take in response to container lifecycle events. For the PostStart and PreStop lifecycle handlers, management of the container blocks until the action is complete, unless the container process fails, in which case the handler is aborted.
            */
-          name: string;
-          /**
-           * List of sources to populate environment variables in the container. The keys defined within a source must be a C_IDENTIFIER. All invalid keys will be reported as an event when the container is starting. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated.
-           */
-          envFrom?: {
+          lifecycle?: {
             /**
-             * An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.
+             * Handler defines a specific action that should be taken
              */
-            prefix?: string;
-            /**
-             * The ConfigMap to select from
-             */
-            configMapRef?: {
+            preStop?: {
               /**
-               * Specify whether the ConfigMap must be defined
+               * HTTPGetAction describes an action based on HTTP Get requests.
                */
-              optional?: boolean;
-              /**
-               * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-               */
-              name?: string;
-              [k: string]: any;
-            };
-            /**
-             * The Secret to select from
-             */
-            secretRef?: {
-              /**
-               * Specify whether the Secret must be defined
-               */
-              optional?: boolean;
-              /**
-               * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-               */
-              name?: string;
-              [k: string]: any;
-            };
-            [k: string]: any;
-          }[];
-          /**
-           * volumeDevices is the list of block devices to be used by the container. This is an alpha feature and may change in the future.
-           */
-          volumeDevices?: {
-            /**
-             * devicePath is the path inside of the container that the device will be mapped to.
-             */
-            devicePath: string;
-            /**
-             * name must match the name of a persistentVolumeClaim in the pod
-             */
-            name: string;
-            [k: string]: any;
-          }[];
-          /**
-           * Whether this container should allocate a buffer for stdin in the container runtime. If this is not set, reads from stdin in the container will always result in EOF. Default is false.
-           */
-          stdin?: boolean;
-          /**
-           * Whether the container runtime should close the stdin channel after it has been opened by a single attach. When stdin is true the stdin stream will remain open across multiple attach sessions. If stdinOnce is set to true, stdin is opened on container start, is empty until the first client attaches to stdin, and then remains open and accepts data until the client disconnects, at which time stdin is closed and remains closed until the container is restarted. If this flag is false, a container processes that reads from stdin will never receive an EOF. Default is false
-           */
-          stdinOnce?: boolean;
-          /**
-           * Indicate how the termination message should be populated. File will use the contents of terminationMessagePath to populate the container status message on both success and failure. FallbackToLogsOnError will use the last chunk of container log output if the termination message file is empty and the container exited with an error. The log output is limited to 2048 bytes or 80 lines, whichever is smaller. Defaults to File. Cannot be updated.
-           */
-          terminationMessagePolicy?: string;
-          /**
-           * Entrypoint array. Not executed within a shell. The docker image's ENTRYPOINT is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
-           */
-          command?: string[];
-          /**
-           * List of environment variables to set in the container. Cannot be updated.
-           */
-          env?: {
-            /**
-             * Source for the environment variable's value. Cannot be used if value is not empty.
-             */
-            valueFrom?: {
-              /**
-               * Selects a key of a secret in the pod's namespace
-               */
-              secretKeyRef?: {
+              httpGet?: {
                 /**
-                 * Specify whether the Secret or it's key must be defined
+                 * Path to access on the HTTP server.
                  */
-                optional?: boolean;
+                path?: string | null;
                 /**
-                 * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                 * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
                  */
-                name?: string;
+                host?: string | null;
                 /**
-                 * The key of the secret to select from.  Must be a valid secret key.
+                 * Scheme to use for connecting to the host. Defaults to HTTP.
                  */
-                key: string;
+                scheme?: string | null;
+                /**
+                 * Custom headers to set in the request. HTTP allows repeated headers.
+                 */
+                httpHeaders?: {
+                  /**
+                   * The header field name
+                   */
+                  name: string;
+                  /**
+                   * The header field value
+                   */
+                  value: string;
+                  [k: string]: any;
+                }[];
+                port: (string | null) | number;
                 [k: string]: any;
               };
               /**
-               * Selects a field of the pod: supports metadata.name, metadata.namespace, metadata.labels, metadata.annotations, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP.
+               * TCPSocketAction describes an action based on opening a socket
                */
-              fieldRef?: {
+              tcpSocket?: {
                 /**
-                 * Path of the field to select in the specified API version.
+                 * Optional: Host name to connect to, defaults to the pod IP.
                  */
-                fieldPath: string;
-                /**
-                 * Version of the schema the FieldPath is written in terms of, defaults to "v1".
-                 */
-                apiVersion?: string;
+                host?: string | null;
+                port: (string | null) | number;
                 [k: string]: any;
               };
               /**
-               * Selects a key of a ConfigMap.
+               * ExecAction describes a "run in container" action.
                */
-              configMapKeyRef?: {
+              exec?: {
                 /**
-                 * Specify whether the ConfigMap or it's key must be defined
+                 * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
                  */
-                optional?: boolean;
-                /**
-                 * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                 */
-                name?: string;
-                /**
-                 * The key to select.
-                 */
-                key: string;
-                [k: string]: any;
-              };
-              /**
-               * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
-               */
-              resourceFieldRef?: {
-                /**
-                 * Container name: required for volumes, optional for env vars
-                 */
-                containerName?: string;
-                /**
-                 * Required: resource to select
-                 */
-                resource: string;
-                /**
-                 * Specifies the output format of the exposed resources, defaults to "1"
-                 */
-                divisor?: string | number;
+                command?: (string | null)[];
                 [k: string]: any;
               };
               [k: string]: any;
             };
             /**
-             * Name of the environment variable. Must be a C_IDENTIFIER.
+             * Handler defines a specific action that should be taken
              */
-            name: string;
-            /**
-             * Variable references $(VAR_NAME) are expanded using the previous defined environment variables in the container and any service environment variables. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. Defaults to "".
-             */
-            value?: string;
-            [k: string]: any;
-          }[];
-          /**
-           * Image pull policy. One of Always, Never, IfNotPresent. Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. Cannot be updated. More info: https://kubernetes.io/docs/concepts/containers/images#updating-images
-           */
-          imagePullPolicy?: string;
-          /**
-           * Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
-           */
-          readinessProbe?: {
-            /**
-             * HTTPGet specifies the http request to perform.
-             */
-            httpGet?: {
+            postStart?: {
               /**
-               * Path to access on the HTTP server.
+               * HTTPGetAction describes an action based on HTTP Get requests.
                */
-              path?: string;
-              /**
-               * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
-               */
-              host?: string;
-              /**
-               * Scheme to use for connecting to the host. Defaults to HTTP.
-               */
-              scheme?: string;
-              /**
-               * Custom headers to set in the request. HTTP allows repeated headers.
-               */
-              httpHeaders?: {
+              httpGet?: {
                 /**
-                 * The header field name
+                 * Path to access on the HTTP server.
                  */
-                name: string;
+                path?: string | null;
                 /**
-                 * The header field value
+                 * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
                  */
-                value: string;
+                host?: string | null;
+                /**
+                 * Scheme to use for connecting to the host. Defaults to HTTP.
+                 */
+                scheme?: string | null;
+                /**
+                 * Custom headers to set in the request. HTTP allows repeated headers.
+                 */
+                httpHeaders?: {
+                  /**
+                   * The header field name
+                   */
+                  name: string;
+                  /**
+                   * The header field value
+                   */
+                  value: string;
+                  [k: string]: any;
+                }[];
+                port: (string | null) | number;
                 [k: string]: any;
-              }[];
+              };
               /**
-               * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+               * TCPSocketAction describes an action based on opening a socket
                */
-              port: string | number;
+              tcpSocket?: {
+                /**
+                 * Optional: Host name to connect to, defaults to the pod IP.
+                 */
+                host?: string | null;
+                port: (string | null) | number;
+                [k: string]: any;
+              };
+              /**
+               * ExecAction describes a "run in container" action.
+               */
+              exec?: {
+                /**
+                 * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+                 */
+                command?: (string | null)[];
+                [k: string]: any;
+              };
               [k: string]: any;
             };
-            /**
-             * Number of seconds after which the probe times out. Defaults to 1 second. Minimum value is 1. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
-             */
-            timeoutSeconds?: number;
-            /**
-             * One and only one of the following should be specified. Exec specifies the action to take.
-             */
-            exec?: {
-              /**
-               * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
-               */
-              command?: string[];
-              [k: string]: any;
-            };
-            /**
-             * Number of seconds after the container has started before liveness probes are initiated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
-             */
-            initialDelaySeconds?: number;
-            /**
-             * TCPSocket specifies an action involving a TCP port. TCP hooks not yet supported
-             */
-            tcpSocket?: {
-              /**
-               * Optional: Host name to connect to, defaults to the pod IP.
-               */
-              host?: string;
-              /**
-               * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
-               */
-              port: string | number;
-              [k: string]: any;
-            };
-            /**
-             * How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1.
-             */
-            periodSeconds?: number;
-            /**
-             * Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1. Must be 1 for liveness. Minimum value is 1.
-             */
-            successThreshold?: number;
-            /**
-             * Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1.
-             */
-            failureThreshold?: number;
             [k: string]: any;
           };
           /**
-           * List of ports to expose from the container. Exposing a port here gives the system additional information about the network connections a container uses, but is primarily informational. Not specifying a port here DOES NOT prevent that port from being exposed. Any port which is listening on the default "0.0.0.0" address inside a container will be accessible from the network. Cannot be updated.
-           */
-          ports?: {
-            /**
-             * What host IP to bind the external port to.
-             */
-            hostIP?: string;
-            /**
-             * Protocol for port. Must be UDP, TCP, or SCTP. Defaults to "TCP".
-             */
-            protocol?: string;
-            /**
-             * Number of port to expose on the pod's IP address. This must be a valid port number, 0 < x < 65536.
-             */
-            containerPort: number;
-            /**
-             * If specified, this must be an IANA_SVC_NAME and unique within the pod. Each named port in a pod must have a unique name. Name for the port that can be referred to by services.
-             */
-            name?: string;
-            /**
-             * Number of port to expose on the host. If specified, this must be a valid port number, 0 < x < 65536. If HostNetwork is specified, this must match ContainerPort. Most containers do not need this.
-             */
-            hostPort?: number;
-            [k: string]: any;
-          }[];
-          /**
-           * Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+           * ResourceRequirements describes the compute resource requirements.
            */
           resources?: {
             /**
              * Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
              */
             requests?: {
-              [k: string]: string | number;
+              [k: string]: (string | null) | number;
             };
             /**
              * Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
              */
             limits?: {
-              [k: string]: string | number;
+              [k: string]: (string | null) | number;
             };
             [k: string]: any;
           };
+          /**
+           * Whether the container runtime should close the stdin channel after it has been opened by a single attach. When stdin is true the stdin stream will remain open across multiple attach sessions. If stdinOnce is set to true, stdin is opened on container start, is empty until the first client attaches to stdin, and then remains open and accepts data until the client disconnects, at which time stdin is closed and remains closed until the container is restarted. If this flag is false, a container processes that reads from stdin will never receive an EOF. Default is false
+           */
+          stdinOnce?: boolean;
           [k: string]: any;
         }[];
+        /**
+         * If specified, indicates the pod's priority. "system-node-critical" and "system-cluster-critical" are two special keywords which indicate the highest priorities with the former being the highest priority. Any other name must be defined by creating a PriorityClass object with that name. If not specified, the pod priority will be default or zero if there is no default.
+         */
+        priorityClassName?: string | null;
+        /**
+         * ServiceAccountName is the name of the ServiceAccount to use to run this pod. More info: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+         */
+        serviceAccountName?: string | null;
+        /**
+         * If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler.
+         */
+        schedulerName?: string | null;
+        /**
+         * Use the host's ipc namespace. Optional: Default to false.
+         */
+        hostIPC?: boolean;
+        /**
+         * RuntimeClassName refers to a RuntimeClass object in the node.k8s.io group, which should be used to run this pod.  If no RuntimeClass resource matches the named class, the pod will not be run. If unset or empty, the "legacy" RuntimeClass will be used, which is an implicit class with an empty definition that uses the default runtime handler. More info: https://github.com/kubernetes/community/blob/master/keps/sig-node/0014-runtime-class.md This is an alpha feature and may change in the future.
+         */
+        runtimeClassName?: string | null;
+        /**
+         * PodDNSConfig defines the DNS parameters of a pod in addition to those generated from DNSPolicy.
+         */
+        dnsConfig?: {
+          /**
+           * A list of DNS name server IP addresses. This will be appended to the base nameservers generated from DNSPolicy. Duplicated nameservers will be removed.
+           */
+          nameservers?: (string | null)[];
+          /**
+           * A list of DNS search domains for host-name lookup. This will be appended to the base search paths generated from DNSPolicy. Duplicated search paths will be removed.
+           */
+          searches?: (string | null)[];
+          /**
+           * A list of DNS resolver options. This will be merged with the base options generated from DNSPolicy. Duplicated entries will be removed. Resolution options given in Options will override those that appear in the base DNSPolicy.
+           */
+          options?: {
+            /**
+             * Required.
+             */
+            name?: string | null;
+            value?: string | null;
+            [k: string]: any;
+          }[];
+          [k: string]: any;
+        };
+        /**
+         * Optional duration in seconds the pod may be active on the node relative to StartTime before the system will actively try to mark it failed and kill associated containers. Value must be a positive integer.
+         */
+        activeDeadlineSeconds?: number;
+        /**
+         * Optional duration in seconds the pod needs to terminate gracefully. May be decreased in delete request. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period will be used instead. The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal. Set this value longer than the expected cleanup time for your process. Defaults to 30 seconds.
+         */
+        terminationGracePeriodSeconds?: number;
+        /**
+         * If specified, all readiness gates will be evaluated for pod readiness. A pod is ready when all its containers are ready AND all conditions specified in the readiness gates have status equal to "True" More info: https://github.com/kubernetes/community/blob/master/keps/sig-network/0007-pod-ready%2B%2B.md
+         */
+        readinessGates?: {
+          /**
+           * ConditionType refers to a condition in the pod's condition list with matching type.
+           */
+          conditionType: string;
+          [k: string]: any;
+        }[];
+        /**
+         * Use the host's pid namespace. Optional: Default to false.
+         */
+        hostPID?: boolean;
         /**
          * List of volumes that can be mounted by containers belonging to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes
          */
         volumes?: {
           /**
-           * PhotonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine
-           */
-          photonPersistentDisk?: {
-            /**
-             * Filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-             */
-            fsType?: string;
-            /**
-             * ID that identifies Photon Controller persistent disk
-             */
-            pdID: string;
-            [k: string]: any;
-          };
-          /**
-           * Quobyte represents a Quobyte mount on the host that shares a pod's lifetime
-           */
-          quobyte?: {
-            /**
-             * Volume is a string that references an already created Quobyte volume by name.
-             */
-            volume: string;
-            /**
-             * ReadOnly here will force the Quobyte volume to be mounted with read-only permissions. Defaults to false.
-             */
-            readOnly?: boolean;
-            /**
-             * Group to map volume access to Default is no group
-             */
-            group?: string;
-            /**
-             * Registry represents a single or multiple Quobyte Registry services specified as a string as host:port pair (multiple entries are separated with commas) which acts as the central registry for volumes
-             */
-            registry: string;
-            /**
-             * User to map volume access to Defaults to serivceaccount user
-             */
-            user?: string;
-            [k: string]: any;
-          };
-          /**
-           * AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.
-           */
-          azureDisk?: {
-            /**
-             * The URI the data disk in the blob storage
-             */
-            diskURI: string;
-            /**
-             * The Name of the data disk in the blob storage
-             */
-            diskName: string;
-            /**
-             * Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.
-             */
-            readOnly?: boolean;
-            /**
-             * Host Caching mode: None, Read Only, Read Write.
-             */
-            cachingMode?: string;
-            /**
-             * Expected values Shared: multiple blob disks per storage account  Dedicated: single blob disk per storage account  Managed: azure managed data disk (only in managed availability set). defaults to shared
-             */
-            kind?: string;
-            /**
-             * Filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-             */
-            fsType?: string;
-            [k: string]: any;
-          };
-          /**
-           * PortworxVolume represents a portworx volume attached and mounted on kubelets host machine
+           * PortworxVolumeSource represents a Portworx volume resource.
            */
           portworxVolume?: {
             /**
@@ -1738,11 +1673,11 @@ export interface Statefulset {
             /**
              * FSType represents the filesystem type to mount Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs". Implicitly inferred to be "ext4" if unspecified.
              */
-            fsType?: string;
+            fsType?: string | null;
             [k: string]: any;
           };
           /**
-           * Glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. More info: https://releases.k8s.io/HEAD/examples/volumes/glusterfs/README.md
+           * Represents a Glusterfs mount that lasts the lifetime of a pod. Glusterfs volumes do not support ownership management or SELinux relabeling.
            */
           glusterfs?: {
             /**
@@ -1760,13 +1695,15 @@ export interface Statefulset {
             [k: string]: any;
           };
           /**
-           * GitRepo represents a git repository at a particular revision. DEPRECATED: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.
+           * Represents a volume that is populated with the contents of a git repository. Git repo volumes do not support ownership management. Git repo volumes support SELinux relabeling.
+           *
+           * DEPRECATED: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.
            */
           gitRepo?: {
             /**
              * Target directory name. Must not contain or start with '..'.  If '.' is supplied, the volume directory will be the git repository.  Otherwise, if specified, the volume will contain the git repository in the subdirectory with the given name.
              */
-            directory?: string;
+            directory?: string | null;
             /**
              * Repository URL
              */
@@ -1774,209 +1711,57 @@ export interface Statefulset {
             /**
              * Commit hash for the specified revision.
              */
-            revision?: string;
+            revision?: string | null;
             [k: string]: any;
           };
           /**
-           * ScaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.
-           */
-          scaleIO?: {
-            /**
-             * Indicates whether the storage for a volume should be ThickProvisioned or ThinProvisioned. Default is ThinProvisioned.
-             */
-            storageMode?: string;
-            /**
-             * SecretRef references to the secret for ScaleIO user and other sensitive information. If this is not provided, Login operation will fail.
-             */
-            secretRef: {
-              /**
-               * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-               */
-              name?: string;
-              [k: string]: any;
-            };
-            /**
-             * The name of the ScaleIO Protection Domain for the configured storage.
-             */
-            protectionDomain?: string;
-            /**
-             * The name of a volume already created in the ScaleIO system that is associated with this volume source.
-             */
-            volumeName?: string;
-            /**
-             * Flag to enable/disable SSL communication with Gateway, default false
-             */
-            sslEnabled?: boolean;
-            /**
-             * The name of the storage system as configured in ScaleIO.
-             */
-            system: string;
-            /**
-             * Filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Default is "xfs".
-             */
-            fsType?: string;
-            /**
-             * Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.
-             */
-            readOnly?: boolean;
-            /**
-             * The ScaleIO Storage Pool associated with the protection domain.
-             */
-            storagePool?: string;
-            /**
-             * The host address of the ScaleIO API Gateway.
-             */
-            gateway: string;
-            [k: string]: any;
-          };
-          /**
-           * EmptyDir represents a temporary directory that shares a pod's lifetime. More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir
-           */
-          emptyDir?: {
-            /**
-             * Total amount of local storage required for this EmptyDir volume. The size limit is also applicable for memory medium. The maximum usage on memory medium EmptyDir would be the minimum value between the SizeLimit specified here and the sum of memory limits of all containers in a pod. The default is nil which means that the limit is undefined. More info: http://kubernetes.io/docs/user-guide/volumes#emptydir
-             */
-            sizeLimit?: string | number;
-            /**
-             * What type of storage medium should back this directory. The default is "" which means to use the node's default medium. Must be an empty string (default) or Memory. More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir
-             */
-            medium?: string;
-            [k: string]: any;
-          };
-          /**
-           * Cinder represents a cinder volume attached and mounted on kubelets host machine More info: https://releases.k8s.io/HEAD/examples/mysql-cinder-pd/README.md
-           */
-          cinder?: {
-            /**
-             * Optional: Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts. More info: https://releases.k8s.io/HEAD/examples/mysql-cinder-pd/README.md
-             */
-            readOnly?: boolean;
-            /**
-             * Filesystem type to mount. Must be a filesystem type supported by the host operating system. Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified. More info: https://releases.k8s.io/HEAD/examples/mysql-cinder-pd/README.md
-             */
-            fsType?: string;
-            /**
-             * Optional: points to a secret object containing parameters used to connect to OpenStack.
-             */
-            secretRef?: {
-              /**
-               * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-               */
-              name?: string;
-              [k: string]: any;
-            };
-            /**
-             * volume id used to identify the volume in cinder More info: https://releases.k8s.io/HEAD/examples/mysql-cinder-pd/README.md
-             */
-            volumeID: string;
-            [k: string]: any;
-          };
-          /**
-           * Flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running
+           * Represents a Flocker volume mounted by the Flocker agent. One and only one of datasetName and datasetUUID should be set. Flocker volumes do not support ownership management or SELinux relabeling.
            */
           flocker?: {
             /**
              * Name of the dataset stored as metadata -> name on the dataset for Flocker should be considered as deprecated
              */
-            datasetName?: string;
+            datasetName?: string | null;
             /**
              * UUID of the dataset. This is unique identifier of a Flocker dataset
              */
-            datasetUUID?: string;
+            datasetUUID?: string | null;
             [k: string]: any;
           };
           /**
-           * PersistentVolumeClaimVolumeSource represents a reference to a PersistentVolumeClaim in the same namespace. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+           * Represents a StorageOS persistent volume resource.
            */
-          persistentVolumeClaim?: {
+          storageos?: {
             /**
-             * Will force the ReadOnly setting in VolumeMounts. Default false.
+             * VolumeName is the human-readable name of the StorageOS volume.  Volume names are only unique within a namespace.
+             */
+            volumeName?: string | null;
+            /**
+             * Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.
              */
             readOnly?: boolean;
             /**
-             * ClaimName is the name of a PersistentVolumeClaim in the same namespace as the pod using this volume. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+             * VolumeNamespace specifies the scope of the volume within StorageOS.  If no namespace is specified then the Pod's namespace will be used.  This allows the Kubernetes name scoping to be mirrored within StorageOS for tighter integration. Set VolumeName to any name to override the default behaviour. Set to "default" if you are not using namespaces within StorageOS. Namespaces that do not pre-exist within StorageOS will be created.
              */
-            claimName: string;
-            [k: string]: any;
-          };
-          /**
-           * ConfigMap represents a configMap that should populate this volume
-           */
-          configMap?: {
+            volumeNamespace?: string | null;
             /**
-             * If unspecified, each key-value pair in the Data field of the referenced ConfigMap will be projected into the volume as a file whose name is the key and content is the value. If specified, the listed keys will be projected into the specified paths, and unlisted keys will not be present. If a key is specified which is not present in the ConfigMap, the volume setup will error unless it is marked optional. Paths must be relative and may not contain the '..' path or start with '..'.
-             */
-            items?: {
-              /**
-               * The relative path of the file to map the key to. May not be an absolute path. May not contain the path element '..'. May not start with the string '..'.
-               */
-              path: string;
-              /**
-               * Optional: mode bits to use on this file, must be a value between 0 and 0777. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
-               */
-              mode?: number;
-              /**
-               * The key to project.
-               */
-              key: string;
-              [k: string]: any;
-            }[];
-            /**
-             * Specify whether the ConfigMap or it's keys must be defined
-             */
-            optional?: boolean;
-            /**
-             * Optional: mode bits to use on created files by default. Must be a value between 0 and 0777. Defaults to 0644. Directories within the path are not affected by this setting. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
-             */
-            defaultMode?: number;
-            /**
-             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-             */
-            name?: string;
-            [k: string]: any;
-          };
-          /**
-           * CephFS represents a Ceph FS mount on the host that shares a pod's lifetime
-           */
-          cephfs?: {
-            /**
-             * Optional: SecretRef is reference to the authentication secret for User, default is empty. More info: https://releases.k8s.io/HEAD/examples/volumes/cephfs/README.md#how-to-use-it
+             * LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.
              */
             secretRef?: {
               /**
                * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
                */
-              name?: string;
+              name?: string | null;
               [k: string]: any;
             };
             /**
-             * Optional: SecretFile is the path to key ring for User, default is /etc/ceph/user.secret More info: https://releases.k8s.io/HEAD/examples/volumes/cephfs/README.md#how-to-use-it
+             * Filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
              */
-            secretFile?: string;
-            /**
-             * Optional: User is the rados user name, default is admin More info: https://releases.k8s.io/HEAD/examples/volumes/cephfs/README.md#how-to-use-it
-             */
-            user?: string;
-            /**
-             * Optional: Used as the mounted root, rather than the full Ceph tree, default is /
-             */
-            path?: string;
-            /**
-             * Optional: Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts. More info: https://releases.k8s.io/HEAD/examples/volumes/cephfs/README.md#how-to-use-it
-             */
-            readOnly?: boolean;
-            /**
-             * Required: Monitors is a collection of Ceph monitors More info: https://releases.k8s.io/HEAD/examples/volumes/cephfs/README.md#how-to-use-it
-             */
-            monitors: string[];
+            fsType?: string | null;
             [k: string]: any;
           };
           /**
-           * Volume's name. Must be a DNS_LABEL and unique within the pod. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-           */
-          name: string;
-          /**
-           * ISCSI represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://releases.k8s.io/HEAD/examples/volumes/iscsi/README.md
+           * Represents an ISCSI disk. ISCSI volumes can only be mounted as read/write once. ISCSI volumes support ownership management and SELinux relabeling.
            */
           iscsi?: {
             /**
@@ -1986,21 +1771,21 @@ export interface Statefulset {
             /**
              * iSCSI Target Portal List. The portal is either an IP or ip_addr:port if the port is other than default (typically TCP ports 860 and 3260).
              */
-            portals?: string[];
+            portals?: (string | null)[];
             /**
-             * CHAP Secret for iSCSI target and initiator authentication
+             * LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.
              */
             secretRef?: {
               /**
                * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
                */
-              name?: string;
+              name?: string | null;
               [k: string]: any;
             };
             /**
              * Filesystem type of the volume that you want to mount. Tip: Ensure that the filesystem type is supported by the host operating system. Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified. More info: https://kubernetes.io/docs/concepts/storage/volumes#iscsi
              */
-            fsType?: string;
+            fsType?: string | null;
             /**
              * ReadOnly here will force the ReadOnly setting in VolumeMounts. Defaults to false.
              */
@@ -2012,11 +1797,11 @@ export interface Statefulset {
             /**
              * Custom iSCSI Initiator Name. If initiatorName is specified with iscsiInterface simultaneously, new iSCSI interface <target portal>:<volume name> will be created for the connection.
              */
-            initiatorName?: string;
+            initiatorName?: string | null;
             /**
              * iSCSI Interface Name that uses an iSCSI transport. Defaults to 'default' (tcp).
              */
-            iscsiInterface?: string;
+            iscsiInterface?: string | null;
             /**
              * Target iSCSI Qualified Name.
              */
@@ -2032,7 +1817,7 @@ export interface Statefulset {
             [k: string]: any;
           };
           /**
-           * Items for all in one resources secrets, configmaps, and downward API
+           * Represents a projected volume source
            */
           projected?: {
             /**
@@ -2040,7 +1825,9 @@ export interface Statefulset {
              */
             sources: {
               /**
-               * information about the configMap data to project
+               * Adapts a ConfigMap into a projected volume.
+               *
+               * The contents of the target ConfigMap's Data field will be presented in a projected volume as files using the keys in the Data field as the file names, unless the items element is populated with specific mappings of keys to paths. Note that this is identical to a configmap volume source without the default mode.
                */
               configMap?: {
                 /**
@@ -2068,11 +1855,13 @@ export interface Statefulset {
                 /**
                  * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
                  */
-                name?: string;
+                name?: string | null;
                 [k: string]: any;
               };
               /**
-               * information about the secret data to project
+               * Adapts a secret into a projected volume.
+               *
+               * The contents of the target Secret's Data field will be presented in a projected volume as files using the keys in the Data field as the file names. Note that this is identical to a secret volume source without the default mode.
                */
               secret?: {
                 /**
@@ -2100,11 +1889,11 @@ export interface Statefulset {
                 /**
                  * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
                  */
-                name?: string;
+                name?: string | null;
                 [k: string]: any;
               };
               /**
-               * information about the serviceAccountToken data to project
+               * ServiceAccountTokenProjection represents a projected service account token volume. This projection can be used to insert a service account token into the pods runtime filesystem for use against APIs (Kubernetes API Server or otherwise).
                */
               serviceAccountToken?: {
                 /**
@@ -2114,7 +1903,7 @@ export interface Statefulset {
                 /**
                  * Audience is the intended audience of the token. A recipient of a token must identify itself with an identifier specified in the audience of the token, and otherwise should reject the token. The audience defaults to the identifier of the apiserver.
                  */
-                audience?: string;
+                audience?: string | null;
                 /**
                  * ExpirationSeconds is the requested duration of validity of the service account token. As the token approaches expiration, the kubelet volume plugin will proactively rotate the service account token. The kubelet will start trying to rotate the token if the token is older than 80 percent of its time to live or if the token is older than 24 hours.Defaults to 1 hour and must be at least 10 minutes.
                  */
@@ -2122,7 +1911,7 @@ export interface Statefulset {
                 [k: string]: any;
               };
               /**
-               * information about the downwardAPI data to project
+               * Represents downward API info for projecting into a projected volume. Note that this is identical to a downwardAPI volume source without the default mode.
                */
               downwardAPI?: {
                 /**
@@ -2134,7 +1923,7 @@ export interface Statefulset {
                    */
                   path: string;
                   /**
-                   * Required: Selects a field of the pod: only annotations, labels, name and namespace are supported.
+                   * ObjectFieldSelector selects an APIVersioned field of an object.
                    */
                   fieldRef?: {
                     /**
@@ -2144,7 +1933,7 @@ export interface Statefulset {
                     /**
                      * Version of the schema the FieldPath is written in terms of, defaults to "v1".
                      */
-                    apiVersion?: string;
+                    apiVersion?: string | null;
                     [k: string]: any;
                   };
                   /**
@@ -2152,21 +1941,18 @@ export interface Statefulset {
                    */
                   mode?: number;
                   /**
-                   * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, requests.cpu and requests.memory) are currently supported.
+                   * ResourceFieldSelector represents container resources (cpu, memory) and their output format
                    */
                   resourceFieldRef?: {
                     /**
                      * Container name: required for volumes, optional for env vars
                      */
-                    containerName?: string;
+                    containerName?: string | null;
                     /**
                      * Required: resource to select
                      */
                     resource: string;
-                    /**
-                     * Specifies the output format of the exposed resources, defaults to "1"
-                     */
-                    divisor?: string | number;
+                    divisor?: (string | null) | number;
                     [k: string]: any;
                   };
                   [k: string]: any;
@@ -2182,95 +1968,9 @@ export interface Statefulset {
             [k: string]: any;
           };
           /**
-           * DownwardAPI represents downward API about the pod that should populate this volume
-           */
-          downwardAPI?: {
-            /**
-             * Items is a list of downward API volume file
-             */
-            items?: {
-              /**
-               * Required: Path is  the relative path name of the file to be created. Must not be absolute or contain the '..' path. Must be utf-8 encoded. The first item of the relative path must not start with '..'
-               */
-              path: string;
-              /**
-               * Required: Selects a field of the pod: only annotations, labels, name and namespace are supported.
-               */
-              fieldRef?: {
-                /**
-                 * Path of the field to select in the specified API version.
-                 */
-                fieldPath: string;
-                /**
-                 * Version of the schema the FieldPath is written in terms of, defaults to "v1".
-                 */
-                apiVersion?: string;
-                [k: string]: any;
-              };
-              /**
-               * Optional: mode bits to use on this file, must be a value between 0 and 0777. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
-               */
-              mode?: number;
-              /**
-               * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, requests.cpu and requests.memory) are currently supported.
-               */
-              resourceFieldRef?: {
-                /**
-                 * Container name: required for volumes, optional for env vars
-                 */
-                containerName?: string;
-                /**
-                 * Required: resource to select
-                 */
-                resource: string;
-                /**
-                 * Specifies the output format of the exposed resources, defaults to "1"
-                 */
-                divisor?: string | number;
-                [k: string]: any;
-              };
-              [k: string]: any;
-            }[];
-            /**
-             * Optional: mode bits to use on created files by default. Must be a value between 0 and 0777. Defaults to 0644. Directories within the path are not affected by this setting. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
-             */
-            defaultMode?: number;
-            [k: string]: any;
-          };
-          /**
-           * StorageOS represents a StorageOS volume attached and mounted on Kubernetes nodes.
-           */
-          storageos?: {
-            /**
-             * VolumeName is the human-readable name of the StorageOS volume.  Volume names are only unique within a namespace.
-             */
-            volumeName?: string;
-            /**
-             * Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.
-             */
-            readOnly?: boolean;
-            /**
-             * VolumeNamespace specifies the scope of the volume within StorageOS.  If no namespace is specified then the Pod's namespace will be used.  This allows the Kubernetes name scoping to be mirrored within StorageOS for tighter integration. Set VolumeName to any name to override the default behaviour. Set to "default" if you are not using namespaces within StorageOS. Namespaces that do not pre-exist within StorageOS will be created.
-             */
-            volumeNamespace?: string;
-            /**
-             * SecretRef specifies the secret to use for obtaining the StorageOS API credentials.  If not specified, default values will be attempted.
-             */
-            secretRef?: {
-              /**
-               * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-               */
-              name?: string;
-              [k: string]: any;
-            };
-            /**
-             * Filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-             */
-            fsType?: string;
-            [k: string]: any;
-          };
-          /**
-           * Secret represents a secret that should populate this volume. More info: https://kubernetes.io/docs/concepts/storage/volumes#secret
+           * Adapts a Secret into a volume.
+           *
+           * The contents of the target Secret's Data field will be presented in a volume as files using the keys in the Data field as the file names. Secret volumes support ownership management and SELinux relabeling.
            */
           secret?: {
             /**
@@ -2302,111 +2002,13 @@ export interface Statefulset {
             /**
              * Name of the secret in the pod's namespace to use. More info: https://kubernetes.io/docs/concepts/storage/volumes#secret
              */
-            secretName?: string;
-            [k: string]: any;
-          };
-          /**
-           * FC represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.
-           */
-          fc?: {
-            /**
-             * Optional: FC target worldwide names (WWNs)
-             */
-            targetWWNs?: string[];
-            /**
-             * Optional: Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.
-             */
-            readOnly?: boolean;
-            /**
-             * Optional: FC volume world wide identifiers (wwids) Either wwids or combination of targetWWNs and lun must be set, but not both simultaneously.
-             */
-            wwids?: string[];
-            /**
-             * Optional: FC target lun number
-             */
-            lun?: number;
-            /**
-             * Filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-             */
-            fsType?: string;
-            [k: string]: any;
-          };
-          /**
-           * NFS represents an NFS mount on the host that shares a pod's lifetime More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
-           */
-          nfs?: {
-            /**
-             * Path that is exported by the NFS server. More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
-             */
-            path: string;
-            /**
-             * ReadOnly here will force the NFS export to be mounted with read-only permissions. Defaults to false. More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
-             */
-            readOnly?: boolean;
-            /**
-             * Server is the hostname or IP address of the NFS server. More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
-             */
-            server: string;
-            [k: string]: any;
-          };
-          /**
-           * GCEPersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
-           */
-          gcePersistentDisk?: {
-            /**
-             * ReadOnly here will force the ReadOnly setting in VolumeMounts. Defaults to false. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
-             */
-            readOnly?: boolean;
-            /**
-             * The partition in the volume that you want to mount. If omitted, the default is to mount by volume name. Examples: For volume /dev/sda1, you specify the partition as "1". Similarly, the volume partition for /dev/sda is "0" (or you can leave the property empty). More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
-             */
-            partition?: number;
-            /**
-             * Unique name of the PD resource in GCE. Used to identify the disk in GCE. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
-             */
-            pdName: string;
-            /**
-             * Filesystem type of the volume that you want to mount. Tip: Ensure that the filesystem type is supported by the host operating system. Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
-             */
-            fsType?: string;
-            [k: string]: any;
-          };
-          /**
-           * HostPath represents a pre-existing file or directory on the host machine that is directly exposed to the container. This is generally used for system agents or other privileged things that are allowed to see the host machine. Most containers will NOT need this. More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
-           */
-          hostPath?: {
-            /**
-             * Path of the directory on the host. If the path is a symlink, it will follow the link to the real path. More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
-             */
-            path: string;
-            /**
-             * Type for HostPath Volume Defaults to "" More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
-             */
-            type?: string;
+            secretName?: string | null;
             [k: string]: any;
           };
           /**
            * FlexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin.
            */
           flexVolume?: {
-            /**
-             * Optional: SecretRef is reference to the secret object containing sensitive information to pass to the plugin scripts. This may be empty if no secret object is specified. If the secret object contains more than one secret, all secrets are passed to the plugin scripts.
-             */
-            secretRef?: {
-              /**
-               * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-               */
-              name?: string;
-              [k: string]: any;
-            };
-            /**
-             * Filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". The default filesystem depends on FlexVolume script.
-             */
-            fsType?: string;
-            /**
-             * Driver is the name of the driver to use for this volume.
-             */
-            driver: string;
             /**
              * Optional: Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.
              */
@@ -2415,76 +2017,253 @@ export interface Statefulset {
              * Optional: Extra command options if any.
              */
             options?: {
-              [k: string]: string;
+              [k: string]: string | null;
             };
-            [k: string]: any;
-          };
-          /**
-           * AWSElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
-           */
-          awsElasticBlockStore?: {
             /**
-             * Specify "true" to force and set the ReadOnly property in VolumeMounts to "true". If omitted, the default is "false". More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
+             * Driver is the name of the driver to use for this volume.
              */
-            readOnly?: boolean;
+            driver: string;
             /**
-             * The partition in the volume that you want to mount. If omitted, the default is to mount by volume name. Examples: For volume /dev/sda1, you specify the partition as "1". Similarly, the volume partition for /dev/sda is "0" (or you can leave the property empty).
-             */
-            partition?: number;
-            /**
-             * Unique ID of the persistent disk resource in AWS (Amazon EBS volume). More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
-             */
-            volumeID: string;
-            /**
-             * Filesystem type of the volume that you want to mount. Tip: Ensure that the filesystem type is supported by the host operating system. Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
-             */
-            fsType?: string;
-            [k: string]: any;
-          };
-          /**
-           * RBD represents a Rados Block Device mount on the host that shares a pod's lifetime. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md
-           */
-          rbd?: {
-            /**
-             * SecretRef is name of the authentication secret for RBDUser. If provided overrides keyring. Default is nil. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it
+             * LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.
              */
             secretRef?: {
               /**
                * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
                */
-              name?: string;
+              name?: string | null;
               [k: string]: any;
             };
             /**
-             * The rados image name. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it
+             * Filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". The default filesystem depends on FlexVolume script.
              */
-            image: string;
+            fsType?: string | null;
+            [k: string]: any;
+          };
+          /**
+           * Represents a Photon Controller persistent disk resource.
+           */
+          photonPersistentDisk?: {
             /**
-             * Keyring is the path to key ring for RBDUser. Default is /etc/ceph/keyring. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it
+             * Filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
              */
-            keyring?: string;
+            fsType?: string | null;
             /**
-             * Filesystem type of the volume that you want to mount. Tip: Ensure that the filesystem type is supported by the host operating system. Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified. More info: https://kubernetes.io/docs/concepts/storage/volumes#rbd
+             * ID that identifies Photon Controller persistent disk
              */
-            fsType?: string;
+            pdID: string;
+            [k: string]: any;
+          };
+          /**
+           * AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.
+           */
+          azureDisk?: {
             /**
-             * ReadOnly here will force the ReadOnly setting in VolumeMounts. Defaults to false. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it
+             * The Name of the data disk in the blob storage
+             */
+            diskName: string;
+            /**
+             * Host Caching mode: None, Read Only, Read Write.
+             */
+            cachingMode?: string | null;
+            /**
+             * Expected values Shared: multiple blob disks per storage account  Dedicated: single blob disk per storage account  Managed: azure managed data disk (only in managed availability set). defaults to shared
+             */
+            kind?: string | null;
+            /**
+             * Filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+             */
+            fsType?: string | null;
+            /**
+             * The URI the data disk in the blob storage
+             */
+            diskURI: string;
+            /**
+             * Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.
+             */
+            readOnly?: boolean;
+            [k: string]: any;
+          };
+          /**
+           * Represents a Fibre Channel volume. Fibre Channel volumes can only be mounted as read/write once. Fibre Channel volumes support ownership management and SELinux relabeling.
+           */
+          fc?: {
+            /**
+             * Optional: FC target worldwide names (WWNs)
+             */
+            targetWWNs?: (string | null)[];
+            /**
+             * Filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+             */
+            fsType?: string | null;
+            /**
+             * Optional: Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.
              */
             readOnly?: boolean;
             /**
-             * The rados user name. Default is admin. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it
+             * Optional: FC target lun number
              */
-            user?: string;
+            lun?: number;
             /**
-             * A collection of Ceph monitors. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it
+             * Optional: FC volume world wide identifiers (wwids) Either wwids or combination of targetWWNs and lun must be set, but not both simultaneously.
              */
-            monitors: string[];
-            /**
-             * The rados pool name. Default is rbd. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it
-             */
-            pool?: string;
+            wwids?: (string | null)[];
             [k: string]: any;
           };
+          /**
+           * ScaleIOVolumeSource represents a persistent ScaleIO volume
+           */
+          scaleIO?: {
+            /**
+             * Indicates whether the storage for a volume should be ThickProvisioned or ThinProvisioned. Default is ThinProvisioned.
+             */
+            storageMode?: string | null;
+            /**
+             * LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.
+             */
+            secretRef: {
+              /**
+               * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+               */
+              name?: string | null;
+              [k: string]: any;
+            };
+            /**
+             * The name of the ScaleIO Protection Domain for the configured storage.
+             */
+            protectionDomain?: string | null;
+            /**
+             * The name of a volume already created in the ScaleIO system that is associated with this volume source.
+             */
+            volumeName?: string | null;
+            /**
+             * Flag to enable/disable SSL communication with Gateway, default false
+             */
+            sslEnabled?: boolean;
+            /**
+             * The name of the storage system as configured in ScaleIO.
+             */
+            system: string;
+            /**
+             * Filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Default is "xfs".
+             */
+            fsType?: string | null;
+            /**
+             * Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.
+             */
+            readOnly?: boolean;
+            /**
+             * The ScaleIO Storage Pool associated with the protection domain.
+             */
+            storagePool?: string | null;
+            /**
+             * The host address of the ScaleIO API Gateway.
+             */
+            gateway: string;
+            [k: string]: any;
+          };
+          /**
+           * Represents an empty directory for a pod. Empty directory volumes support ownership management and SELinux relabeling.
+           */
+          emptyDir?: {
+            sizeLimit?: (string | null) | number;
+            /**
+             * What type of storage medium should back this directory. The default is "" which means to use the node's default medium. Must be an empty string (default) or Memory. More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir
+             */
+            medium?: string | null;
+            [k: string]: any;
+          };
+          /**
+           * PersistentVolumeClaimVolumeSource references the user's PVC in the same namespace. This volume finds the bound PV and mounts that volume for the pod. A PersistentVolumeClaimVolumeSource is, essentially, a wrapper around another type of volume that is owned by someone else (the system).
+           */
+          persistentVolumeClaim?: {
+            /**
+             * Will force the ReadOnly setting in VolumeMounts. Default false.
+             */
+            readOnly?: boolean;
+            /**
+             * ClaimName is the name of a PersistentVolumeClaim in the same namespace as the pod using this volume. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+             */
+            claimName: string;
+            [k: string]: any;
+          };
+          /**
+           * Adapts a ConfigMap into a volume.
+           *
+           * The contents of the target ConfigMap's Data field will be presented in a volume as files using the keys in the Data field as the file names, unless the items element is populated with specific mappings of keys to paths. ConfigMap volumes support ownership management and SELinux relabeling.
+           */
+          configMap?: {
+            /**
+             * If unspecified, each key-value pair in the Data field of the referenced ConfigMap will be projected into the volume as a file whose name is the key and content is the value. If specified, the listed keys will be projected into the specified paths, and unlisted keys will not be present. If a key is specified which is not present in the ConfigMap, the volume setup will error unless it is marked optional. Paths must be relative and may not contain the '..' path or start with '..'.
+             */
+            items?: {
+              /**
+               * The relative path of the file to map the key to. May not be an absolute path. May not contain the path element '..'. May not start with the string '..'.
+               */
+              path: string;
+              /**
+               * Optional: mode bits to use on this file, must be a value between 0 and 0777. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+               */
+              mode?: number;
+              /**
+               * The key to project.
+               */
+              key: string;
+              [k: string]: any;
+            }[];
+            /**
+             * Specify whether the ConfigMap or it's keys must be defined
+             */
+            optional?: boolean;
+            /**
+             * Optional: mode bits to use on created files by default. Must be a value between 0 and 0777. Defaults to 0644. Directories within the path are not affected by this setting. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+             */
+            defaultMode?: number;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: string | null;
+            [k: string]: any;
+          };
+          /**
+           * Represents a Ceph Filesystem mount that lasts the lifetime of a pod Cephfs volumes do not support ownership management or SELinux relabeling.
+           */
+          cephfs?: {
+            /**
+             * LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.
+             */
+            secretRef?: {
+              /**
+               * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+               */
+              name?: string | null;
+              [k: string]: any;
+            };
+            /**
+             * Optional: SecretFile is the path to key ring for User, default is /etc/ceph/user.secret More info: https://releases.k8s.io/HEAD/examples/volumes/cephfs/README.md#how-to-use-it
+             */
+            secretFile?: string | null;
+            /**
+             * Optional: Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts. More info: https://releases.k8s.io/HEAD/examples/volumes/cephfs/README.md#how-to-use-it
+             */
+            readOnly?: boolean;
+            /**
+             * Optional: User is the rados user name, default is admin More info: https://releases.k8s.io/HEAD/examples/volumes/cephfs/README.md#how-to-use-it
+             */
+            user?: string | null;
+            /**
+             * Optional: Used as the mounted root, rather than the full Ceph tree, default is /
+             */
+            path?: string | null;
+            /**
+             * Required: Monitors is a collection of Ceph monitors More info: https://releases.k8s.io/HEAD/examples/volumes/cephfs/README.md#how-to-use-it
+             */
+            monitors: (string | null)[];
+            [k: string]: any;
+          };
+          /**
+           * Volume's name. Must be a DNS_LABEL and unique within the pod. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+           */
+          name: string;
           /**
            * AzureFile represents an Azure File Service mount on the host and bind mount to the pod.
            */
@@ -2504,21 +2283,252 @@ export interface Statefulset {
             [k: string]: any;
           };
           /**
-           * VsphereVolume represents a vSphere volume attached and mounted on kubelets host machine
+           * Represents a Quobyte mount that lasts the lifetime of a pod. Quobyte volumes do not support ownership management or SELinux relabeling.
+           */
+          quobyte?: {
+            /**
+             * Volume is a string that references an already created Quobyte volume by name.
+             */
+            volume: string;
+            /**
+             * ReadOnly here will force the Quobyte volume to be mounted with read-only permissions. Defaults to false.
+             */
+            readOnly?: boolean;
+            /**
+             * Group to map volume access to Default is no group
+             */
+            group?: string | null;
+            /**
+             * Registry represents a single or multiple Quobyte Registry services specified as a string as host:port pair (multiple entries are separated with commas) which acts as the central registry for volumes
+             */
+            registry: string;
+            /**
+             * User to map volume access to Defaults to serivceaccount user
+             */
+            user?: string | null;
+            [k: string]: any;
+          };
+          /**
+           * Represents a host path mapped into a pod. Host path volumes do not support ownership management or SELinux relabeling.
+           */
+          hostPath?: {
+            /**
+             * Path of the directory on the host. If the path is a symlink, it will follow the link to the real path. More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
+             */
+            path: string;
+            /**
+             * Type for HostPath Volume Defaults to "" More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
+             */
+            type?: string | null;
+            [k: string]: any;
+          };
+          /**
+           * Represents an NFS mount that lasts the lifetime of a pod. NFS volumes do not support ownership management or SELinux relabeling.
+           */
+          nfs?: {
+            /**
+             * Path that is exported by the NFS server. More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
+             */
+            path: string;
+            /**
+             * ReadOnly here will force the NFS export to be mounted with read-only permissions. Defaults to false. More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
+             */
+            readOnly?: boolean;
+            /**
+             * Server is the hostname or IP address of the NFS server. More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
+             */
+            server: string;
+            [k: string]: any;
+          };
+          /**
+           * Represents a Persistent Disk resource in Google Compute Engine.
+           *
+           * A GCE PD must exist before mounting to a container. The disk must also be in the same GCE project and zone as the kubelet. A GCE PD can only be mounted as read/write once or read-only many times. GCE PDs support ownership management and SELinux relabeling.
+           */
+          gcePersistentDisk?: {
+            /**
+             * ReadOnly here will force the ReadOnly setting in VolumeMounts. Defaults to false. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
+             */
+            readOnly?: boolean;
+            /**
+             * The partition in the volume that you want to mount. If omitted, the default is to mount by volume name. Examples: For volume /dev/sda1, you specify the partition as "1". Similarly, the volume partition for /dev/sda is "0" (or you can leave the property empty). More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
+             */
+            partition?: number;
+            /**
+             * Unique name of the PD resource in GCE. Used to identify the disk in GCE. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
+             */
+            pdName: string;
+            /**
+             * Filesystem type of the volume that you want to mount. Tip: Ensure that the filesystem type is supported by the host operating system. Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
+             */
+            fsType?: string | null;
+            [k: string]: any;
+          };
+          /**
+           * Represents a cinder volume resource in Openstack. A Cinder volume must exist before mounting to a container. The volume must also be in the same region as the kubelet. Cinder volumes support ownership management and SELinux relabeling.
+           */
+          cinder?: {
+            /**
+             * Optional: Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts. More info: https://releases.k8s.io/HEAD/examples/mysql-cinder-pd/README.md
+             */
+            readOnly?: boolean;
+            /**
+             * Filesystem type to mount. Must be a filesystem type supported by the host operating system. Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified. More info: https://releases.k8s.io/HEAD/examples/mysql-cinder-pd/README.md
+             */
+            fsType?: string | null;
+            /**
+             * LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.
+             */
+            secretRef?: {
+              /**
+               * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+               */
+              name?: string | null;
+              [k: string]: any;
+            };
+            /**
+             * volume id used to identify the volume in cinder More info: https://releases.k8s.io/HEAD/examples/mysql-cinder-pd/README.md
+             */
+            volumeID: string;
+            [k: string]: any;
+          };
+          /**
+           * Represents a Persistent Disk resource in AWS.
+           *
+           * An AWS EBS disk must exist before mounting to a container. The disk must also be in the same AWS zone as the kubelet. An AWS EBS disk can only be mounted as read/write once. AWS EBS volumes support ownership management and SELinux relabeling.
+           */
+          awsElasticBlockStore?: {
+            /**
+             * Specify "true" to force and set the ReadOnly property in VolumeMounts to "true". If omitted, the default is "false". More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
+             */
+            readOnly?: boolean;
+            /**
+             * The partition in the volume that you want to mount. If omitted, the default is to mount by volume name. Examples: For volume /dev/sda1, you specify the partition as "1". Similarly, the volume partition for /dev/sda is "0" (or you can leave the property empty).
+             */
+            partition?: number;
+            /**
+             * Unique ID of the persistent disk resource in AWS (Amazon EBS volume). More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
+             */
+            volumeID: string;
+            /**
+             * Filesystem type of the volume that you want to mount. Tip: Ensure that the filesystem type is supported by the host operating system. Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
+             */
+            fsType?: string | null;
+            [k: string]: any;
+          };
+          /**
+           * Represents a Rados Block Device mount that lasts the lifetime of a pod. RBD volumes support ownership management and SELinux relabeling.
+           */
+          rbd?: {
+            /**
+             * LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.
+             */
+            secretRef?: {
+              /**
+               * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+               */
+              name?: string | null;
+              [k: string]: any;
+            };
+            /**
+             * The rados image name. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it
+             */
+            image: string;
+            /**
+             * Keyring is the path to key ring for RBDUser. Default is /etc/ceph/keyring. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it
+             */
+            keyring?: string | null;
+            /**
+             * Filesystem type of the volume that you want to mount. Tip: Ensure that the filesystem type is supported by the host operating system. Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified. More info: https://kubernetes.io/docs/concepts/storage/volumes#rbd
+             */
+            fsType?: string | null;
+            /**
+             * ReadOnly here will force the ReadOnly setting in VolumeMounts. Defaults to false. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it
+             */
+            readOnly?: boolean;
+            /**
+             * The rados user name. Default is admin. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it
+             */
+            user?: string | null;
+            /**
+             * A collection of Ceph monitors. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it
+             */
+            monitors: (string | null)[];
+            /**
+             * The rados pool name. Default is rbd. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it
+             */
+            pool?: string | null;
+            [k: string]: any;
+          };
+          /**
+           * DownwardAPIVolumeSource represents a volume containing downward API info. Downward API volumes support ownership management and SELinux relabeling.
+           */
+          downwardAPI?: {
+            /**
+             * Items is a list of downward API volume file
+             */
+            items?: {
+              /**
+               * Required: Path is  the relative path name of the file to be created. Must not be absolute or contain the '..' path. Must be utf-8 encoded. The first item of the relative path must not start with '..'
+               */
+              path: string;
+              /**
+               * ObjectFieldSelector selects an APIVersioned field of an object.
+               */
+              fieldRef?: {
+                /**
+                 * Path of the field to select in the specified API version.
+                 */
+                fieldPath: string;
+                /**
+                 * Version of the schema the FieldPath is written in terms of, defaults to "v1".
+                 */
+                apiVersion?: string | null;
+                [k: string]: any;
+              };
+              /**
+               * Optional: mode bits to use on this file, must be a value between 0 and 0777. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+               */
+              mode?: number;
+              /**
+               * ResourceFieldSelector represents container resources (cpu, memory) and their output format
+               */
+              resourceFieldRef?: {
+                /**
+                 * Container name: required for volumes, optional for env vars
+                 */
+                containerName?: string | null;
+                /**
+                 * Required: resource to select
+                 */
+                resource: string;
+                divisor?: (string | null) | number;
+                [k: string]: any;
+              };
+              [k: string]: any;
+            }[];
+            /**
+             * Optional: mode bits to use on created files by default. Must be a value between 0 and 0777. Defaults to 0644. Directories within the path are not affected by this setting. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+             */
+            defaultMode?: number;
+            [k: string]: any;
+          };
+          /**
+           * Represents a vSphere volume resource.
            */
           vsphereVolume?: {
             /**
              * Storage Policy Based Management (SPBM) profile name.
              */
-            storagePolicyName?: string;
+            storagePolicyName?: string | null;
             /**
              * Filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
              */
-            fsType?: string;
+            fsType?: string | null;
             /**
              * Storage Policy Based Management (SPBM) profile ID associated with the StoragePolicyName.
              */
-            storagePolicyID?: string;
+            storagePolicyID?: string | null;
             /**
              * Path that identifies vSphere volume vmdk
              */
@@ -2528,59 +2538,29 @@ export interface Statefulset {
           [k: string]: any;
         }[];
         /**
-         * If specified, the pod's tolerations.
-         */
-        tolerations?: {
-          /**
-           * Operator represents a key's relationship to the value. Valid operators are Exists and Equal. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category.
-           */
-          operator?: string;
-          /**
-           * Key is the taint key that the toleration applies to. Empty means match all taint keys. If the key is empty, operator must be Exists; this combination means to match all values and all keys.
-           */
-          key?: string;
-          /**
-           * TolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system.
-           */
-          tolerationSeconds?: number;
-          /**
-           * Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
-           */
-          effect?: string;
-          /**
-           * Value is the taint value the toleration matches to. If the operator is Exists, the value should be empty, otherwise just a regular string.
-           */
-          value?: string;
-          [k: string]: any;
-        }[];
-        /**
-         * If specified, the fully qualified Pod hostname will be "<hostname>.<subdomain>.<pod namespace>.svc.<cluster domain>". If not specified, the pod will not have a domainname at all.
-         */
-        subdomain?: string;
-        /**
          * List of initialization containers belonging to the pod. Init containers are executed in order prior to containers being started. If any init container fails, the pod is considered to have failed and is handled according to its restartPolicy. The name for an init container or normal container must be unique among all containers. Init containers may not have Lifecycle actions, Readiness probes, or Liveness probes. The resourceRequirements of an init container are taken into account during scheduling by finding the highest request/limit for each resource type, and then using the max of of that value or the sum of the normal containers. Limits are applied to init containers in a similar fashion. Init containers cannot currently be added or removed. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
          */
         initContainers?: {
           /**
-           * Periodic probe of container liveness. Container will be restarted if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+           * Probe describes a health check to be performed against a container to determine whether it is alive or ready to receive traffic.
            */
           livenessProbe?: {
             /**
-             * HTTPGet specifies the http request to perform.
+             * HTTPGetAction describes an action based on HTTP Get requests.
              */
             httpGet?: {
               /**
                * Path to access on the HTTP server.
                */
-              path?: string;
+              path?: string | null;
               /**
                * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
                */
-              host?: string;
+              host?: string | null;
               /**
                * Scheme to use for connecting to the host. Defaults to HTTP.
                */
-              scheme?: string;
+              scheme?: string | null;
               /**
                * Custom headers to set in the request. HTTP allows repeated headers.
                */
@@ -2595,10 +2575,7 @@ export interface Statefulset {
                 value: string;
                 [k: string]: any;
               }[];
-              /**
-               * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
-               */
-              port: string | number;
+              port: (string | null) | number;
               [k: string]: any;
             };
             /**
@@ -2606,13 +2583,13 @@ export interface Statefulset {
              */
             timeoutSeconds?: number;
             /**
-             * One and only one of the following should be specified. Exec specifies the action to take.
+             * ExecAction describes a "run in container" action.
              */
             exec?: {
               /**
                * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
                */
-              command?: string[];
+              command?: (string | null)[];
               [k: string]: any;
             };
             /**
@@ -2620,17 +2597,14 @@ export interface Statefulset {
              */
             initialDelaySeconds?: number;
             /**
-             * TCPSocket specifies an action involving a TCP port. TCP hooks not yet supported
+             * TCPSocketAction describes an action based on opening a socket
              */
             tcpSocket?: {
               /**
                * Optional: Host name to connect to, defaults to the pod IP.
                */
-              host?: string;
-              /**
-               * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
-               */
-              port: string | number;
+              host?: string | null;
+              port: (string | null) | number;
               [k: string]: any;
             };
             /**
@@ -2648,45 +2622,95 @@ export interface Statefulset {
             [k: string]: any;
           };
           /**
+           * Arguments to the entrypoint. The docker image's CMD is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+           */
+          args?: (string | null)[];
+          /**
            * Optional: Path at which the file to which the container's termination message will be written is mounted into the container's filesystem. Message written is intended to be brief final status, such as an assertion failure message. Will be truncated by the node if greater than 4096 bytes. The total message length across all containers will be limited to 12kb. Defaults to /dev/termination-log. Cannot be updated.
            */
-          terminationMessagePath?: string;
+          terminationMessagePath?: string | null;
+          /**
+           * Name of the container specified as a DNS_LABEL. Each container in a pod must have a unique name (DNS_LABEL). Cannot be updated.
+           */
+          name: string;
+          /**
+           * List of sources to populate environment variables in the container. The keys defined within a source must be a C_IDENTIFIER. All invalid keys will be reported as an event when the container is starting. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated.
+           */
+          envFrom?: {
+            /**
+             * An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.
+             */
+            prefix?: string | null;
+            /**
+             * ConfigMapEnvSource selects a ConfigMap to populate the environment variables with.
+             *
+             * The contents of the target ConfigMap's Data field will represent the key-value pairs as environment variables.
+             */
+            configMapRef?: {
+              /**
+               * Specify whether the ConfigMap must be defined
+               */
+              optional?: boolean;
+              /**
+               * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+               */
+              name?: string | null;
+              [k: string]: any;
+            };
+            /**
+             * SecretEnvSource selects a Secret to populate the environment variables with.
+             *
+             * The contents of the target Secret's Data field will represent the key-value pairs as environment variables.
+             */
+            secretRef?: {
+              /**
+               * Specify whether the Secret must be defined
+               */
+              optional?: boolean;
+              /**
+               * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+               */
+              name?: string | null;
+              [k: string]: any;
+            };
+            [k: string]: any;
+          }[];
           /**
            * Container's working directory. If not specified, the container runtime's default will be used, which might be configured in the container image. Cannot be updated.
            */
-          workingDir?: string;
+          workingDir?: string | null;
           /**
            * Docker image name. More info: https://kubernetes.io/docs/concepts/containers/images This field is optional to allow higher level config management to default or override container images in workload controllers like Deployments and StatefulSets.
            */
-          image?: string;
+          image?: string | null;
           /**
-           * Arguments to the entrypoint. The docker image's CMD is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+           * Whether this container should allocate a buffer for stdin in the container runtime. If this is not set, reads from stdin in the container will always result in EOF. Default is false.
            */
-          args?: string[];
+          stdin?: boolean;
           /**
            * Pod volumes to mount into the container's filesystem. Cannot be updated.
            */
           volumeMounts?: {
             /**
-             * mountPropagation determines how mounts are propagated from the host to container and the other way around. When not set, MountPropagationNone is used. This field is beta in 1.10.
-             */
-            mountPropagation?: string;
-            /**
              * Mounted read-only if true, read-write otherwise (false or unspecified). Defaults to false.
              */
             readOnly?: boolean;
             /**
-             * Path within the container at which the volume should be mounted.  Must not contain ':'.
+             * mountPropagation determines how mounts are propagated from the host to container and the other way around. When not set, MountPropagationNone is used. This field is beta in 1.10.
              */
-            mountPath: string;
+            mountPropagation?: string | null;
             /**
              * Path within the volume from which the container's volume should be mounted. Defaults to "" (volume's root).
              */
-            subPath?: string;
+            subPath?: string | null;
             /**
              * This must match the Name of a Volume.
              */
             name: string;
+            /**
+             * Path within the container at which the volume should be mounted.  Must not contain ':'.
+             */
+            mountPath: string;
             [k: string]: any;
           }[];
           /**
@@ -2694,145 +2718,224 @@ export interface Statefulset {
            */
           tty?: boolean;
           /**
-           * Actions that the management system should take in response to container lifecycle events. Cannot be updated.
+           * Indicate how the termination message should be populated. File will use the contents of terminationMessagePath to populate the container status message on both success and failure. FallbackToLogsOnError will use the last chunk of container log output if the termination message file is empty and the container exited with an error. The log output is limited to 2048 bytes or 80 lines, whichever is smaller. Defaults to File. Cannot be updated.
            */
-          lifecycle?: {
+          terminationMessagePolicy?: string | null;
+          /**
+           * List of ports to expose from the container. Exposing a port here gives the system additional information about the network connections a container uses, but is primarily informational. Not specifying a port here DOES NOT prevent that port from being exposed. Any port which is listening on the default "0.0.0.0" address inside a container will be accessible from the network. Cannot be updated.
+           */
+          ports?: {
             /**
-             * PreStop is called immediately before a container is terminated. The container is terminated after the handler completes. The reason for termination is passed to the handler. Regardless of the outcome of the handler, the container is eventually terminated. Other management of the container blocks until the hook completes. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+             * What host IP to bind the external port to.
              */
-            preStop?: {
+            hostIP?: string | null;
+            /**
+             * Protocol for port. Must be UDP, TCP, or SCTP. Defaults to "TCP".
+             */
+            protocol?: string | null;
+            /**
+             * Number of port to expose on the pod's IP address. This must be a valid port number, 0 < x < 65536.
+             */
+            containerPort: number;
+            /**
+             * If specified, this must be an IANA_SVC_NAME and unique within the pod. Each named port in a pod must have a unique name. Name for the port that can be referred to by services.
+             */
+            name?: string | null;
+            /**
+             * Number of port to expose on the host. If specified, this must be a valid port number, 0 < x < 65536. If HostNetwork is specified, this must match ContainerPort. Most containers do not need this.
+             */
+            hostPort?: number;
+            [k: string]: any;
+          }[];
+          /**
+           * volumeDevices is the list of block devices to be used by the container. This is an alpha feature and may change in the future.
+           */
+          volumeDevices?: {
+            /**
+             * devicePath is the path inside of the container that the device will be mapped to.
+             */
+            devicePath: string;
+            /**
+             * name must match the name of a persistentVolumeClaim in the pod
+             */
+            name: string;
+            [k: string]: any;
+          }[];
+          /**
+           * Entrypoint array. Not executed within a shell. The docker image's ENTRYPOINT is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+           */
+          command?: (string | null)[];
+          /**
+           * List of environment variables to set in the container. Cannot be updated.
+           */
+          env?: {
+            /**
+             * EnvVarSource represents a source for the value of an EnvVar.
+             */
+            valueFrom?: {
               /**
-               * HTTPGet specifies the http request to perform.
+               * SecretKeySelector selects a key of a Secret.
                */
-              httpGet?: {
+              secretKeyRef?: {
                 /**
-                 * Path to access on the HTTP server.
+                 * Specify whether the Secret or it's key must be defined
                  */
-                path?: string;
+                optional?: boolean;
                 /**
-                 * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
+                 * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
                  */
-                host?: string;
+                name?: string | null;
                 /**
-                 * Scheme to use for connecting to the host. Defaults to HTTP.
+                 * The key of the secret to select from.  Must be a valid secret key.
                  */
-                scheme?: string;
-                /**
-                 * Custom headers to set in the request. HTTP allows repeated headers.
-                 */
-                httpHeaders?: {
-                  /**
-                   * The header field name
-                   */
-                  name: string;
-                  /**
-                   * The header field value
-                   */
-                  value: string;
-                  [k: string]: any;
-                }[];
-                /**
-                 * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
-                 */
-                port: string | number;
+                key: string;
                 [k: string]: any;
               };
               /**
-               * TCPSocket specifies an action involving a TCP port. TCP hooks not yet supported
+               * ObjectFieldSelector selects an APIVersioned field of an object.
                */
-              tcpSocket?: {
+              fieldRef?: {
                 /**
-                 * Optional: Host name to connect to, defaults to the pod IP.
+                 * Path of the field to select in the specified API version.
                  */
-                host?: string;
+                fieldPath: string;
                 /**
-                 * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+                 * Version of the schema the FieldPath is written in terms of, defaults to "v1".
                  */
-                port: string | number;
+                apiVersion?: string | null;
                 [k: string]: any;
               };
               /**
-               * One and only one of the following should be specified. Exec specifies the action to take.
+               * Selects a key from a ConfigMap.
                */
-              exec?: {
+              configMapKeyRef?: {
                 /**
-                 * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+                 * Specify whether the ConfigMap or it's key must be defined
                  */
-                command?: string[];
+                optional?: boolean;
+                /**
+                 * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                 */
+                name?: string | null;
+                /**
+                 * The key to select.
+                 */
+                key: string;
+                [k: string]: any;
+              };
+              /**
+               * ResourceFieldSelector represents container resources (cpu, memory) and their output format
+               */
+              resourceFieldRef?: {
+                /**
+                 * Container name: required for volumes, optional for env vars
+                 */
+                containerName?: string | null;
+                /**
+                 * Required: resource to select
+                 */
+                resource: string;
+                divisor?: (string | null) | number;
                 [k: string]: any;
               };
               [k: string]: any;
             };
             /**
-             * PostStart is called immediately after a container is created. If the handler fails, the container is terminated and restarted according to its restart policy. Other management of the container blocks until the hook completes. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+             * Name of the environment variable. Must be a C_IDENTIFIER.
              */
-            postStart?: {
+            name: string;
+            /**
+             * Variable references $(VAR_NAME) are expanded using the previous defined environment variables in the container and any service environment variables. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. Defaults to "".
+             */
+            value?: string | null;
+            [k: string]: any;
+          }[];
+          /**
+           * Image pull policy. One of Always, Never, IfNotPresent. Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. Cannot be updated. More info: https://kubernetes.io/docs/concepts/containers/images#updating-images
+           */
+          imagePullPolicy?: string | null;
+          /**
+           * Probe describes a health check to be performed against a container to determine whether it is alive or ready to receive traffic.
+           */
+          readinessProbe?: {
+            /**
+             * HTTPGetAction describes an action based on HTTP Get requests.
+             */
+            httpGet?: {
               /**
-               * HTTPGet specifies the http request to perform.
+               * Path to access on the HTTP server.
                */
-              httpGet?: {
-                /**
-                 * Path to access on the HTTP server.
-                 */
-                path?: string;
-                /**
-                 * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
-                 */
-                host?: string;
-                /**
-                 * Scheme to use for connecting to the host. Defaults to HTTP.
-                 */
-                scheme?: string;
-                /**
-                 * Custom headers to set in the request. HTTP allows repeated headers.
-                 */
-                httpHeaders?: {
-                  /**
-                   * The header field name
-                   */
-                  name: string;
-                  /**
-                   * The header field value
-                   */
-                  value: string;
-                  [k: string]: any;
-                }[];
-                /**
-                 * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
-                 */
-                port: string | number;
-                [k: string]: any;
-              };
+              path?: string | null;
               /**
-               * TCPSocket specifies an action involving a TCP port. TCP hooks not yet supported
+               * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
                */
-              tcpSocket?: {
-                /**
-                 * Optional: Host name to connect to, defaults to the pod IP.
-                 */
-                host?: string;
-                /**
-                 * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
-                 */
-                port: string | number;
-                [k: string]: any;
-              };
+              host?: string | null;
               /**
-               * One and only one of the following should be specified. Exec specifies the action to take.
+               * Scheme to use for connecting to the host. Defaults to HTTP.
                */
-              exec?: {
+              scheme?: string | null;
+              /**
+               * Custom headers to set in the request. HTTP allows repeated headers.
+               */
+              httpHeaders?: {
                 /**
-                 * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+                 * The header field name
                  */
-                command?: string[];
+                name: string;
+                /**
+                 * The header field value
+                 */
+                value: string;
                 [k: string]: any;
-              };
+              }[];
+              port: (string | null) | number;
               [k: string]: any;
             };
+            /**
+             * Number of seconds after which the probe times out. Defaults to 1 second. Minimum value is 1. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            timeoutSeconds?: number;
+            /**
+             * ExecAction describes a "run in container" action.
+             */
+            exec?: {
+              /**
+               * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+               */
+              command?: (string | null)[];
+              [k: string]: any;
+            };
+            /**
+             * Number of seconds after the container has started before liveness probes are initiated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            initialDelaySeconds?: number;
+            /**
+             * TCPSocketAction describes an action based on opening a socket
+             */
+            tcpSocket?: {
+              /**
+               * Optional: Host name to connect to, defaults to the pod IP.
+               */
+              host?: string | null;
+              port: (string | null) | number;
+              [k: string]: any;
+            };
+            /**
+             * How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1.
+             */
+            periodSeconds?: number;
+            /**
+             * Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1. Must be 1 for liveness. Minimum value is 1.
+             */
+            successThreshold?: number;
+            /**
+             * Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1.
+             */
+            failureThreshold?: number;
             [k: string]: any;
           };
           /**
-           * Security options the pod should run with. More info: https://kubernetes.io/docs/concepts/policy/security-context/ More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+           * SecurityContext holds security configuration that will be applied to a container. Some fields are present in both SecurityContext and PodSecurityContext.  When both are set, the values in SecurityContext take precedence.
            */
           securityContext?: {
             /**
@@ -2854,45 +2957,45 @@ export interface Statefulset {
             /**
              * procMount denotes the type of proc mount to use for the containers. The default is DefaultProcMount which uses the container runtime defaults for readonly paths and masked paths. This requires the ProcMountType feature flag to be enabled.
              */
-            procMount?: string;
+            procMount?: string | null;
             /**
              * Indicates that the container must run as a non-root user. If true, the Kubelet will validate the image at runtime to ensure that it does not run as UID 0 (root) and fail to start the container if it does. If unset or false, no such validation will be performed. May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
              */
             runAsNonRoot?: boolean;
             /**
-             * The SELinux context to be applied to the container. If unspecified, the container runtime will allocate a random SELinux context for each container.  May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
+             * SELinuxOptions are the labels to be applied to the container
              */
             seLinuxOptions?: {
               /**
                * Role is a SELinux role label that applies to the container.
                */
-              role?: string;
+              role?: string | null;
               /**
                * Type is a SELinux type label that applies to the container.
                */
-              type?: string;
+              type?: string | null;
               /**
                * User is a SELinux user label that applies to the container.
                */
-              user?: string;
+              user?: string | null;
               /**
                * Level is SELinux level label that applies to the container.
                */
-              level?: string;
+              level?: string | null;
               [k: string]: any;
             };
             /**
-             * The capabilities to add/drop when running containers. Defaults to the default set of capabilities granted by the container runtime.
+             * Adds and removes POSIX capabilities from running containers.
              */
             capabilities?: {
               /**
                * Added capabilities
                */
-              add?: string[];
+              add?: (string | null)[];
               /**
                * Removed capabilities
                */
-              drop?: string[];
+              drop?: (string | null)[];
               [k: string]: any;
             };
             /**
@@ -2902,299 +3005,153 @@ export interface Statefulset {
             [k: string]: any;
           };
           /**
-           * Name of the container specified as a DNS_LABEL. Each container in a pod must have a unique name (DNS_LABEL). Cannot be updated.
+           * Lifecycle describes actions that the management system should take in response to container lifecycle events. For the PostStart and PreStop lifecycle handlers, management of the container blocks until the action is complete, unless the container process fails, in which case the handler is aborted.
            */
-          name: string;
-          /**
-           * List of sources to populate environment variables in the container. The keys defined within a source must be a C_IDENTIFIER. All invalid keys will be reported as an event when the container is starting. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated.
-           */
-          envFrom?: {
+          lifecycle?: {
             /**
-             * An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.
+             * Handler defines a specific action that should be taken
              */
-            prefix?: string;
-            /**
-             * The ConfigMap to select from
-             */
-            configMapRef?: {
+            preStop?: {
               /**
-               * Specify whether the ConfigMap must be defined
+               * HTTPGetAction describes an action based on HTTP Get requests.
                */
-              optional?: boolean;
-              /**
-               * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-               */
-              name?: string;
-              [k: string]: any;
-            };
-            /**
-             * The Secret to select from
-             */
-            secretRef?: {
-              /**
-               * Specify whether the Secret must be defined
-               */
-              optional?: boolean;
-              /**
-               * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-               */
-              name?: string;
-              [k: string]: any;
-            };
-            [k: string]: any;
-          }[];
-          /**
-           * volumeDevices is the list of block devices to be used by the container. This is an alpha feature and may change in the future.
-           */
-          volumeDevices?: {
-            /**
-             * devicePath is the path inside of the container that the device will be mapped to.
-             */
-            devicePath: string;
-            /**
-             * name must match the name of a persistentVolumeClaim in the pod
-             */
-            name: string;
-            [k: string]: any;
-          }[];
-          /**
-           * Whether this container should allocate a buffer for stdin in the container runtime. If this is not set, reads from stdin in the container will always result in EOF. Default is false.
-           */
-          stdin?: boolean;
-          /**
-           * Whether the container runtime should close the stdin channel after it has been opened by a single attach. When stdin is true the stdin stream will remain open across multiple attach sessions. If stdinOnce is set to true, stdin is opened on container start, is empty until the first client attaches to stdin, and then remains open and accepts data until the client disconnects, at which time stdin is closed and remains closed until the container is restarted. If this flag is false, a container processes that reads from stdin will never receive an EOF. Default is false
-           */
-          stdinOnce?: boolean;
-          /**
-           * Indicate how the termination message should be populated. File will use the contents of terminationMessagePath to populate the container status message on both success and failure. FallbackToLogsOnError will use the last chunk of container log output if the termination message file is empty and the container exited with an error. The log output is limited to 2048 bytes or 80 lines, whichever is smaller. Defaults to File. Cannot be updated.
-           */
-          terminationMessagePolicy?: string;
-          /**
-           * Entrypoint array. Not executed within a shell. The docker image's ENTRYPOINT is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
-           */
-          command?: string[];
-          /**
-           * List of environment variables to set in the container. Cannot be updated.
-           */
-          env?: {
-            /**
-             * Source for the environment variable's value. Cannot be used if value is not empty.
-             */
-            valueFrom?: {
-              /**
-               * Selects a key of a secret in the pod's namespace
-               */
-              secretKeyRef?: {
+              httpGet?: {
                 /**
-                 * Specify whether the Secret or it's key must be defined
+                 * Path to access on the HTTP server.
                  */
-                optional?: boolean;
+                path?: string | null;
                 /**
-                 * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                 * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
                  */
-                name?: string;
+                host?: string | null;
                 /**
-                 * The key of the secret to select from.  Must be a valid secret key.
+                 * Scheme to use for connecting to the host. Defaults to HTTP.
                  */
-                key: string;
+                scheme?: string | null;
+                /**
+                 * Custom headers to set in the request. HTTP allows repeated headers.
+                 */
+                httpHeaders?: {
+                  /**
+                   * The header field name
+                   */
+                  name: string;
+                  /**
+                   * The header field value
+                   */
+                  value: string;
+                  [k: string]: any;
+                }[];
+                port: (string | null) | number;
                 [k: string]: any;
               };
               /**
-               * Selects a field of the pod: supports metadata.name, metadata.namespace, metadata.labels, metadata.annotations, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP.
+               * TCPSocketAction describes an action based on opening a socket
                */
-              fieldRef?: {
+              tcpSocket?: {
                 /**
-                 * Path of the field to select in the specified API version.
+                 * Optional: Host name to connect to, defaults to the pod IP.
                  */
-                fieldPath: string;
-                /**
-                 * Version of the schema the FieldPath is written in terms of, defaults to "v1".
-                 */
-                apiVersion?: string;
+                host?: string | null;
+                port: (string | null) | number;
                 [k: string]: any;
               };
               /**
-               * Selects a key of a ConfigMap.
+               * ExecAction describes a "run in container" action.
                */
-              configMapKeyRef?: {
+              exec?: {
                 /**
-                 * Specify whether the ConfigMap or it's key must be defined
+                 * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
                  */
-                optional?: boolean;
-                /**
-                 * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                 */
-                name?: string;
-                /**
-                 * The key to select.
-                 */
-                key: string;
-                [k: string]: any;
-              };
-              /**
-               * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
-               */
-              resourceFieldRef?: {
-                /**
-                 * Container name: required for volumes, optional for env vars
-                 */
-                containerName?: string;
-                /**
-                 * Required: resource to select
-                 */
-                resource: string;
-                /**
-                 * Specifies the output format of the exposed resources, defaults to "1"
-                 */
-                divisor?: string | number;
+                command?: (string | null)[];
                 [k: string]: any;
               };
               [k: string]: any;
             };
             /**
-             * Name of the environment variable. Must be a C_IDENTIFIER.
+             * Handler defines a specific action that should be taken
              */
-            name: string;
-            /**
-             * Variable references $(VAR_NAME) are expanded using the previous defined environment variables in the container and any service environment variables. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. Defaults to "".
-             */
-            value?: string;
-            [k: string]: any;
-          }[];
-          /**
-           * Image pull policy. One of Always, Never, IfNotPresent. Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. Cannot be updated. More info: https://kubernetes.io/docs/concepts/containers/images#updating-images
-           */
-          imagePullPolicy?: string;
-          /**
-           * Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
-           */
-          readinessProbe?: {
-            /**
-             * HTTPGet specifies the http request to perform.
-             */
-            httpGet?: {
+            postStart?: {
               /**
-               * Path to access on the HTTP server.
+               * HTTPGetAction describes an action based on HTTP Get requests.
                */
-              path?: string;
-              /**
-               * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
-               */
-              host?: string;
-              /**
-               * Scheme to use for connecting to the host. Defaults to HTTP.
-               */
-              scheme?: string;
-              /**
-               * Custom headers to set in the request. HTTP allows repeated headers.
-               */
-              httpHeaders?: {
+              httpGet?: {
                 /**
-                 * The header field name
+                 * Path to access on the HTTP server.
                  */
-                name: string;
+                path?: string | null;
                 /**
-                 * The header field value
+                 * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
                  */
-                value: string;
+                host?: string | null;
+                /**
+                 * Scheme to use for connecting to the host. Defaults to HTTP.
+                 */
+                scheme?: string | null;
+                /**
+                 * Custom headers to set in the request. HTTP allows repeated headers.
+                 */
+                httpHeaders?: {
+                  /**
+                   * The header field name
+                   */
+                  name: string;
+                  /**
+                   * The header field value
+                   */
+                  value: string;
+                  [k: string]: any;
+                }[];
+                port: (string | null) | number;
                 [k: string]: any;
-              }[];
+              };
               /**
-               * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+               * TCPSocketAction describes an action based on opening a socket
                */
-              port: string | number;
+              tcpSocket?: {
+                /**
+                 * Optional: Host name to connect to, defaults to the pod IP.
+                 */
+                host?: string | null;
+                port: (string | null) | number;
+                [k: string]: any;
+              };
+              /**
+               * ExecAction describes a "run in container" action.
+               */
+              exec?: {
+                /**
+                 * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+                 */
+                command?: (string | null)[];
+                [k: string]: any;
+              };
               [k: string]: any;
             };
-            /**
-             * Number of seconds after which the probe times out. Defaults to 1 second. Minimum value is 1. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
-             */
-            timeoutSeconds?: number;
-            /**
-             * One and only one of the following should be specified. Exec specifies the action to take.
-             */
-            exec?: {
-              /**
-               * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
-               */
-              command?: string[];
-              [k: string]: any;
-            };
-            /**
-             * Number of seconds after the container has started before liveness probes are initiated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
-             */
-            initialDelaySeconds?: number;
-            /**
-             * TCPSocket specifies an action involving a TCP port. TCP hooks not yet supported
-             */
-            tcpSocket?: {
-              /**
-               * Optional: Host name to connect to, defaults to the pod IP.
-               */
-              host?: string;
-              /**
-               * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
-               */
-              port: string | number;
-              [k: string]: any;
-            };
-            /**
-             * How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1.
-             */
-            periodSeconds?: number;
-            /**
-             * Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1. Must be 1 for liveness. Minimum value is 1.
-             */
-            successThreshold?: number;
-            /**
-             * Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1.
-             */
-            failureThreshold?: number;
             [k: string]: any;
           };
           /**
-           * List of ports to expose from the container. Exposing a port here gives the system additional information about the network connections a container uses, but is primarily informational. Not specifying a port here DOES NOT prevent that port from being exposed. Any port which is listening on the default "0.0.0.0" address inside a container will be accessible from the network. Cannot be updated.
-           */
-          ports?: {
-            /**
-             * What host IP to bind the external port to.
-             */
-            hostIP?: string;
-            /**
-             * Protocol for port. Must be UDP, TCP, or SCTP. Defaults to "TCP".
-             */
-            protocol?: string;
-            /**
-             * Number of port to expose on the pod's IP address. This must be a valid port number, 0 < x < 65536.
-             */
-            containerPort: number;
-            /**
-             * If specified, this must be an IANA_SVC_NAME and unique within the pod. Each named port in a pod must have a unique name. Name for the port that can be referred to by services.
-             */
-            name?: string;
-            /**
-             * Number of port to expose on the host. If specified, this must be a valid port number, 0 < x < 65536. If HostNetwork is specified, this must match ContainerPort. Most containers do not need this.
-             */
-            hostPort?: number;
-            [k: string]: any;
-          }[];
-          /**
-           * Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+           * ResourceRequirements describes the compute resource requirements.
            */
           resources?: {
             /**
              * Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
              */
             requests?: {
-              [k: string]: string | number;
+              [k: string]: (string | null) | number;
             };
             /**
              * Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
              */
             limits?: {
-              [k: string]: string | number;
+              [k: string]: (string | null) | number;
             };
             [k: string]: any;
           };
+          /**
+           * Whether the container runtime should close the stdin channel after it has been opened by a single attach. When stdin is true the stdin stream will remain open across multiple attach sessions. If stdinOnce is set to true, stdin is opened on container start, is empty until the first client attaches to stdin, and then remains open and accepts data until the client disconnects, at which time stdin is closed and remains closed until the container is restarted. If this flag is false, a container processes that reads from stdin will never receive an EOF. Default is false
+           */
+          stdinOnce?: boolean;
           [k: string]: any;
         }[];
         /**
@@ -3204,45 +3161,15 @@ export interface Statefulset {
           /**
            * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
            */
-          name?: string;
+          name?: string | null;
           [k: string]: any;
         }[];
-        /**
-         * Use the host's pid namespace. Optional: Default to false.
-         */
-        hostPID?: boolean;
         [k: string]: any;
       };
       /**
-       * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
+       * ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.
        */
       metadata?: {
-        /**
-         * Must be empty before the object is deleted from the registry. Each entry is an identifier for the responsible component that will remove the entry from the list. If the deletionTimestamp of the object is non-nil, entries in this list can only be removed.
-         */
-        finalizers?: string[];
-        /**
-         * The name of the cluster which the object belongs to. This is used to distinguish resources with same name and namespace in different clusters. This field is not set anywhere right now and apiserver is going to ignore it if set in create or update request.
-         */
-        clusterName?: string;
-        /**
-         * Number of seconds allowed for this object to gracefully terminate before it will be removed from the system. Only set when deletionTimestamp is also set. May only be shortened. Read-only.
-         */
-        deletionGracePeriodSeconds?: number;
-        /**
-         * Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels
-         */
-        labels?: {
-          [k: string]: string;
-        };
-        /**
-         * GenerateName is an optional prefix, used by the server, to generate a unique name ONLY IF the Name field has not been provided. If this field is used, the name returned to the client will be different than the name passed. This value will also be combined with a unique suffix. The provided value has the same validation rules as the Name field, and may be truncated by the length of the suffix required to make the value unique on the server.
-         *
-         * If this field is specified and the generated name exists, the server will NOT return a 409 - instead, it will either return 201 Created or 500 with Reason ServerTimeout indicating a unique name could not be found in the time allotted, and the client should retry (optionally after the time indicated in the Retry-After header).
-         *
-         * Applied only if Name is not specified. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#idempotency
-         */
-        generateName?: string;
         /**
          * List of objects depended by this object. If ALL objects in the list have been deleted, this object will be garbage collected. If this object is managed by a controller, then an entry in this list will point to this controller, with the controller field set to true. There cannot be more than one managing controller.
          */
@@ -3252,21 +3179,21 @@ export interface Statefulset {
            */
           kind: string;
           /**
-           * If true, AND if the owner has the "foregroundDeletion" finalizer, then the owner cannot be deleted from the key-value store until this reference is removed. Defaults to false. To set this field, a user needs "delete" permission of the owner, otherwise 422 (Unprocessable Entity) will be returned.
-           */
-          blockOwnerDeletion?: boolean;
-          /**
            * UID of the referent. More info: http://kubernetes.io/docs/user-guide/identifiers#uids
            */
           uid: string;
+          /**
+           * API version of the referent.
+           */
+          apiVersion: string;
           /**
            * If true, this reference points to the managing controller.
            */
           controller?: boolean;
           /**
-           * API version of the referent.
+           * If true, AND if the owner has the "foregroundDeletion" finalizer, then the owner cannot be deleted from the key-value store until this reference is removed. Defaults to false. To set this field, a user needs "delete" permission of the owner, otherwise 422 (Unprocessable Entity) will be returned.
            */
-          apiVersion: string;
+          blockOwnerDeletion?: boolean;
           /**
            * Name of the referent. More info: http://kubernetes.io/docs/user-guide/identifiers#names
            */
@@ -3274,55 +3201,59 @@ export interface Statefulset {
           [k: string]: any;
         }[];
         /**
-         * CreationTimestamp is a timestamp representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations. Clients may not set this value. It is represented in RFC3339 form and is in UTC.
-         *
-         * Populated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
-         */
-        creationTimestamp?: string;
-        /**
          * UID is the unique in time and space value for this object. It is typically generated by the server on successful creation of a resource and is not allowed to change on PUT operations.
          *
          * Populated by the system. Read-only. More info: http://kubernetes.io/docs/user-guide/identifiers#uids
          */
-        uid?: string;
+        uid?: string | null;
         /**
-         * Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names
+         * Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.
          */
-        name?: string;
+        deletionTimestamp?: string | null;
         /**
-         * DeletionTimestamp is RFC 3339 date and time at which this resource will be deleted. This field is set by the server when a graceful deletion is requested by the user, and is not directly settable by a client. The resource is expected to be deleted (no longer visible from resource lists, and not reachable by name) after the time in this field, once the finalizers list is empty. As long as the finalizers list contains items, deletion is blocked. Once the deletionTimestamp is set, this value may not be unset or be set further into the future, although it may be shortened or the resource may be deleted prior to this time. For example, a user may request that a pod is deleted in 30 seconds. The Kubelet will react by sending a graceful termination signal to the containers in the pod. After that 30 seconds, the Kubelet will send a hard termination signal (SIGKILL) to the container and after cleanup, remove the pod from the API. In the presence of network partitions, this object may still exist after this timestamp, until an administrator or automated process can determine the resource is fully terminated. If not set, graceful deletion of the object has not been requested.
-         *
-         * Populated by the system when a graceful deletion is requested. Read-only. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
+         * The name of the cluster which the object belongs to. This is used to distinguish resources with same name and namespace in different clusters. This field is not set anywhere right now and apiserver is going to ignore it if set in create or update request.
          */
-        deletionTimestamp?: string;
+        clusterName?: string | null;
+        /**
+         * Number of seconds allowed for this object to gracefully terminate before it will be removed from the system. Only set when deletionTimestamp is also set. May only be shortened. Read-only.
+         */
+        deletionGracePeriodSeconds?: number;
+        /**
+         * Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels
+         */
+        labels?: {
+          [k: string]: string | null;
+        };
         /**
          * Namespace defines the space within each name must be unique. An empty namespace is equivalent to the "default" namespace, but "default" is the canonical representation. Not all objects are required to be scoped to a namespace - the value of this field for those objects will be empty.
          *
          * Must be a DNS_LABEL. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/namespaces
          */
-        namespace?: string;
+        namespace?: string | null;
+        /**
+         * Must be empty before the object is deleted from the registry. Each entry is an identifier for the responsible component that will remove the entry from the list. If the deletionTimestamp of the object is non-nil, entries in this list can only be removed.
+         */
+        finalizers?: (string | null)[];
         /**
          * A sequence number representing a specific generation of the desired state. Populated by the system. Read-only.
          */
         generation?: number;
         /**
-         * An initializer is a controller which enforces some system invariant at object creation time. This field is a list of initializers that have not yet acted on this object. If nil or empty, this object has been completely initialized. Otherwise, the object is considered uninitialized and is hidden (in list/watch and get calls) from clients that haven't explicitly asked to observe uninitialized objects.
-         *
-         * When an object is created, the system will populate this list with the current set of initializers. Only privileged users may set or modify this list. Once it is empty, it may not be modified further by any user.
+         * Initializers tracks the progress of initialization.
          */
         initializers?: {
           /**
-           * If result is set with the Failure field, the object will be persisted to storage and then deleted, ensuring that other clients can observe the deletion.
+           * Status is a return value for calls that don't return other objects.
            */
           result?: {
             /**
              * Status of the operation. One of: "Success" or "Failure". More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status
              */
-            status?: string;
+            status?: string | null;
             /**
              * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds
              */
-            kind?: string;
+            kind?: string | null;
             /**
              * Suggested HTTP return code for this status, 0 if not set.
              */
@@ -3330,27 +3261,27 @@ export interface Statefulset {
             /**
              * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources
              */
-            apiVersion?: string;
+            apiVersion?: string | null;
             /**
              * A machine-readable description of why this operation is in the "Failure" status. If this value is empty there is no information available. A Reason clarifies an HTTP status code but does not override it.
              */
-            reason?: string;
+            reason?: string | null;
             /**
-             * Extended data associated with the reason.  Each reason may define its own extended details. This field is optional and the data returned is not guaranteed to conform to any schema except that defined by the reason type.
+             * StatusDetails is a set of additional properties that MAY be set by the server to provide additional information about a response. The Reason field of a Status object defines what attributes will be set. Clients must ignore fields that do not match the defined type of each attribute, and should assume that any attribute may be empty, invalid, or under defined.
              */
             details?: {
               /**
                * The kind attribute of the resource associated with the status StatusReason. On some operations may differ from the requested resource Kind. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds
                */
-              kind?: string;
+              kind?: string | null;
               /**
                * The group attribute of the resource associated with the status StatusReason.
                */
-              group?: string;
+              group?: string | null;
               /**
                * The name attribute of the resource associated with the status StatusReason (when there is a single name which can be described).
                */
-              name?: string;
+              name?: string | null;
               /**
                * If specified, the time in seconds before the operation should be retried. Some errors may indicate the client must take an alternate action - for those errors this field may indicate how long to wait before taking the alternate action.
                */
@@ -3366,43 +3297,43 @@ export interface Statefulset {
                  *   "name" - the field "name" on the current resource
                  *   "items[0].name" - the field "name" on the first array entry in "items"
                  */
-                field?: string;
+                field?: string | null;
                 /**
                  * A human-readable description of the cause of the error.  This field may be presented as-is to a reader.
                  */
-                message?: string;
+                message?: string | null;
                 /**
                  * A machine-readable description of the cause of the error. If this value is empty there is no information available.
                  */
-                reason?: string;
+                reason?: string | null;
                 [k: string]: any;
               }[];
               /**
                * UID of the resource. (when there is a single resource which can be described). More info: http://kubernetes.io/docs/user-guide/identifiers#uids
                */
-              uid?: string;
+              uid?: string | null;
               [k: string]: any;
             };
             /**
              * A human-readable description of the status of this operation.
              */
-            message?: string;
+            message?: string | null;
             /**
-             * Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds
+             * ListMeta describes metadata that synthetic resources must have, including lists and various status objects. A resource may have only one of {ObjectMeta, ListMeta}.
              */
             metadata?: {
               /**
                * continue may be set if the user set a limit on the number of items returned, and indicates that the server has more data available. The value is opaque and may be used to issue another request to the endpoint that served this list to retrieve the next set of available objects. Continuing a consistent list may not be possible if the server configuration has changed or more than a few minutes have passed. The resourceVersion field returned when using this continue value will be identical to the value in the first response, unless you have received this token from an error message.
                */
-              continue?: string;
+              continue?: string | null;
               /**
                * selfLink is a URL representing this object. Populated by the system. Read-only.
                */
-              selfLink?: string;
+              selfLink?: string | null;
               /**
                * String that identifies the server's internal version of this object that can be used by clients to determine when objects have changed. Value must be treated as opaque by clients and passed unmodified back to the server. Populated by the system. Read-only. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#concurrency-control-and-consistency
                */
-              resourceVersion?: string;
+              resourceVersion?: string | null;
               [k: string]: any;
             };
             [k: string]: any;
@@ -3424,17 +3355,33 @@ export interface Statefulset {
          *
          * Populated by the system. Read-only. Value must be treated as opaque by clients and . More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#concurrency-control-and-consistency
          */
-        resourceVersion?: string;
+        resourceVersion?: string | null;
+        /**
+         * GenerateName is an optional prefix, used by the server, to generate a unique name ONLY IF the Name field has not been provided. If this field is used, the name returned to the client will be different than the name passed. This value will also be combined with a unique suffix. The provided value has the same validation rules as the Name field, and may be truncated by the length of the suffix required to make the value unique on the server.
+         *
+         * If this field is specified and the generated name exists, the server will NOT return a 409 - instead, it will either return 201 Created or 500 with Reason ServerTimeout indicating a unique name could not be found in the time allotted, and the client should retry (optionally after the time indicated in the Retry-After header).
+         *
+         * Applied only if Name is not specified. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#idempotency
+         */
+        generateName?: string | null;
+        /**
+         * Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.
+         */
+        creationTimestamp?: string | null;
         /**
          * Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations
          */
         annotations?: {
-          [k: string]: string;
+          [k: string]: string | null;
         };
         /**
          * SelfLink is a URL representing this object. Populated by the system. Read-only.
          */
-        selfLink?: string;
+        selfLink?: string | null;
+        /**
+         * Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names
+         */
+        name?: string | null;
         [k: string]: any;
       };
       [k: string]: any;
@@ -3444,11 +3391,11 @@ export interface Statefulset {
      */
     revisionHistoryLimit?: number;
     /**
-     * updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.
+     * StatefulSetUpdateStrategy indicates the strategy that the StatefulSet controller will use to perform updates. It includes any additional parameters necessary to perform the update for the indicated strategy.
      */
     updateStrategy?: {
       /**
-       * RollingUpdate is used to communicate parameters when Type is RollingUpdateStatefulSetStrategyType.
+       * RollingUpdateStatefulSetStrategy is used to communicate parameter for RollingUpdateStatefulSetStrategyType.
        */
       rollingUpdate?: {
         /**
@@ -3460,7 +3407,7 @@ export interface Statefulset {
       /**
        * Type indicates the type of the StatefulSetUpdateStrategy.
        */
-      type?: string;
+      type?: string | null;
       [k: string]: any;
     };
     [k: string]: any;
@@ -3474,32 +3421,6 @@ export interface Statefulset {
    */
   metadata?: {
     /**
-     * Must be empty before the object is deleted from the registry. Each entry is an identifier for the responsible component that will remove the entry from the list. If the deletionTimestamp of the object is non-nil, entries in this list can only be removed.
-     */
-    finalizers?: string[];
-    /**
-     * The name of the cluster which the object belongs to. This is used to distinguish resources with same name and namespace in different clusters. This field is not set anywhere right now and apiserver is going to ignore it if set in create or update request.
-     */
-    clusterName?: string;
-    /**
-     * Number of seconds allowed for this object to gracefully terminate before it will be removed from the system. Only set when deletionTimestamp is also set. May only be shortened. Read-only.
-     */
-    deletionGracePeriodSeconds?: number;
-    /**
-     * Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels
-     */
-    labels?: {
-      [k: string]: string;
-    };
-    /**
-     * GenerateName is an optional prefix, used by the server, to generate a unique name ONLY IF the Name field has not been provided. If this field is used, the name returned to the client will be different than the name passed. This value will also be combined with a unique suffix. The provided value has the same validation rules as the Name field, and may be truncated by the length of the suffix required to make the value unique on the server.
-     *
-     * If this field is specified and the generated name exists, the server will NOT return a 409 - instead, it will either return 201 Created or 500 with Reason ServerTimeout indicating a unique name could not be found in the time allotted, and the client should retry (optionally after the time indicated in the Retry-After header).
-     *
-     * Applied only if Name is not specified. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#idempotency
-     */
-    generateName?: string;
-    /**
      * List of objects depended by this object. If ALL objects in the list have been deleted, this object will be garbage collected. If this object is managed by a controller, then an entry in this list will point to this controller, with the controller field set to true. There cannot be more than one managing controller.
      */
     ownerReferences?: {
@@ -3508,21 +3429,21 @@ export interface Statefulset {
        */
       kind: string;
       /**
-       * If true, AND if the owner has the "foregroundDeletion" finalizer, then the owner cannot be deleted from the key-value store until this reference is removed. Defaults to false. To set this field, a user needs "delete" permission of the owner, otherwise 422 (Unprocessable Entity) will be returned.
-       */
-      blockOwnerDeletion?: boolean;
-      /**
        * UID of the referent. More info: http://kubernetes.io/docs/user-guide/identifiers#uids
        */
       uid: string;
+      /**
+       * API version of the referent.
+       */
+      apiVersion: string;
       /**
        * If true, this reference points to the managing controller.
        */
       controller?: boolean;
       /**
-       * API version of the referent.
+       * If true, AND if the owner has the "foregroundDeletion" finalizer, then the owner cannot be deleted from the key-value store until this reference is removed. Defaults to false. To set this field, a user needs "delete" permission of the owner, otherwise 422 (Unprocessable Entity) will be returned.
        */
-      apiVersion: string;
+      blockOwnerDeletion?: boolean;
       /**
        * Name of the referent. More info: http://kubernetes.io/docs/user-guide/identifiers#names
        */
@@ -3530,55 +3451,59 @@ export interface Statefulset {
       [k: string]: any;
     }[];
     /**
-     * CreationTimestamp is a timestamp representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations. Clients may not set this value. It is represented in RFC3339 form and is in UTC.
-     *
-     * Populated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
-     */
-    creationTimestamp?: string;
-    /**
      * UID is the unique in time and space value for this object. It is typically generated by the server on successful creation of a resource and is not allowed to change on PUT operations.
      *
      * Populated by the system. Read-only. More info: http://kubernetes.io/docs/user-guide/identifiers#uids
      */
-    uid?: string;
+    uid?: string | null;
     /**
-     * Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names
+     * Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.
      */
-    name?: string;
+    deletionTimestamp?: string | null;
     /**
-     * DeletionTimestamp is RFC 3339 date and time at which this resource will be deleted. This field is set by the server when a graceful deletion is requested by the user, and is not directly settable by a client. The resource is expected to be deleted (no longer visible from resource lists, and not reachable by name) after the time in this field, once the finalizers list is empty. As long as the finalizers list contains items, deletion is blocked. Once the deletionTimestamp is set, this value may not be unset or be set further into the future, although it may be shortened or the resource may be deleted prior to this time. For example, a user may request that a pod is deleted in 30 seconds. The Kubelet will react by sending a graceful termination signal to the containers in the pod. After that 30 seconds, the Kubelet will send a hard termination signal (SIGKILL) to the container and after cleanup, remove the pod from the API. In the presence of network partitions, this object may still exist after this timestamp, until an administrator or automated process can determine the resource is fully terminated. If not set, graceful deletion of the object has not been requested.
-     *
-     * Populated by the system when a graceful deletion is requested. Read-only. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
+     * The name of the cluster which the object belongs to. This is used to distinguish resources with same name and namespace in different clusters. This field is not set anywhere right now and apiserver is going to ignore it if set in create or update request.
      */
-    deletionTimestamp?: string;
+    clusterName?: string | null;
+    /**
+     * Number of seconds allowed for this object to gracefully terminate before it will be removed from the system. Only set when deletionTimestamp is also set. May only be shortened. Read-only.
+     */
+    deletionGracePeriodSeconds?: number;
+    /**
+     * Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels
+     */
+    labels?: {
+      [k: string]: string | null;
+    };
     /**
      * Namespace defines the space within each name must be unique. An empty namespace is equivalent to the "default" namespace, but "default" is the canonical representation. Not all objects are required to be scoped to a namespace - the value of this field for those objects will be empty.
      *
      * Must be a DNS_LABEL. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/namespaces
      */
-    namespace?: string;
+    namespace?: string | null;
+    /**
+     * Must be empty before the object is deleted from the registry. Each entry is an identifier for the responsible component that will remove the entry from the list. If the deletionTimestamp of the object is non-nil, entries in this list can only be removed.
+     */
+    finalizers?: (string | null)[];
     /**
      * A sequence number representing a specific generation of the desired state. Populated by the system. Read-only.
      */
     generation?: number;
     /**
-     * An initializer is a controller which enforces some system invariant at object creation time. This field is a list of initializers that have not yet acted on this object. If nil or empty, this object has been completely initialized. Otherwise, the object is considered uninitialized and is hidden (in list/watch and get calls) from clients that haven't explicitly asked to observe uninitialized objects.
-     *
-     * When an object is created, the system will populate this list with the current set of initializers. Only privileged users may set or modify this list. Once it is empty, it may not be modified further by any user.
+     * Initializers tracks the progress of initialization.
      */
     initializers?: {
       /**
-       * If result is set with the Failure field, the object will be persisted to storage and then deleted, ensuring that other clients can observe the deletion.
+       * Status is a return value for calls that don't return other objects.
        */
       result?: {
         /**
          * Status of the operation. One of: "Success" or "Failure". More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status
          */
-        status?: string;
+        status?: string | null;
         /**
          * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds
          */
-        kind?: string;
+        kind?: string | null;
         /**
          * Suggested HTTP return code for this status, 0 if not set.
          */
@@ -3586,27 +3511,27 @@ export interface Statefulset {
         /**
          * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources
          */
-        apiVersion?: string;
+        apiVersion?: string | null;
         /**
          * A machine-readable description of why this operation is in the "Failure" status. If this value is empty there is no information available. A Reason clarifies an HTTP status code but does not override it.
          */
-        reason?: string;
+        reason?: string | null;
         /**
-         * Extended data associated with the reason.  Each reason may define its own extended details. This field is optional and the data returned is not guaranteed to conform to any schema except that defined by the reason type.
+         * StatusDetails is a set of additional properties that MAY be set by the server to provide additional information about a response. The Reason field of a Status object defines what attributes will be set. Clients must ignore fields that do not match the defined type of each attribute, and should assume that any attribute may be empty, invalid, or under defined.
          */
         details?: {
           /**
            * The kind attribute of the resource associated with the status StatusReason. On some operations may differ from the requested resource Kind. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds
            */
-          kind?: string;
+          kind?: string | null;
           /**
            * The group attribute of the resource associated with the status StatusReason.
            */
-          group?: string;
+          group?: string | null;
           /**
            * The name attribute of the resource associated with the status StatusReason (when there is a single name which can be described).
            */
-          name?: string;
+          name?: string | null;
           /**
            * If specified, the time in seconds before the operation should be retried. Some errors may indicate the client must take an alternate action - for those errors this field may indicate how long to wait before taking the alternate action.
            */
@@ -3622,43 +3547,43 @@ export interface Statefulset {
              *   "name" - the field "name" on the current resource
              *   "items[0].name" - the field "name" on the first array entry in "items"
              */
-            field?: string;
+            field?: string | null;
             /**
              * A human-readable description of the cause of the error.  This field may be presented as-is to a reader.
              */
-            message?: string;
+            message?: string | null;
             /**
              * A machine-readable description of the cause of the error. If this value is empty there is no information available.
              */
-            reason?: string;
+            reason?: string | null;
             [k: string]: any;
           }[];
           /**
            * UID of the resource. (when there is a single resource which can be described). More info: http://kubernetes.io/docs/user-guide/identifiers#uids
            */
-          uid?: string;
+          uid?: string | null;
           [k: string]: any;
         };
         /**
          * A human-readable description of the status of this operation.
          */
-        message?: string;
+        message?: string | null;
         /**
-         * Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds
+         * ListMeta describes metadata that synthetic resources must have, including lists and various status objects. A resource may have only one of {ObjectMeta, ListMeta}.
          */
         metadata?: {
           /**
            * continue may be set if the user set a limit on the number of items returned, and indicates that the server has more data available. The value is opaque and may be used to issue another request to the endpoint that served this list to retrieve the next set of available objects. Continuing a consistent list may not be possible if the server configuration has changed or more than a few minutes have passed. The resourceVersion field returned when using this continue value will be identical to the value in the first response, unless you have received this token from an error message.
            */
-          continue?: string;
+          continue?: string | null;
           /**
            * selfLink is a URL representing this object. Populated by the system. Read-only.
            */
-          selfLink?: string;
+          selfLink?: string | null;
           /**
            * String that identifies the server's internal version of this object that can be used by clients to determine when objects have changed. Value must be treated as opaque by clients and passed unmodified back to the server. Populated by the system. Read-only. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#concurrency-control-and-consistency
            */
-          resourceVersion?: string;
+          resourceVersion?: string | null;
           [k: string]: any;
         };
         [k: string]: any;
@@ -3680,17 +3605,33 @@ export interface Statefulset {
      *
      * Populated by the system. Read-only. Value must be treated as opaque by clients and . More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#concurrency-control-and-consistency
      */
-    resourceVersion?: string;
+    resourceVersion?: string | null;
+    /**
+     * GenerateName is an optional prefix, used by the server, to generate a unique name ONLY IF the Name field has not been provided. If this field is used, the name returned to the client will be different than the name passed. This value will also be combined with a unique suffix. The provided value has the same validation rules as the Name field, and may be truncated by the length of the suffix required to make the value unique on the server.
+     *
+     * If this field is specified and the generated name exists, the server will NOT return a 409 - instead, it will either return 201 Created or 500 with Reason ServerTimeout indicating a unique name could not be found in the time allotted, and the client should retry (optionally after the time indicated in the Retry-After header).
+     *
+     * Applied only if Name is not specified. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#idempotency
+     */
+    generateName?: string | null;
+    /**
+     * Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.
+     */
+    creationTimestamp?: string | null;
     /**
      * Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations
      */
     annotations?: {
-      [k: string]: string;
+      [k: string]: string | null;
     };
     /**
      * SelfLink is a URL representing this object. Populated by the system. Read-only.
      */
-    selfLink?: string;
+    selfLink?: string | null;
+    /**
+     * Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names
+     */
+    name?: string | null;
     [k: string]: any;
   };
   [k: string]: any;

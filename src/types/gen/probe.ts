@@ -10,21 +10,21 @@
  */
 export interface Probe {
   /**
-   * HTTPGet specifies the http request to perform.
+   * HTTPGetAction describes an action based on HTTP Get requests.
    */
   httpGet?: {
     /**
      * Path to access on the HTTP server.
      */
-    path?: string;
+    path?: string | null;
     /**
      * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
      */
-    host?: string;
+    host?: string | null;
     /**
      * Scheme to use for connecting to the host. Defaults to HTTP.
      */
-    scheme?: string;
+    scheme?: string | null;
     /**
      * Custom headers to set in the request. HTTP allows repeated headers.
      */
@@ -39,10 +39,7 @@ export interface Probe {
       value: string;
       [k: string]: any;
     }[];
-    /**
-     * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
-     */
-    port: string | number;
+    port: (string | null) | number;
     [k: string]: any;
   };
   /**
@@ -50,13 +47,13 @@ export interface Probe {
    */
   timeoutSeconds?: number;
   /**
-   * One and only one of the following should be specified. Exec specifies the action to take.
+   * ExecAction describes a "run in container" action.
    */
   exec?: {
     /**
      * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
      */
-    command?: string[];
+    command?: (string | null)[];
     [k: string]: any;
   };
   /**
@@ -64,17 +61,14 @@ export interface Probe {
    */
   initialDelaySeconds?: number;
   /**
-   * TCPSocket specifies an action involving a TCP port. TCP hooks not yet supported
+   * TCPSocketAction describes an action based on opening a socket
    */
   tcpSocket?: {
     /**
      * Optional: Host name to connect to, defaults to the pod IP.
      */
-    host?: string;
-    /**
-     * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
-     */
-    port: string | number;
+    host?: string | null;
+    port: (string | null) | number;
     [k: string]: any;
   };
   /**

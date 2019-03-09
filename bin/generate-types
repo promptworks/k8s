@@ -2,7 +2,7 @@
 
 set -e
 
-base_url="https://raw.githubusercontent.com/garethr/kubernetes-json-schema/master/v1.12.2"
+base_url="https://raw.githubusercontent.com/garethr/kubernetes-json-schema/master/v1.12.2-standalone"
 
 objects=(
   configmap

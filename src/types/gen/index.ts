@@ -12,6 +12,7 @@ export * from "./horizontalpodautoscaler";
 export * from "./ingress";
 export * from "./job";
 export * from "./namespace";
+export * from "./objectmeta";
 export * from "./persistentvolumeclaim";
 export * from "./pod";
 export * from "./probe";

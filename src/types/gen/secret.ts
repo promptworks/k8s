@@ -14,11 +14,9 @@ export interface Secret {
    */
   kind?: string | null;
   /**
-   * Data contains the secret data. Each key must consist of alphanumeric characters, '-', '_' or '.'. The serialized form of the secret data is a base64 encoded string, representing the arbitrary (possibly non-string) data value here. Described in https://tools.ietf.org/html/rfc4648#section-4
+   * Used to facilitate programmatic handling of secret data.
    */
-  data?: {
-    [k: string]: string | null;
-  };
+  type?: string | null;
   /**
    * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources
    */
@@ -30,39 +28,15 @@ export interface Secret {
     [k: string]: string | null;
   };
   /**
-   * Used to facilitate programmatic handling of secret data.
+   * Data contains the secret data. Each key must consist of alphanumeric characters, '-', '_' or '.'. The serialized form of the secret data is a base64 encoded string, representing the arbitrary (possibly non-string) data value here. Described in https://tools.ietf.org/html/rfc4648#section-4
    */
-  type?: string | null;
+  data?: {
+    [k: string]: string | null;
+  };
   /**
-   * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
+   * ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.
    */
   metadata?: {
-    /**
-     * Must be empty before the object is deleted from the registry. Each entry is an identifier for the responsible component that will remove the entry from the list. If the deletionTimestamp of the object is non-nil, entries in this list can only be removed.
-     */
-    finalizers?: string[];
-    /**
-     * The name of the cluster which the object belongs to. This is used to distinguish resources with same name and namespace in different clusters. This field is not set anywhere right now and apiserver is going to ignore it if set in create or update request.
-     */
-    clusterName?: string;
-    /**
-     * Number of seconds allowed for this object to gracefully terminate before it will be removed from the system. Only set when deletionTimestamp is also set. May only be shortened. Read-only.
-     */
-    deletionGracePeriodSeconds?: number;
-    /**
-     * Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels
-     */
-    labels?: {
-      [k: string]: string;
-    };
-    /**
-     * GenerateName is an optional prefix, used by the server, to generate a unique name ONLY IF the Name field has not been provided. If this field is used, the name returned to the client will be different than the name passed. This value will also be combined with a unique suffix. The provided value has the same validation rules as the Name field, and may be truncated by the length of the suffix required to make the value unique on the server.
-     *
-     * If this field is specified and the generated name exists, the server will NOT return a 409 - instead, it will either return 201 Created or 500 with Reason ServerTimeout indicating a unique name could not be found in the time allotted, and the client should retry (optionally after the time indicated in the Retry-After header).
-     *
-     * Applied only if Name is not specified. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#idempotency
-     */
-    generateName?: string;
     /**
      * List of objects depended by this object. If ALL objects in the list have been deleted, this object will be garbage collected. If this object is managed by a controller, then an entry in this list will point to this controller, with the controller field set to true. There cannot be more than one managing controller.
      */
@@ -72,21 +46,21 @@ export interface Secret {
        */
       kind: string;
       /**
-       * If true, AND if the owner has the "foregroundDeletion" finalizer, then the owner cannot be deleted from the key-value store until this reference is removed. Defaults to false. To set this field, a user needs "delete" permission of the owner, otherwise 422 (Unprocessable Entity) will be returned.
-       */
-      blockOwnerDeletion?: boolean;
-      /**
        * UID of the referent. More info: http://kubernetes.io/docs/user-guide/identifiers#uids
        */
       uid: string;
+      /**
+       * API version of the referent.
+       */
+      apiVersion: string;
       /**
        * If true, this reference points to the managing controller.
        */
       controller?: boolean;
       /**
-       * API version of the referent.
+       * If true, AND if the owner has the "foregroundDeletion" finalizer, then the owner cannot be deleted from the key-value store until this reference is removed. Defaults to false. To set this field, a user needs "delete" permission of the owner, otherwise 422 (Unprocessable Entity) will be returned.
        */
-      apiVersion: string;
+      blockOwnerDeletion?: boolean;
       /**
        * Name of the referent. More info: http://kubernetes.io/docs/user-guide/identifiers#names
        */
@@ -94,55 +68,59 @@ export interface Secret {
       [k: string]: any;
     }[];
     /**
-     * CreationTimestamp is a timestamp representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations. Clients may not set this value. It is represented in RFC3339 form and is in UTC.
-     *
-     * Populated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
-     */
-    creationTimestamp?: string;
-    /**
      * UID is the unique in time and space value for this object. It is typically generated by the server on successful creation of a resource and is not allowed to change on PUT operations.
      *
      * Populated by the system. Read-only. More info: http://kubernetes.io/docs/user-guide/identifiers#uids
      */
-    uid?: string;
+    uid?: string | null;
     /**
-     * Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names
+     * Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.
      */
-    name?: string;
+    deletionTimestamp?: string | null;
     /**
-     * DeletionTimestamp is RFC 3339 date and time at which this resource will be deleted. This field is set by the server when a graceful deletion is requested by the user, and is not directly settable by a client. The resource is expected to be deleted (no longer visible from resource lists, and not reachable by name) after the time in this field, once the finalizers list is empty. As long as the finalizers list contains items, deletion is blocked. Once the deletionTimestamp is set, this value may not be unset or be set further into the future, although it may be shortened or the resource may be deleted prior to this time. For example, a user may request that a pod is deleted in 30 seconds. The Kubelet will react by sending a graceful termination signal to the containers in the pod. After that 30 seconds, the Kubelet will send a hard termination signal (SIGKILL) to the container and after cleanup, remove the pod from the API. In the presence of network partitions, this object may still exist after this timestamp, until an administrator or automated process can determine the resource is fully terminated. If not set, graceful deletion of the object has not been requested.
-     *
-     * Populated by the system when a graceful deletion is requested. Read-only. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
+     * The name of the cluster which the object belongs to. This is used to distinguish resources with same name and namespace in different clusters. This field is not set anywhere right now and apiserver is going to ignore it if set in create or update request.
      */
-    deletionTimestamp?: string;
+    clusterName?: string | null;
+    /**
+     * Number of seconds allowed for this object to gracefully terminate before it will be removed from the system. Only set when deletionTimestamp is also set. May only be shortened. Read-only.
+     */
+    deletionGracePeriodSeconds?: number;
+    /**
+     * Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels
+     */
+    labels?: {
+      [k: string]: string | null;
+    };
     /**
      * Namespace defines the space within each name must be unique. An empty namespace is equivalent to the "default" namespace, but "default" is the canonical representation. Not all objects are required to be scoped to a namespace - the value of this field for those objects will be empty.
      *
      * Must be a DNS_LABEL. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/namespaces
      */
-    namespace?: string;
+    namespace?: string | null;
+    /**
+     * Must be empty before the object is deleted from the registry. Each entry is an identifier for the responsible component that will remove the entry from the list. If the deletionTimestamp of the object is non-nil, entries in this list can only be removed.
+     */
+    finalizers?: (string | null)[];
     /**
      * A sequence number representing a specific generation of the desired state. Populated by the system. Read-only.
      */
     generation?: number;
     /**
-     * An initializer is a controller which enforces some system invariant at object creation time. This field is a list of initializers that have not yet acted on this object. If nil or empty, this object has been completely initialized. Otherwise, the object is considered uninitialized and is hidden (in list/watch and get calls) from clients that haven't explicitly asked to observe uninitialized objects.
-     *
-     * When an object is created, the system will populate this list with the current set of initializers. Only privileged users may set or modify this list. Once it is empty, it may not be modified further by any user.
+     * Initializers tracks the progress of initialization.
      */
     initializers?: {
       /**
-       * If result is set with the Failure field, the object will be persisted to storage and then deleted, ensuring that other clients can observe the deletion.
+       * Status is a return value for calls that don't return other objects.
        */
       result?: {
         /**
          * Status of the operation. One of: "Success" or "Failure". More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status
          */
-        status?: string;
+        status?: string | null;
         /**
          * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds
          */
-        kind?: string;
+        kind?: string | null;
         /**
          * Suggested HTTP return code for this status, 0 if not set.
          */
@@ -150,27 +128,27 @@ export interface Secret {
         /**
          * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources
          */
-        apiVersion?: string;
+        apiVersion?: string | null;
         /**
          * A machine-readable description of why this operation is in the "Failure" status. If this value is empty there is no information available. A Reason clarifies an HTTP status code but does not override it.
          */
-        reason?: string;
+        reason?: string | null;
         /**
-         * Extended data associated with the reason.  Each reason may define its own extended details. This field is optional and the data returned is not guaranteed to conform to any schema except that defined by the reason type.
+         * StatusDetails is a set of additional properties that MAY be set by the server to provide additional information about a response. The Reason field of a Status object defines what attributes will be set. Clients must ignore fields that do not match the defined type of each attribute, and should assume that any attribute may be empty, invalid, or under defined.
          */
         details?: {
           /**
            * The kind attribute of the resource associated with the status StatusReason. On some operations may differ from the requested resource Kind. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds
            */
-          kind?: string;
+          kind?: string | null;
           /**
            * The group attribute of the resource associated with the status StatusReason.
            */
-          group?: string;
+          group?: string | null;
           /**
            * The name attribute of the resource associated with the status StatusReason (when there is a single name which can be described).
            */
-          name?: string;
+          name?: string | null;
           /**
            * If specified, the time in seconds before the operation should be retried. Some errors may indicate the client must take an alternate action - for those errors this field may indicate how long to wait before taking the alternate action.
            */
@@ -186,43 +164,43 @@ export interface Secret {
              *   "name" - the field "name" on the current resource
              *   "items[0].name" - the field "name" on the first array entry in "items"
              */
-            field?: string;
+            field?: string | null;
             /**
              * A human-readable description of the cause of the error.  This field may be presented as-is to a reader.
              */
-            message?: string;
+            message?: string | null;
             /**
              * A machine-readable description of the cause of the error. If this value is empty there is no information available.
              */
-            reason?: string;
+            reason?: string | null;
             [k: string]: any;
           }[];
           /**
            * UID of the resource. (when there is a single resource which can be described). More info: http://kubernetes.io/docs/user-guide/identifiers#uids
            */
-          uid?: string;
+          uid?: string | null;
           [k: string]: any;
         };
         /**
          * A human-readable description of the status of this operation.
          */
-        message?: string;
+        message?: string | null;
         /**
-         * Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds
+         * ListMeta describes metadata that synthetic resources must have, including lists and various status objects. A resource may have only one of {ObjectMeta, ListMeta}.
          */
         metadata?: {
           /**
            * continue may be set if the user set a limit on the number of items returned, and indicates that the server has more data available. The value is opaque and may be used to issue another request to the endpoint that served this list to retrieve the next set of available objects. Continuing a consistent list may not be possible if the server configuration has changed or more than a few minutes have passed. The resourceVersion field returned when using this continue value will be identical to the value in the first response, unless you have received this token from an error message.
            */
-          continue?: string;
+          continue?: string | null;
           /**
            * selfLink is a URL representing this object. Populated by the system. Read-only.
            */
-          selfLink?: string;
+          selfLink?: string | null;
           /**
            * String that identifies the server's internal version of this object that can be used by clients to determine when objects have changed. Value must be treated as opaque by clients and passed unmodified back to the server. Populated by the system. Read-only. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#concurrency-control-and-consistency
            */
-          resourceVersion?: string;
+          resourceVersion?: string | null;
           [k: string]: any;
         };
         [k: string]: any;
@@ -244,17 +222,33 @@ export interface Secret {
      *
      * Populated by the system. Read-only. Value must be treated as opaque by clients and . More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#concurrency-control-and-consistency
      */
-    resourceVersion?: string;
+    resourceVersion?: string | null;
+    /**
+     * GenerateName is an optional prefix, used by the server, to generate a unique name ONLY IF the Name field has not been provided. If this field is used, the name returned to the client will be different than the name passed. This value will also be combined with a unique suffix. The provided value has the same validation rules as the Name field, and may be truncated by the length of the suffix required to make the value unique on the server.
+     *
+     * If this field is specified and the generated name exists, the server will NOT return a 409 - instead, it will either return 201 Created or 500 with Reason ServerTimeout indicating a unique name could not be found in the time allotted, and the client should retry (optionally after the time indicated in the Retry-After header).
+     *
+     * Applied only if Name is not specified. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#idempotency
+     */
+    generateName?: string | null;
+    /**
+     * Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.
+     */
+    creationTimestamp?: string | null;
     /**
      * Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations
      */
     annotations?: {
-      [k: string]: string;
+      [k: string]: string | null;
     };
     /**
      * SelfLink is a URL representing this object. Populated by the system. Read-only.
      */
-    selfLink?: string;
+    selfLink?: string | null;
+    /**
+     * Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names
+     */
+    name?: string | null;
     [k: string]: any;
   };
   [k: string]: any;
