@@ -1,4 +1,5 @@
 import * as gen from "./generated";
+import { isObject } from "util";
 
 export type ObjectMeta = gen.IoK8sApimachineryPkgApisMetaV1ObjectMeta;
 export type Container = gen.IoK8sApiCoreV1Container;
@@ -112,3 +113,89 @@ export type AnyObject =
   | HorizontalPodAutoscaler
   | PersistentVolumeClaim
   | GenericObject;
+
+export const buildObject = (o: AnyObject): AnyObject => o;
+
+export const buildNamespace = (o: Namespace): Namespace => o;
+
+export const buildPod = (o: Pod): Pod => o;
+
+export const buildConfigMap = (o: ConfigMap): ConfigMap => o;
+
+export const buildDeployment = (o: Deployment): Deployment => o;
+
+export const buildIngress = (o: Ingress): Ingress => o;
+
+export const buildSecret = (o: Secret): Secret => o;
+
+export const buildService = (o: Service): Service => o;
+
+export const buildDaemonSet = (o: DaemonSet): DaemonSet => o;
+
+export const buildReplicaSet = (o: ReplicaSet): ReplicaSet => o;
+
+export const buildJob = (o: Job): Job => o;
+
+export const buildCronJob = (o: CronJob): CronJob => o;
+
+export const buildHorizontalPodAutoscaler = (
+  o: HorizontalPodAutoscaler
+): HorizontalPodAutoscaler => o;
+
+export const buildPersistentVolumeClaim = (
+  o: PersistentVolumeClaim
+): PersistentVolumeClaim => o;
+
+export const isNamespace = (o: any): o is Namespace => {
+  return isObject(o) && o.kind === "Namespace";
+};
+
+export const isPod = (o: any): o is Pod => {
+  return isObject(o) && o.kind === "Pod";
+};
+
+export const isConfigMap = (o: any): o is ConfigMap => {
+  return isObject(o) && o.kind === "ConfigMap";
+};
+
+export const isDeployment = (o: any): o is Deployment => {
+  return isObject(o) && o.kind === "Deployment";
+};
+
+export const isIngress = (o: any): o is Ingress => {
+  return isObject(o) && o.kind === "Ingress";
+};
+
+export const isSecret = (o: any): o is Secret => {
+  return isObject(o) && o.kind === "Secret";
+};
+
+export const isService = (o: any): o is Service => {
+  return isObject(o) && o.kind === "Service";
+};
+
+export const isDaemonSet = (o: any): o is DaemonSet => {
+  return isObject(o) && o.kind === "DaemonSet";
+};
+
+export const isReplicaSet = (o: any): o is ReplicaSet => {
+  return isObject(o) && o.kind === "ReplicaSet";
+};
+
+export const isJob = (o: any): o is Job => {
+  return isObject(o) && o.kind === "Job";
+};
+
+export const isCronJob = (o: any): o is CronJob => {
+  return isObject(o) && o.kind === "CronJob";
+};
+
+export const isHorizontalPodAutoscaler = (
+  o: any
+): o is HorizontalPodAutoscaler => {
+  return isObject(o) && o.kind === "HorizontalPodAutoscaler";
+};
+
+export const isPersistentVolumeClaim = (o: any): o is PersistentVolumeClaim => {
+  return isObject(o) && o.kind === "PersistentVolumeClaim";
+};
