@@ -1,5 +1,6 @@
+import { Stream } from "stream";
+
 export * from "./objects";
-export * from "./options";
 
 export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends Array<infer U>
@@ -8,3 +9,36 @@ export type DeepPartial<T> = {
     ? DeepPartial<T[P]>
     : T[P]
 };
+
+export interface Options {
+  namespace?: string;
+  kubeconfig?: string;
+  context?: string;
+}
+
+export interface Flags {
+  [key: string]: string | boolean | null | undefined;
+}
+
+export interface LogOptions {
+  container?: string;
+}
+
+export interface ExecOptions {
+  command?: string[];
+  container?: string;
+  stderr?: boolean;
+  stdout?: boolean;
+}
+
+export interface AttachOptions {
+  container?: string;
+  stderr?: Stream;
+  stdin?: Stream;
+  stdout?: Stream;
+  tty?: boolean;
+}
+
+export interface ConnectOptions extends AttachOptions {
+  command?: string[];
+}
