@@ -1211,4 +1211,6 @@ export class Kubernetes extends Kubectl {
         .get()
     );
   }
+
+  // GENERATED CODE ENDS HERE
 }

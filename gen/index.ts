@@ -36,8 +36,12 @@ export const generateTypes = async (input: string, output: string) => {
 export const generateTemplate = async (input: string, output: string) => {
   const code = await renderFile<string>(input, data);
   const current = await readFile(output, "utf-8");
-  const comment = "// GENERATED CODE BEGINS HERE\n";
-  const result = current.replace(comment, comment + code);
+
+  const intro = "// GENERATED CODE BEGINS HERE\n";
+  const outro = "// GENERATED CODE ENDS HERE\n";
+  const pattern = new RegExp(`${intro}.*${outro}`);
+
+  const result = current.replace(pattern, intro + code + outro);
   await writeFile(output, result);
 };
 

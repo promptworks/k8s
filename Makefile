@@ -18,5 +18,6 @@ src/types/generated.ts: tmp/swagger.json $(SOURCES)
 src/types/objects.ts: src/types/generated.ts $(SOURCES)
 	bin/generate template gen/objects.ejs src/types/objects.ts
 
-src/Kubernetes.ts: src/types/objects.ts $(SOURCES)
+.PHONY: src/Kubernetes.ts
+src/Kubernetes.ts:
 	bin/generate template gen/Kubernetes.ejs src/Kubernetes.ts
