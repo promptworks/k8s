@@ -40,3 +40,11 @@ export interface AttachOptions {
 export interface ConnectOptions extends AttachOptions {
   command?: string[];
 }
+
+export enum PodPhase {
+  PENDING = "Pending",
+  RUNNING = "Running",
+  SUCCEEDED = "Succeeded",
+  FAILED = "Failed",
+  UNKNOWN = "Unknown"
+}

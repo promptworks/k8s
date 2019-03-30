@@ -1,3 +1,4 @@
+import { AnyObject, isPod, isDeployment } from "./types/objects";
 import * as k8s from "kubernetes-client";
 import { Stream } from "stream";
 import { Kubectl } from "./Kubectl";
@@ -18,7 +19,8 @@ import {
   Job,
   CronJob,
   HorizontalPodAutoscaler,
-  PersistentVolumeClaim
+  PersistentVolumeClaim,
+  PodPhase
 } from "./types";
 
 const getBody = <T>(promise: Promise<{ body: T }>) => {
@@ -42,6 +44,8 @@ const exists = async (promise: Promise<any>): Promise<boolean> => {
       throw err;
     });
 };
+
+export class PodStatusError extends Error {}
 
 export class Kubernetes extends Kubectl {
   public readonly kubeconfig: any;
@@ -102,6 +106,49 @@ export class Kubernetes extends Kubectl {
         .pods(name)
         .exec.post({ qs: opts })
     );
+  }
+
+  /**
+   * Wait until a pod is running. If it transitions to a failed or unknown state,
+   * throw an error.
+   */
+  public async waitForPod(name: string): Promise<void> {
+    while (true) {
+      const pod = await this.getPod(name);
+
+      switch (pod.status!.phase as PodPhase) {
+        case PodPhase.SUCCEEDED:
+          return;
+
+        case PodPhase.FAILED:
+          throw new PodStatusError(`Pod '${name}' failed.`);
+
+        case PodPhase.UNKNOWN:
+          throw new PodStatusError(
+            `Pod '${name}' failed, because the status is unknown.`
+          );
+
+        default:
+          await new Promise(resolve => setTimeout(resolve, 3000));
+      }
+    }
+  }
+
+  /**
+   * Wait for all objects to finish deploying.
+   */
+  public async waitForObjects(objects: AnyObject[]) {
+    const pods: Promise<any>[] = objects
+      .filter(isPod)
+      .map(pod => this.waitForPod(pod.metadata.name));
+
+    const deployments: Promise<any>[] = objects
+      .filter(isDeployment)
+      .map(deployment =>
+        this.waitForRollout("deployment", deployment.metadata.name)
+      );
+
+    await Promise.all(pods.concat(deployments));
   }
 
   // GENERATED CODE BEGINS HERE

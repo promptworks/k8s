@@ -88,4 +88,11 @@ export class Kubectl {
 
     return this.kubectl(["exec", pod, ...flags, ...command], opts);
   }
+
+  /**
+   * Wait for a deployment to finish rolling out.
+   */
+  public async waitForRollout(kind: string, name: string) {
+    return this.kubectl(["rollout", "status", kind, name]);
+  }
 }
