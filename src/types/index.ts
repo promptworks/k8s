@@ -1,5 +1,3 @@
-import { Stream } from "stream";
-
 export * from "./objects";
 
 export type DeepPartial<T> = {
@@ -33,9 +31,9 @@ export interface ExecOptions {
 
 export interface AttachOptions {
   container?: string;
-  stderr?: Stream;
-  stdin?: Stream;
-  stdout?: Stream;
+  stderr?: NodeJS.WriteStream;
+  stdin?: NodeJS.ReadStream;
+  stdout?: NodeJS.WriteStream;
   tty?: boolean;
 }
 
