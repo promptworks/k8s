@@ -143,20 +143,23 @@ export class Kubernetes extends Kubectl {
   }
 
   /**
-   * Wait for all objects to finish deploying.
+   * Wait for an object to finish rolling out.
    */
-  public async waitForObjects(objects: AnyObject[]) {
-    const pods: Promise<any>[] = objects
-      .filter(isPod)
-      .map(pod => this.waitForPod(pod.metadata.name));
+  public async waitForObject(object: AnyObject): Promise<void> {
+    if (isPod(object)) {
+      await this.waitForPod(object.metadata.name);
+    }
 
-    const deployments: Promise<any>[] = objects
-      .filter(isDeployment)
-      .map(deployment =>
-        this.waitForRollout("deployment", deployment.metadata.name)
-      );
+    if (isDeployment(object)) {
+      await this.waitForRollout("deployment", object.metadata.name);
+    }
+  }
 
-    await Promise.all(pods.concat(deployments));
+  /**
+   * Wait for all objects to finish rolling out.
+   */
+  public async waitForObjects(objects: AnyObject[]): Promise<void> {
+    await Promise.all(objects.map(object => this.waitForObject(object)));
   }
 
   // GENERATED CODE BEGINS HERE
