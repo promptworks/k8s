@@ -18,6 +18,19 @@ export interface Flags {
   [key: string]: string | boolean | null | undefined;
 }
 
+export enum PodPhase {
+  PENDING = "Pending",
+  RUNNING = "Running",
+  SUCCEEDED = "Succeeded",
+  FAILED = "Failed",
+  UNKNOWN = "Unknown"
+}
+
+export interface WaitForPodOptions {
+  desiredPhases?: PodPhase[];
+  pollingInterval?: number;
+}
+
 export interface LogOptions {
   container?: string;
 }
@@ -39,12 +52,4 @@ export interface AttachOptions {
 
 export interface ConnectOptions extends AttachOptions {
   command?: string[];
-}
-
-export enum PodPhase {
-  PENDING = "Pending",
-  RUNNING = "Running",
-  SUCCEEDED = "Succeeded",
-  FAILED = "Failed",
-  UNKNOWN = "Unknown"
 }

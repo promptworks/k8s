@@ -1,6 +1,7 @@
-import { AnyObject, isPod, isDeployment } from "./types/objects";
+import { IncomingMessage } from "http";
 import * as k8s from "kubernetes-client";
 import { Kubectl } from "./Kubectl";
+import { AnyObject, isPod, isDeployment } from "./types/objects";
 import {
   Options,
   LogOptions,
@@ -19,7 +20,8 @@ import {
   CronJob,
   HorizontalPodAutoscaler,
   PersistentVolumeClaim,
-  PodPhase
+  PodPhase,
+  WaitForPodOptions
 } from "./types";
 
 const getBody = <T>(promise: Promise<{ body: T }>) => {
@@ -86,10 +88,7 @@ export class Kubernetes extends Kubectl {
   /**
    * Get a log stream from a running container.
    */
-  public followLogs(
-    name: string,
-    opts: LogOptions = {}
-  ): NodeJS.ReadableStream {
+  public followLogs(name: string, opts: LogOptions = {}): IncomingMessage {
     return this.client.api.v1
       .ns(this.namespace)
       .pods(name)
@@ -114,25 +113,32 @@ export class Kubernetes extends Kubectl {
    * Wait until a pod is running. If it transitions to a failed or unknown state,
    * throw an error.
    */
-  public async waitForPod(name: string): Promise<void> {
+  public async waitForPod(
+    name: string,
+    {
+      pollingInterval = 3000,
+      desiredPhases = [PodPhase.SUCCEEDED]
+    }: WaitForPodOptions = {}
+  ): Promise<void> {
     while (true) {
       const pod = await this.getPod(name);
+      const phase = pod.status!.phase as PodPhase;
 
-      switch (pod.status!.phase as PodPhase) {
-        case PodPhase.SUCCEEDED:
-          return;
-
-        case PodPhase.FAILED:
-          throw new PodStatusError(`Pod '${name}' failed.`);
-
-        case PodPhase.UNKNOWN:
-          throw new PodStatusError(
-            `Pod '${name}' failed, because the status is unknown.`
-          );
-
-        default:
-          await new Promise(resolve => setTimeout(resolve, 3000));
+      if (desiredPhases.includes(phase)) {
+        break;
       }
+
+      if (phase === PodPhase.FAILED) {
+        throw new PodStatusError(`Pod '${name}' failed.`);
+      }
+
+      if (phase === PodPhase.UNKNOWN) {
+        throw new PodStatusError(
+          `Pod '${name}' failed, because the status is unknown.`
+        );
+      }
+
+      await new Promise(resolve => setTimeout(resolve, pollingInterval));
     }
   }
 
