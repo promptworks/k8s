@@ -1,6 +1,5 @@
 import { AnyObject, isPod, isDeployment } from "./types/objects";
 import * as k8s from "kubernetes-client";
-import { Stream } from "stream";
 import { Kubectl } from "./Kubectl";
 import {
   Options,
@@ -87,7 +86,10 @@ export class Kubernetes extends Kubectl {
   /**
    * Get a log stream from a running container.
    */
-  public followLogs(name: string, opts: LogOptions = {}): Stream {
+  public followLogs(
+    name: string,
+    opts: LogOptions = {}
+  ): NodeJS.ReadableStream {
     return this.client.api.v1
       .ns(this.namespace)
       .pods(name)
