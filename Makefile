@@ -4,6 +4,7 @@ SWAGGER=https://raw.githubusercontent.com/kubernetes/kubernetes/v1.13.4/api/open
 all: src/Kubernetes.ts
 
 build: all
+	rm -rf lib
 	node_modules/.bin/tsc -b
 
 tmp:
