@@ -35,7 +35,10 @@ export const generateTypes = async (input: string, output: string) => {
 
 export const generateTemplate = async (input: string, output: string) => {
   const code = await renderFile<string>(input, data);
-  await writeFile(output, formatCode(code));
+  const current = await readFile(output, "utf-8");
+  const comment = "// GENERATED CODE BEGINS HERE\n";
+  const result = current.replace(comment, comment + code);
+  await writeFile(output, result);
 };
 
 export const generators = {

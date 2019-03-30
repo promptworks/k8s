@@ -18,12 +18,12 @@ describe("Kubectl", () => {
   });
 
   test("run", async () => {
-    await kubectl.run(["arg"]);
+    await kubectl.kubectl(["arg"]);
     expect(exec).toHaveBeenCalledWith("kubectl", [...flags, "arg"], {});
   });
 
   test("run with options", async () => {
-    await kubectl.run(["arg"], { reject: false });
+    await kubectl.kubectl(["arg"], { reject: false });
     expect(exec).toHaveBeenCalledWith("kubectl", [...flags, "arg"], {
       reject: false
     });
@@ -54,12 +54,18 @@ describe("Kubectl", () => {
     expect(exec).toHaveBeenCalledWith(
       "kubectl",
       [...flags, "attach", "nginx", "--tty", "--container", "one", "--stdin"],
-      { stderr, stdin, stdout }
+      {
+        container: "one",
+        stderr: "stdout",
+        stdin: "stdin",
+        stdout: "stderr",
+        tty: true
+      }
     );
   });
 
-  test("exec", async () => {
-    await kubectl.exec("nginx");
+  test("connect", async () => {
+    await kubectl.connect("nginx");
     expect(exec).toHaveBeenCalledWith("kubectl", [...flags, "exec", "nginx"], {
       stderr: undefined,
       stdin: undefined,
@@ -67,12 +73,12 @@ describe("Kubectl", () => {
     });
   });
 
-  test("exec with options", async () => {
+  test("connect with options", async () => {
     const stdout: any = "stderr";
     const stderr: any = "stdout";
     const stdin: any = "stdin";
 
-    await kubectl.exec("nginx", {
+    await kubectl.connect("nginx", {
       stdin,
       stdout,
       stderr,
@@ -94,7 +100,14 @@ describe("Kubectl", () => {
         "--",
         "sh"
       ],
-      { stderr, stdin, stdout }
+      {
+        container: "one",
+        command: ["sh"],
+        stderr: "stdout",
+        stdin: "stdin",
+        stdout: "stderr",
+        tty: true
+      }
     );
   });
 });

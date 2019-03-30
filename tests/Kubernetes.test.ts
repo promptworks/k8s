@@ -31,6 +31,8 @@ deletePod
 deleteReplicaSet
 deleteSecret
 deleteService
+exec
+followLogs
 getConfigMap
 getCronJob
 getDaemonSet
@@ -38,6 +40,7 @@ getDeployment
 getHorizontalPodAutoscaler
 getIngress
 getJob
+getLogs
 getNamespace
 getPersistentVolumeClaim
 getPod
