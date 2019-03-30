@@ -4,8 +4,6 @@ A simple Kubernetes client for Node.js based on [`kubernetes-client`](https://gi
 
 Because some functionality isn't yet supported by  `kubernetes-client`, this package also provides convenience methods for shelling out to `kubectl`.
 
-[View the documentation](docs/README.md)
-
 ## Installing
 
     $ yarn add @promptly/k8s
